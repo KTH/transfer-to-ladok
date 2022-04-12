@@ -1,7 +1,8 @@
 {
   "name": "transfer-to-ladok",
+  "private": true,
   "version": "1.0.0",
-  "description": "",
+  "description": "Send grades from Canvas to Ladok",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -10,8 +11,8 @@
   "author": "KTH Royal Institute of Technology",
   "license": "MIT",
   "devDependencies": {
-    "prettier": "^2.5.1",
-    "typescript": "^4.5.5"
+    "lerna": "^4.0.0",
+    "prettier": "^2.5.1"
   },
   "dependencies": {
     "@kth/canvas-api": "^4.2.0",
