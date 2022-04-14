@@ -1,0 +1,21 @@
+{
+  "name": "t2l-backend",
+  "version": "1.0.0",
+  "description": "This is the \"backend\" side of Transfer to Ladok",
+  "main": "index.js",
+  "scripts": {
+    "dev": "ts-node-dev --respawn src/index.ts | pino-pretty -e options,response",
+    "start": "ts-node --transpile-only src/index.ts",
+    "test": "tsc --noEmit src/**/*.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "ts-node": "^10.7.0"
+  },
+  "devDependencies": {
+    "pino-pretty": "^7.6.1",
+    "ts-node-dev": "^1.1.8"
+  }
+}
