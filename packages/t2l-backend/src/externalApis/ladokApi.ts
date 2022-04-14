@@ -15,6 +15,20 @@ const gotClient = got.extend({
   },
 });
 
+export interface Aktivitetstillfalle {
+  Aktiviteter: {
+    Kursinstans: {
+      Utbildningskod: string;
+    };
+    Utbildningsinstans: {
+      Utbildningskod: string;
+    };
+  }[];
+  Datumperiod: {
+    Startdatum: string;
+  };
+}
+
 export interface Resultat {
   Betygsgrad: number;
   BetygsskalaID: number;
@@ -89,6 +103,14 @@ export interface SokResultat {
       };
     }>;
   }>;
+}
+
+export async function getAktivitetstillfalle(aktivitetstillfalleUID: string) {
+  return gotClient
+    .get<Aktivitetstillfalle>(
+      `resultat/aktivitetstillfalle/${aktivitetstillfalleUID}`
+    )
+    .then((response) => response.body);
 }
 
 export function getAktivitetstillfallesmojlighet(

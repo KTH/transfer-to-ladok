@@ -43,7 +43,7 @@ export interface Enrollment {
 }
 
 export function getCanvasSections(courseId: string) {
-  return canvas.listItems<Section>(`courses/${courseId}/sections`);
+  return canvas.listItems<Section>(`courses/${courseId}/sections`).toArray();
 }
 
 export function getAssignments(courseId: string) {
