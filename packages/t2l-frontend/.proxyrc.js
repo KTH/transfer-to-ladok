@@ -1,7 +1,11 @@
 const { createProxyMiddleware } = require("http-proxy-middleware");
 
 function filter(pathname, req) {
-  return pathname.match("^/transfer-to-ladok/api") || req.method !== "GET";
+  return (
+    pathname.startsWith("/transfer-to-ladok/api") ||
+    pathname.startsWith("/transfer-to-ladok/auth") ||
+    req.method !== "GET"
+  );
 }
 
 module.exports = function (app) {
