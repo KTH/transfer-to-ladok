@@ -1,10 +1,12 @@
 import express from "express";
 import router from "./router";
+import sessionMiddleware from "express-session";
 
 const app = express();
-app.use("/transfer-to-ladok", router);
-const port = process.env.PORT || 3000;
+const port = 3000;
 
+app.use(sessionMiddleware());
+app.use("/transfer-to-ladok", router);
 app.listen(port, () => {
   console.log(`Listening to port ${port}`);
 });

@@ -1,7 +1,8 @@
 import { Router } from "express";
 import sectionsHandler from "./apiHandlers/sections";
+import auth from "./apiHandlers/auth";
 const router = Router();
 
-router.get("/api/courses/:courseId", sectionsHandler);
+router.use("/auth", auth);
 
 export default router;
