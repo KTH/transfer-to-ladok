@@ -20,3 +20,5 @@ process.on("unhandledRejection", (reason) => {
   }
   process.exit(1);
 });
+
+require("@kth/reqvars").check();
