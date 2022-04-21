@@ -4,7 +4,7 @@
   "description": "This is the \"backend\" side of Transfer to Ladok",
   "main": "index.js",
   "scripts": {
-    "dev": "ts-node-dev --respawn src/index.ts | pino-pretty -e options,response",
+    "dev": "ts-node-dev --respawn src/index.ts | pino-pretty -e options,response -o '{msg}' --ignore options,pid,hostname,app,req_id --singleLine --translateTime 'HH:MM:ss.l'",
     "start": "ts-node --transpile-only src/index.ts",
     "test": "tsc --noEmit src/**/*.ts"
   },
@@ -13,9 +13,11 @@
   "license": "MIT",
   "dependencies": {
     "@types/express-session": "^1.17.4",
+    "dotenv": "^16.0.0",
     "express": "^4.17.3",
     "express-session": "^1.17.2",
     "openid-client": "^5.1.5",
+    "skog": "^3.0.0-alpha.4",
     "ts-node": "^10.7.0"
   },
   "devDependencies": {
