@@ -8,13 +8,22 @@ import path from "path";
 const app = express();
 const port = 3000;
 
-// app.use(express.urlencoded({ extended: true }));
+app.set("trust proxy", 1);
 app.use(express.json());
 app.use(
   sessionMiddleware({
+    name: "transfer-to-ladok.sid",
+    proxy: true,
+    cookie: {
+      domain: "localdev.kth.se",
+      maxAge: 3600 * 1000,
+      httpOnly: true,
+      secure: "auto",
+      sameSite: "none",
+    },
+    resave: true,
+    saveUninitialized: true,
     secret: "super secret!",
-    resave: false,
-    saveUninitialized: false,
   })
 );
 app.use(skogMiddleware);

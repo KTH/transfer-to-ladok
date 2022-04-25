@@ -11,6 +11,7 @@ function filter(pathname, req) {
 module.exports = function (app) {
   app.use(
     createProxyMiddleware(filter, {
+      xfwd: true,
       target: "http://localhost:3000/",
     })
   );
