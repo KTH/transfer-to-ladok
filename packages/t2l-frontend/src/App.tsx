@@ -5,7 +5,7 @@ const queryClient = new QueryClient();
 
 function Home() {
   const sections = useQuery("sections", () =>
-    fetch("/api/courses/1/sections").then((r) => r.json())
+    fetch("/transfer-to-ladok/api/courses/1/sections").then((r) => r.json())
   );
 
   if (sections.data) {
