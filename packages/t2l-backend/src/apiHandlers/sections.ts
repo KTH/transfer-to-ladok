@@ -16,7 +16,7 @@ interface PathParameters {
 }
 
 /** Object returned by the API */
-interface T2LSections {
+export interface T2LSections {
   aktivitetstillfalle: {
     id: string;
     name: string;

@@ -1,17 +1,16 @@
 import React from "react";
 import { useQuery, QueryClient, QueryClientProvider } from "react-query";
+import { useSections } from "./hooks/apiClient";
 
 const queryClient = new QueryClient();
 
 function Home() {
-  const sections = useQuery("sections", () =>
-    fetch("/transfer-to-ladok/api/courses/1/sections").then((r) => r.json())
-  );
+  const query = useSections("1");
 
-  if (sections.data) {
-    return <div>Loaded!!</div>;
+  if (!query.data) {
+    return <div>loading...</div>;
   }
-  return <div>loading...</div>;
+  return <div>loaded!!!</div>;
 }
 
 export default function App() {
