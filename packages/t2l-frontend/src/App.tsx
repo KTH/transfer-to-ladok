@@ -1,5 +1,7 @@
-import React from "react";
-import { useQuery, QueryClient, QueryClientProvider } from "react-query";
+import * as React from "react";
+import { ErrorBoundary } from "react-error-boundary";
+import { QueryClient, QueryClientProvider } from "react-query";
+import FullPageError from "./components/FullPageError";
 import { useSections } from "./hooks/apiClient";
 
 const queryClient = new QueryClient();
@@ -15,8 +17,10 @@ function Home() {
 
 export default function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <Home />
-    </QueryClientProvider>
+    <ErrorBoundary FallbackComponent={FullPageError}>
+      <QueryClientProvider client={queryClient}>
+        <Home />
+      </QueryClientProvider>
+    </ErrorBoundary>
   );
 }

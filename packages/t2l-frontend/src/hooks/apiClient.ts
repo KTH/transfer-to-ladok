@@ -2,7 +2,7 @@
 import { useQuery } from "react-query";
 import { T2LSections } from "../../../t2l-backend/src/apiHandlers/sections";
 
-class ApiError extends Error {
+export class ApiError extends Error {
   code: string;
 
   constructor(message: string, code: string) {
