@@ -12,7 +12,7 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "@kth/canvas-api": "^4.2.0",
+    "@kth/canvas-api": "^4.2.2",
     "@kth/reqvars": "^2.0.1",
     "@types/express-session": "^1.17.4",
     "dotenv": "^16.0.0",

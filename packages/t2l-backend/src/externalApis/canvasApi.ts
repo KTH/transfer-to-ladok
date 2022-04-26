@@ -2,12 +2,14 @@
  * This module contains functions to call Canvas API.
  * Functions do not contain any logic
  */
-import Canvas from "@kth/canvas-api";
+import Canvas, { minimalErrorHandler } from "@kth/canvas-api";
 
 const canvas = new Canvas(
   process.env.CANVAS_API_URL!,
   process.env.CANVAS_API_TOKEN!
 );
+
+canvas.errorHandler = minimalErrorHandler;
 
 export interface Section {
   sis_section_id: string;
