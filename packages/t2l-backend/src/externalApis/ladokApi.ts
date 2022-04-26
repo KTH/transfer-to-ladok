@@ -121,10 +121,10 @@ export function getAktivitetstillfallesmojlighet(
   );
 }
 
-export function getCourseRoundStructure(kurstillfalleUID: string) {
-  return gotClient.get<Kurstillfalle>(
-    `resultat/kurstillfalle${kurstillfalleUID}/moment`
-  );
+export function getKurstillfalleStructure(kurstillfalleUID: string) {
+  return gotClient
+    .get<Kurstillfalle>(`resultat/kurstillfalle${kurstillfalleUID}/moment`)
+    .then((response) => response.body);
 }
 
 export function searchModulesStudieresultat(

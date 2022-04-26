@@ -3,7 +3,10 @@ import {
   getCanvasSections,
   Section as CanvasSection,
 } from "../externalApis/canvasApi";
-import { getAktivitetstillfalle } from "../externalApis/ladokApi";
+import {
+  getAktivitetstillfalle,
+  getKurstillfalleStructure,
+} from "../externalApis/ladokApi";
 
 /** Path parameters required by this handler */
 interface PathParameters {
@@ -24,7 +27,7 @@ interface T2LSections {
       utbildningsinstansUID: string;
       examCode: string;
       name: string;
-    };
+    }[];
   }[];
 }
 
@@ -39,6 +42,21 @@ function getUniqueAktivitetstillfalleIds(sections: CanvasSection[]): string[] {
   const ids = sections
     .map((s) => AKTIVITETSTILLFALLE_REGEX.exec(s.sis_section_id)?.[1])
     .filter((id): id is string => id !== undefined);
+
+  return Array.from(new Set(ids));
+}
+
+/**
+ * Given a list of CanvasSection, returns a list of unique UIDs when the
+ * section refers to a kurstillfalle
+ */
+function getUniqueKurstillfalleIds(sections: CanvasSection[]): string[] {
+  // Regex: AA0000VT211
+  const KURSTILLFALLE_REGEX = /^\w{6,7}(HT|VT)\d{3}$/;
+
+  const ids = sections
+    .filter((s) => KURSTILLFALLE_REGEX.test(s.sis_section_id))
+    .map((s) => s.integration_id);
 
   return Array.from(new Set(ids));
 }
@@ -63,6 +81,22 @@ async function completeAktivitetstillfalleInformation(uid: string) {
   };
 }
 
+/** Given an Kurstillfälle UID, get extra information from Ladok */
+async function completeKurstillfalleInformation(uid: string) {
+  const ladokKur = await getKurstillfalleStructure(uid);
+
+  return {
+    id: uid,
+    utbildningsinstansUID: ladokKur.UtbildningsinstansUID,
+    name: ladokKur.Kurstillfalleskod,
+    modules: ladokKur.IngaendeMoment.map((m) => ({
+      utbildningsinstansUID: m.UtbildningsinstansUID,
+      examCode: m.Utbildningskod,
+      name: m.Benamning.sv,
+    })),
+  };
+}
+
 export default async function sectionsHandler(
   req: Request<PathParameters>,
   res: Response<T2LSections>
@@ -76,8 +110,12 @@ export default async function sectionsHandler(
     )
   );
 
+  const kurstillfalle = await Promise.all(
+    getUniqueKurstillfalleIds(allSections).map(completeKurstillfalleInformation)
+  );
+
   res.json({
     aktivitetstillfalle,
-    kurstillfalle: [],
+    kurstillfalle,
   });
 }
