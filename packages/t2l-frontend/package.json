@@ -2,10 +2,9 @@
   "name": "t2l-frontend",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
   "scripts": {
     "dev": "parcel src/index.html --https --port 4443 --public-url /transfer-to-ladok",
-    "build": "parcel build",
+    "build": "parcel build src/index.html --public-url /transfer-to-ladok",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
