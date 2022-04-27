@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import log from "skog";
 
-type ErrorCode = "not_authorized";
+export type ErrorCode = "not_authorized";
 
 /**
  * Errors that must be handled by the client.

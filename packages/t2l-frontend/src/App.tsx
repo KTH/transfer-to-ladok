@@ -9,9 +9,18 @@ const queryClient = new QueryClient();
 function Home() {
   const query = useSections("1");
 
-  if (!query.data) {
+  if (query.status === "loading") {
     return <div>loading...</div>;
   }
+
+  if (query.status === "unauthenticated") {
+    return <div>You are not logged in</div>;
+  }
+
+  if (query.status === "error") {
+    throw query.error;
+  }
+
   return <div>loaded!!!</div>;
 }
 
