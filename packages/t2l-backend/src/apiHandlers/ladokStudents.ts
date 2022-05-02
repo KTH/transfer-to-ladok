@@ -11,7 +11,7 @@ interface PathParams {
   courseId: string;
 }
 
-type BodyParams =
+type QueryParams =
   | {
       utbildningsinstans: string;
       kurstillfalle: string;
@@ -48,12 +48,12 @@ function normalizeStudieresultat(
 }
 
 export default async function ladokStudentsHandler(
-  req: Request<PathParams, any, BodyParams>,
+  req: Request<PathParams, any, any, QueryParams>,
   res: Response<LadokStudent[]>
 ) {
   // const { courseId } = req.params;
 
-  if ("aktivitetstillfalle" in req.body) {
+  if ("aktivitetstillfalle" in req.query) {
     const aktUID = req.body.aktivitetstillfalle;
     const ktfUID = await getSkaFinnasStudenter(aktUID).then((s) =>
       s.Utbildningstillfalle.map((u) => u.Uid)
