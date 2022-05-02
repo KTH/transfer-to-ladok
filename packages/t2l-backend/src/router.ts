@@ -1,5 +1,10 @@
 import { Router } from "express";
 import sectionsHandler from "./apiHandlers/sections";
+import assignmentsHandler from "./apiHandlers/assignments";
+import {
+  assignmentGradesHandler,
+  courseGradesHandler,
+} from "./apiHandlers/canvasGrades";
 import auth from "./apiHandlers/auth";
 import { errorHandler } from "./error";
 const router = Router();
@@ -16,11 +21,19 @@ router.use("/auth", auth);
 router.get("/api/courses/:courseId/sections", (req, res, next) =>
   sectionsHandler(req, res).catch(next)
 );
-router.get("/api/courses/:courseId/assignments");
-router.get("/api/courses/:courseId/total");
-router.get("/api/courses/:courseId/assignments/:assignmentId");
-router.get("/api/courses/:courseId/grades");
-router.post("/api/courses/:courseId/grades");
+router.get("/api/courses/:courseId/assignments", (req, res, next) =>
+  assignmentsHandler(req, res).catch(next)
+);
+router.get("/api/courses/:courseId/total", (req, res, next) =>
+  courseGradesHandler(req, res).catch(next)
+);
+router.get(
+  "/api/courses/:courseId/assignments/:assignmentId",
+  (req, res, next) => assignmentGradesHandler(req, res).catch(next)
+);
+
+router.get("/api/courses/:courseId/ladok-grades");
+router.post("/api/courses/:courseId/ladok-grades");
 
 router.use("/api", errorHandler);
 

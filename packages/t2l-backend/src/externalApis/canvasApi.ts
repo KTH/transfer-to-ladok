@@ -27,6 +27,10 @@ export interface Submission {
   score: number | null;
   graded_at: string | null;
   submitted_at: string | null;
+  user: {
+    integration_id: string;
+    sortable_name: string;
+  };
 }
 
 export interface Enrollment {
@@ -35,6 +39,7 @@ export interface Enrollment {
   };
   user: {
     integration_id: string;
+    sortable_name: string;
   };
 }
 
@@ -64,16 +69,28 @@ export default class CanvasClient {
   }
 
   getAssignments(courseId: string) {
-    return this.client.listItems<Assignment>(`courses/${courseId}/assignments`);
+    return this.client
+      .listItems<Assignment>(`courses/${courseId}/assignments`)
+      .toArray();
   }
 
   getSubmissions(courseId: string, assignmentId: string) {
-    return this.client.listItems<Submission>(
-      `courses/${courseId}/assignments/${assignmentId}/submissions`
-    );
+    return this.client
+      .listItems<Submission>(
+        `courses/${courseId}/assignments/${assignmentId}/submissions`,
+        {
+          per_page: 100,
+          include: ["user"],
+        }
+      )
+      .toArray();
   }
 
   getFinalGrades(courseId: string) {
-    return this.client.listItems<Enrollment>(`courses/${courseId}/enrollments`);
+    return this.client
+      .listItems<Enrollment>(`courses/${courseId}/enrollments`, {
+        include: ["user"],
+      })
+      .toArray();
   }
 }
