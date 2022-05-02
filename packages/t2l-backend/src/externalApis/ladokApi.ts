@@ -88,6 +88,11 @@ export interface SokResultat {
      */
     Uid: string;
 
+    Rapporteringskontext: {
+      /** Use this to check if a user is "rapportor" or not */
+      UtbildningsinstansUID: string;
+    };
+
     /** Present if there is a grade in form of utkast */
     ResultatPaUtbildningar?: Array<{
       Arbetsunderlag: {
@@ -103,6 +108,15 @@ export interface SokResultat {
       };
     }>;
   }>;
+}
+
+export interface Rapportor {
+  Anvandare: {
+    Uid: string;
+    Anvandarnamn: string;
+    Efternamn: string;
+    Fornamn: string;
+  }[];
 }
 
 export async function getAktivitetstillfalle(aktivitetstillfalleUID: string) {
@@ -161,6 +175,14 @@ export function searchAktivitetstillfalleStudieresultat(
           Page: page,
         },
       }
+    )
+    .then((r) => r.body);
+}
+
+export function getPeopleWithPermissions(utbildningsinstansUID: string) {
+  return gotClient
+    .get<Rapportor>(
+      `resultat/anvandare/resultatrattighet/utbildningsinstans?utbildningsinstansUID=${utbildningsinstansUID}`
     )
     .then((r) => r.body);
 }
