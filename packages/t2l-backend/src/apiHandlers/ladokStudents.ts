@@ -1,20 +1,24 @@
 import { Request, Response } from "express";
 import {
   getSkaFinnasStudenter,
-  searchExaminationsStudieresultat,
-  searchModulesStudieresultat,
+  searchAllAktStudieresultat,
+  searchAktivitetstillfalleStudieresultat,
   SokResultat,
+  searchAllUtbStudieresultat,
 } from "../externalApis/ladokApi";
 
-interface AktPathParams {
+interface PathParams {
   courseId: string;
-  aktUID: string;
 }
 
-interface UtbPathParams {
-  courseId: string;
-  utbUID: string;
-}
+type BodyParams =
+  | {
+      utbildningsinstans: string;
+      kurstillfalle: string;
+    }
+  | {
+      aktivitetstillfalle: string;
+    };
 
 interface LadokStudent {
   studieResultatUID: string;
@@ -28,54 +32,41 @@ interface LadokStudent {
   };
 }
 
-// Transform a "sok" function into a function where it does all searches automatically
-function fetchAll(
-  sokFn: (arg1: string, arg2: string[], page: number) => Promise<SokResultat>
-): (arg1: string, arg2: string[]) => Promise<SokResultat> {
-  return async (arg1: string, arg2: string[]): Promise<SokResultat> => {
-    let page = 1;
-    const allResults: SokResultat["Resultat"] = [];
-    const result = await sokFn(arg1, arg2, page);
-    allResults.push(...result.Resultat);
-
-    while (result.TotalAntalPoster > allResults.length) {
-      page++;
-      const result = await sokFn(arg1, arg2, page);
-      allResults.push(...result.Resultat);
-    }
-
-    return {
-      TotalAntalPoster: allResults.length,
-      Resultat: allResults,
-    };
+function normalizeStudieresultat(
+  s: SokResultat["Resultat"][number]
+): LadokStudent {
+  return {
+    studieResultatUID: s.Uid,
+    resultatUID: s.ResultatPaUtbildningar?.[0].Arbetsunderlag.Uid || null,
+    student: {
+      ladokUID: s.Student.Uid,
+      firstName: s.Student.Fornamn,
+      lastName: s.Student.Efternamn,
+      interruptionDate: s.Avbrott?.Avbrottsdatum || null,
+    },
   };
 }
 
-const fetchAllStudentsInAktivitetstillfalle = fetchAll(
-  searchExaminationsStudieresultat
-);
-const fetchAllStudentsInUtbildningsinstans = fetchAll(
-  searchModulesStudieresultat
-);
-
-export async function studentsInAktivitetstillfalle(
-  req: Request<AktPathParams>,
+export default async function ladokStudentsHandler(
+  req: Request<PathParams, any, BodyParams>,
   res: Response<LadokStudent[]>
 ) {
-  // TODO: check that the courseId matches with the aktUID
-  // TODO: check that user has permissions in the courseId
+  // const { courseId } = req.params;
 
-  const aktUID = req.params.aktUID;
-  const kurstillfalle = await getSkaFinnasStudenter(aktUID).then((s) =>
-    s.Utbildningstillfalle.map((u) => u.Uid)
-  );
-  const studieResultat = await searchExaminationsStudieresultat(
-    aktUID,
-    kurstillfalle
-  );
+  if ("aktivitetstillfalle" in req.body) {
+    const aktUID = req.body.aktivitetstillfalle;
+    const ktfUID = await getSkaFinnasStudenter(aktUID).then((s) =>
+      s.Utbildningstillfalle.map((u) => u.Uid)
+    );
+    const result = await searchAllAktStudieresultat(aktUID, ktfUID);
+
+    res.send(result.Resultat.map(normalizeStudieresultat));
+  } else {
+    const ktfUID = [req.body.kurstillfalle];
+    const utbUID = req.body.utbildningsinstans;
+
+    const result = await searchAllUtbStudieresultat(utbUID, ktfUID);
+
+    res.send(result.Resultat.map(normalizeStudieresultat));
+  }
 }
-
-export function studentsInUtbildningsinstans(
-  req: Request<UtbPathParams>,
-  res: Response<LadokStudent[]>
-) {}
