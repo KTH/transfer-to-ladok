@@ -62,11 +62,11 @@ export interface Kurstillfalle {
   }>;
 }
 
-export interface Aktivitetstillfallesmojlighet {
-  TotalAntalPoster: number;
-  Resultat: Array<{
-    KurstillfalleStudentenArRegistreradPa: string;
-  }>;
+export interface SkaFinnasStudenter {
+  Utbildningstillfalle: {
+    /** Kurstillfalle UID */
+    Uid: string;
+  }[];
 }
 
 export interface SokResultat {
@@ -113,12 +113,12 @@ export async function getAktivitetstillfalle(aktivitetstillfalleUID: string) {
     .then((response) => response.body);
 }
 
-export function getAktivitetstillfallesmojlighet(
-  aktivitetstillfalleUID: string
-) {
-  return gotClient.get<Aktivitetstillfallesmojlighet>(
-    `resultat/aktivitetstillfallesmojlighet/aktivitetstillfallesmojlighet/filtrera/utananonymbehorighet?aktivitetstillfalleUID=${aktivitetstillfalleUID}&page=1&limit=400`
-  );
+export function getSkaFinnasStudenter(aktivitetstillfalleUID: string) {
+  return gotClient
+    .get<SkaFinnasStudenter>(
+      `resultat/kurstillfalle/aktivitetstillfalle/skafinnasstudenter/${aktivitetstillfalleUID}`
+    )
+    .then((response) => response.body);
 }
 
 export function getKurstillfalleStructure(kurstillfalleUID: string) {
@@ -127,36 +127,42 @@ export function getKurstillfalleStructure(kurstillfalleUID: string) {
     .then((response) => response.body);
 }
 
-export function searchModulesStudieresultat(
+export function searchUtbildningsinstansStudieresultat(
   utbildningsinstansUID: string,
-  status: "OBEHANDLADE" | "UTKAST",
-  KurstillfallenUID: string[]
+  KurstillfallenUID: string[],
+  page: number = 1
 ) {
-  return gotClient.put<SokResultat>(
-    `resultat/studieresultat/rapportera/utbildningsinstans/${utbildningsinstansUID}/sok`,
-    {
-      json: {
-        Filtrering: [status],
-        KurstillfallenUID,
-      },
-    }
-  );
+  return gotClient
+    .put<SokResultat>(
+      `resultat/studieresultat/rapportera/utbildningsinstans/${utbildningsinstansUID}/sok`,
+      {
+        json: {
+          Filtrering: ["OBEHANDLADE", "UTKAST"],
+          KurstillfallenUID,
+          Page: page,
+        },
+      }
+    )
+    .then((r) => r.body);
 }
 
-export function searchExaminationsStudieresultat(
+export function searchAktivitetstillfalleStudieresultat(
   aktivitetstillfalleUID: string,
-  status: "OBEHANDLADE" | "UTKAST",
-  KurstillfallenUID: string[]
+  KurstillfallenUID: string[],
+  page: number = 1
 ) {
-  return gotClient.put<SokResultat>(
-    `resultat/studieresultat/rapportera/aktivitetstillfalle/${aktivitetstillfalleUID}/sok`,
-    {
-      json: {
-        Filtrering: [status],
-        KurstillfallenUID,
-      },
-    }
-  );
+  return gotClient
+    .put<SokResultat>(
+      `resultat/studieresultat/rapportera/aktivitetstillfalle/${aktivitetstillfalleUID}/sok`,
+      {
+        json: {
+          Filtrering: ["OBEHANDLADE", "UTKAST"],
+          KurstillfallenUID,
+          Page: page,
+        },
+      }
+    )
+    .then((r) => r.body);
 }
 
 export function createResult(
