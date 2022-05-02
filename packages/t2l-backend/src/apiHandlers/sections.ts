@@ -99,6 +99,11 @@ async function completeKurstillfalleInformation(uid: string) {
   };
 }
 
+/**
+ * Return all sections in a canvas course room
+ * - If the section is linked with a kurstillfälle in Ladok, this endpoint
+ *   will also return all the modules in such kurstillfälle
+ */
 export default async function sectionsHandler(
   req: Request<PathParameters>,
   res: Response<T2LSections>
