@@ -1,10 +1,7 @@
 import { CanvasApiError } from "@kth/canvas-api";
 import { Request, Response } from "express";
 import { EndpointError } from "../error";
-import {
-  getCanvasSections,
-  Section as CanvasSection,
-} from "../externalApis/canvasApi";
+import CanvasClient, { CanvasSection } from "../externalApis/canvasApi";
 import {
   getAktivitetstillfalle,
   getKurstillfalleStructure,
@@ -108,8 +105,9 @@ export default async function sectionsHandler(
   req: Request<PathParameters>,
   res: Response<T2LSections>
 ) {
+  const canvasApi = new CanvasClient(req);
   const courseId = req.params.courseId;
-  const allSections = await getCanvasSections(courseId).catch((err) => {
+  const allSections = await canvasApi.getSections(courseId).catch((err) => {
     if (err instanceof CanvasApiError && err.code === 401) {
       throw new EndpointError("Invalid canvas access token", "not_authorized");
     }

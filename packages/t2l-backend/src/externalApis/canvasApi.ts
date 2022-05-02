@@ -2,16 +2,10 @@
  * This module contains functions to call Canvas API.
  * Functions do not contain any logic
  */
-import Canvas, { minimalErrorHandler } from "@kth/canvas-api";
+import CanvasAPI, { minimalErrorHandler } from "@kth/canvas-api";
+import { Request } from "express";
 
-const canvas = new Canvas(
-  process.env.CANVAS_API_URL!,
-  process.env.CANVAS_API_TOKEN!
-);
-
-canvas.errorHandler = minimalErrorHandler;
-
-export interface Section {
+export interface CanvasSection {
   sis_section_id: string;
   integration_id: string;
   name: string;
@@ -44,20 +38,42 @@ export interface Enrollment {
   };
 }
 
-export function getCanvasSections(courseId: string) {
-  return canvas.listItems<Section>(`courses/${courseId}/sections`).toArray();
+function getToken(token: string = "") {
+  if (token.startsWith("Bearer ")) {
+    return token.substring(7);
+  }
+
+  throw new Error("Invalid token");
 }
 
-export function getAssignments(courseId: string) {
-  return canvas.listItems<Assignment>(`courses/${courseId}/assignments`);
-}
+export default class CanvasClient {
+  client: CanvasAPI;
 
-export function getSubmissions(courseId: string, assignmentId: string) {
-  return canvas.listItems<Submission>(
-    `courses/${courseId}/assignments/${assignmentId}/submissions`
-  );
-}
+  constructor(req: Request<unknown>) {
+    const token =
+      req.session.accessToken || getToken(req.headers.authorization);
 
-export function getFinalGrades(courseId: string) {
-  return canvas.listItems<Enrollment>(`courses/${courseId}/enrollments`);
+    this.client = new CanvasAPI(process.env.CANVAS_API_URL!, token);
+    this.client.errorHandler = minimalErrorHandler;
+  }
+
+  getSections(courseId: string) {
+    return this.client
+      .listItems<CanvasSection>(`courses/${courseId}/sections`)
+      .toArray();
+  }
+
+  getAssignments(courseId: string) {
+    return this.client.listItems<Assignment>(`courses/${courseId}/assignments`);
+  }
+
+  getSubmissions(courseId: string, assignmentId: string) {
+    return this.client.listItems<Submission>(
+      `courses/${courseId}/assignments/${assignmentId}/submissions`
+    );
+  }
+
+  getFinalGrades(courseId: string) {
+    return this.client.listItems<Enrollment>(`courses/${courseId}/enrollments`);
+  }
 }
