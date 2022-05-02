@@ -19,9 +19,8 @@ router.get("/api/courses/:courseId/sections", (req, res, next) =>
 router.get("/api/courses/:courseId/assignments");
 router.get("/api/courses/:courseId/total");
 router.get("/api/courses/:courseId/assignments/:assignmentId");
-router.get("/api/courses/:courseId/students");
-router.post("/api/courses/:courseId/utbildningsinstans/:utbUID/send-grades");
-router.post("/api/courses/:courseId/aktivitetstillfalle/:aktUID/send-grades");
+router.get("/api/courses/:courseId/grades");
+router.post("/api/courses/:courseId/grades");
 
 router.use("/api", errorHandler);
 

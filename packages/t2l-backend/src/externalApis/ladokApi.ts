@@ -179,7 +179,7 @@ export function searchAktivitetstillfalleStudieresultat(
     .then((r) => r.body);
 }
 
-export function getPeopleWithPermissions(utbildningsinstansUID: string) {
+export function getRapportor(utbildningsinstansUID: string) {
   return gotClient
     .get<Rapportor>(
       `resultat/anvandare/resultatrattighet/utbildningsinstans?utbildningsinstansUID=${utbildningsinstansUID}`
@@ -215,33 +215,3 @@ export function updateResult(
     }
   );
 }
-
-// Transform a "sok" function into a function where it does all searches automatically
-export function searchAll(
-  sokFn: (arg1: string, arg2: string[], page: number) => Promise<SokResultat>
-): (arg1: string, arg2: string[]) => Promise<SokResultat> {
-  return async (arg1: string, arg2: string[]): Promise<SokResultat> => {
-    let page = 1;
-    const allResults: SokResultat["Resultat"] = [];
-    const result = await sokFn(arg1, arg2, page);
-    allResults.push(...result.Resultat);
-
-    while (result.TotalAntalPoster > allResults.length) {
-      page++;
-      const result = await sokFn(arg1, arg2, page);
-      allResults.push(...result.Resultat);
-    }
-
-    return {
-      TotalAntalPoster: allResults.length,
-      Resultat: allResults,
-    };
-  };
-}
-
-export const searchAllAktStudieresultat = searchAll(
-  searchAktivitetstillfalleStudieresultat
-);
-export const searchAllUtbStudieresultat = searchAll(
-  searchUtbildningsinstansStudieresultat
-);
