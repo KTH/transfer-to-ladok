@@ -137,7 +137,7 @@ export function getSkaFinnasStudenter(aktivitetstillfalleUID: string) {
 
 export function getKurstillfalleStructure(kurstillfalleUID: string) {
   return gotClient
-    .get<Kurstillfalle>(`resultat/kurstillfalle${kurstillfalleUID}/moment`)
+    .get<Kurstillfalle>(`resultat/kurstillfalle/${kurstillfalleUID}/moment`)
     .then((response) => response.body);
 }
 
