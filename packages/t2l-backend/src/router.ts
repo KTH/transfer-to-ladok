@@ -16,6 +16,15 @@ router.use("/auth", auth);
 router.get("/api/courses/:courseId/sections", (req, res, next) =>
   sectionsHandler(req, res).catch(next)
 );
+router.get("/api/courses/:courseId/assignments");
+router.get("/api/courses/:courseId/total");
+router.get("/api/courses/:courseId/assignments/:assignmentId");
+router.get("/api/courses/:courseId/kurstillfalle/:kurstillfalleUID/modules");
+router.get("/api/courses/:courseId/utbildningsinstans/:utbUID/students");
+router.get("/api/courses/:courseId/aktivitestillfalle/:aktUID/students");
+router.post("/api/courses/:courseId/utbildningsinstans/:utbUID/send-grades");
+router.post("/api/courses/:courseId/aktivitetstillfalle/:aktUID/send-grades");
+
 router.use("/api", errorHandler);
 
 export default router;
