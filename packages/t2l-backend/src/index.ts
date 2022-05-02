@@ -35,3 +35,5 @@ app.use(
 app.listen(port, () => {
   log.info(`Listening to port ${port}`);
 });
+
+export * from "./types";

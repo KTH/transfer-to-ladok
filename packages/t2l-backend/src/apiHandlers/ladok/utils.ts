@@ -58,6 +58,7 @@ export interface LadokResult {
   studentUID: string;
   studieresultatUID: string;
   resultatUID: string | null;
+  utbildningsinstansUID: string;
   hasPermission: boolean;
 }
 
@@ -95,6 +96,8 @@ export default async function getLadokResults(
     ladokResults.push({
       studentUID: studieResultat.Student.Uid,
       studieresultatUID: studieResultat.Uid,
+      utbildningsinstansUID:
+        studieResultat.Rapporteringskontext.UtbildningsinstansUID,
       resultatUID:
         studieResultat.ResultatPaUtbildningar?.[0].Arbetsunderlag.Uid || null,
       hasPermission,
