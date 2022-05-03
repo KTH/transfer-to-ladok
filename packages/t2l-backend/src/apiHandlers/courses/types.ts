@@ -42,3 +42,27 @@ export interface Sections {
 // The following types are exported for convinience
 export type AktSection = Sections["aktivitetstillfalle"][number];
 export type KurSection = Sections["kurstillfalle"][number];
+
+/**
+ * Response of endpoint
+ * GET /api/courses/:courseId/assignments
+ */
+export type Assignments = {
+  /** Unique identifier in Canvas */
+  id: string;
+
+  /** Assignment name in Canvas */
+  name: string;
+
+  /** Grading type in Canvas */
+  gradingType: "gpa_scale" | "points" | "letter_grade";
+
+  /** Assignment due date in ISO format */
+  dueAt: string | null;
+
+  /** Assignment "unlock" date in ISO format */
+  unlockAt: string | null;
+
+  /** Assignment "lock" date in ISO format */
+  lockAt: string | null;
+}[];
