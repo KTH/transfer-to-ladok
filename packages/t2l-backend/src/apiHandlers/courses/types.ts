@@ -66,3 +66,22 @@ export type Assignments = {
   /** Assignment "lock" date in ISO format */
   lockAt: string | null;
 }[];
+
+/**
+ * Response of endpoints
+ * GET /api/courses/:courseId/assignments/:assignmentId/grades
+ * GET /api/courses/:courseId/grades
+ */
+export type CanvasGrades = {
+  /** Ladok student identifier */
+  id: string;
+
+  /** Letter grade in Canvas. Available only if the assignment contains some letter grade */
+  grade: string | null;
+
+  /** Date when the student get the grade */
+  gradedAt: string | null;
+
+  /** Date when the student has sent a submission */
+  submittedAt: string | null;
+}[];

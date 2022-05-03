@@ -2,18 +2,11 @@ import { CanvasApiError } from "@kth/canvas-api";
 import { Request, Response } from "express";
 import { EndpointError } from "../../error";
 import CanvasClient from "../../externalApis/canvasApi";
-
-/** Object returned by the API */
-export type ResponseBody = {
-  studentId: string;
-  grade: string | null;
-  gradedAt: string | null;
-  submittedAt: string | null;
-}[];
+import { CanvasGrades } from "./types";
 
 export async function assignmentGradesHandler(
   req: Request<{ courseId: string; assignmentId: string }>,
-  res: Response<ResponseBody>
+  res: Response<CanvasGrades>
 ) {
   const canvasApi = new CanvasClient(req);
   const courseId = req.params.courseId;
@@ -34,7 +27,7 @@ export async function assignmentGradesHandler(
 
   res.json(
     submissions.map((s) => ({
-      studentId: s.user.integration_id,
+      id: s.user.integration_id,
       grade: s.grade,
       gradedAt: s.graded_at,
       submittedAt: s.submitted_at,
@@ -44,7 +37,7 @@ export async function assignmentGradesHandler(
 
 export async function courseGradesHandler(
   req: Request<{ courseId: string }>,
-  res: Response<ResponseBody>
+  res: Response<CanvasGrades>
 ) {
   const canvasApi = new CanvasClient(req);
   const courseId = req.params.courseId;
@@ -59,7 +52,7 @@ export async function courseGradesHandler(
 
   res.json(
     enrollments.map((e) => ({
-      studentId: e.user.integration_id,
+      id: e.user.integration_id,
       grade: e.grades?.unposted_current_grade,
       gradedAt: null,
       submittedAt: null,
