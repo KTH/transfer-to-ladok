@@ -15,10 +15,6 @@ async function completeAktivitetstillfalleInformation(
   uid: string
 ): Promise<AktSection> {
   const ladokAkt = await getAktivitetstillfalle(uid);
-
-  // Name format: cours+exam codes - exam date
-  // Example: HF0025 TEN1 & ML0025 TEN1 - 2022-01-01
-
   const codes = ladokAkt.Aktiviteter.map(
     (a) =>
       `${a.Kursinstans.Utbildningskod} ${a.Utbildningsinstans.Utbildningskod}`

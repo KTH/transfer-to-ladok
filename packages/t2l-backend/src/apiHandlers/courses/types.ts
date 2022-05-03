@@ -10,7 +10,7 @@ export interface Sections {
     /** Ladok identifier */
     id: string;
 
-    /** Human readable name of the aktivitetstillfälle */
+    /** Human readable name of the aktivitetstillfälle. Example: `HF0025 TEN1 & ML0025 TEN1 - 2022-01-01` */
     name: string;
   }[];
 
