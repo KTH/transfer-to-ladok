@@ -85,3 +85,55 @@ export type CanvasGrades = {
   /** Date when the student has sent a submission */
   submittedAt: string | null;
 }[];
+
+/**
+ * Specifies where will the user send grades to. It can be either:
+ * - Kursinstans + Kurstillfälle
+ * - Aktivitetstillfälle
+ */
+export type GradesDestination =
+  | {
+      utbildningsinstansUID: string;
+      kurstillfalleUID: string;
+    }
+  | {
+      aktivitetstillfalleUID: string;
+    };
+
+/**
+ * Specificies which grades should be sent to Ladok.
+ */
+export type GradesResults = {
+  /** Student ID */
+  id: string;
+
+  /** Letter grade */
+  grade: string;
+
+  /** Examination date */
+  examinationDate: string;
+}[];
+
+/**
+ * Query request of endpoint
+ * GET /api/courses/:courseId/ladok-grades
+ */
+export type GetLadokGradesInput = GradesDestination;
+
+/**
+ * Response of endpoint
+ * GET /api/courses/:courseId/ladok-grades
+ */
+export type GradeableStudents = {
+  /** Student ID */
+  id: string;
+}[];
+
+/**
+ * Body request of endpoint
+ * POST /api/courses/:courseId/ladok-grades
+ */
+export interface PostLadokGradesInput {
+  destination: GradesDestination;
+  results: GradesResults;
+}
