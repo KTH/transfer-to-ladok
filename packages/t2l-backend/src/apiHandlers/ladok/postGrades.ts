@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { createResult, updateResult } from "../../externalApis/ladokApi";
-import getLadokResults, { GradesDestination } from "./utils";
+import { getLadokResults, GradesDestination } from "./utils";
 
 interface BodyParams {
   destination: GradesDestination;

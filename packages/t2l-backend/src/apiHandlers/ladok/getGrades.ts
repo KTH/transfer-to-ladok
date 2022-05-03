@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import getLadokResults, { GradesDestination, LadokResult } from "./utils";
+import { getLadokResults, GradesDestination, LadokResult } from "./utils";
 
 export default async function getGradesHandler(
   req: Request<{ courseId: string }, any, any, GradesDestination>,

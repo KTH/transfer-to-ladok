@@ -62,7 +62,7 @@ export interface LadokResult {
   hasPermission: boolean;
 }
 
-export default async function getLadokResults(
+export async function getLadokResults(
   destination: GradesDestination,
   personUID: string
 ): Promise<LadokResult[]> {
