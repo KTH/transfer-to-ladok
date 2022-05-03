@@ -6,7 +6,11 @@ import {
   getAktivitetstillfalle,
   getKurstillfalleStructure,
 } from "../../externalApis/ladokApi";
-import { getUniqueAktivitetstillfalleIds } from "./utils";
+import {
+  completeKurstillfalleInformation,
+  getUniqueAktivitetstillfalleIds,
+  getUniqueKurstillfalleIds,
+} from "./utils";
 
 export interface ResponseBody {
   aktivitetstillfalle: {
@@ -23,21 +27,6 @@ export interface ResponseBody {
       name: string;
     }[];
   }[];
-}
-
-/**
- * Given a list of CanvasSection, returns a list of unique UIDs when the
- * section refers to a kurstillfalle
- */
-function getUniqueKurstillfalleIds(sections: CanvasSection[]): string[] {
-  // Regex: AA0000VT211
-  const KURSTILLFALLE_REGEX = /^\w{6,7}(HT|VT)\d{3}$/;
-
-  const ids = sections
-    .filter((s) => KURSTILLFALLE_REGEX.test(s.sis_section_id))
-    .map((s) => s.integration_id);
-
-  return Array.from(new Set(ids));
 }
 
 /** Given an Aktivitetstillfalle UID, get extra information from Ladok */
@@ -57,22 +46,6 @@ async function completeAktivitetstillfalleInformation(uid: string) {
   return {
     id: uid,
     name,
-  };
-}
-
-/** Given an Kurstillfälle UID, get extra information from Ladok */
-async function completeKurstillfalleInformation(uid: string) {
-  const ladokKur = await getKurstillfalleStructure(uid);
-
-  return {
-    id: uid,
-    utbildningsinstansUID: ladokKur.UtbildningsinstansUID,
-    name: ladokKur.Kurstillfalleskod,
-    modules: ladokKur.IngaendeMoment.map((m) => ({
-      utbildningsinstansUID: m.UtbildningsinstansUID,
-      examCode: m.Utbildningskod,
-      name: m.Benamning.sv,
-    })),
   };
 }
 

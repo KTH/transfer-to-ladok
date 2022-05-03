@@ -7,7 +7,9 @@ import {
 } from "../../externalApis/ladokApi";
 import CanvasClient from "../../externalApis/canvasApi";
 import {
+  completeKurstillfalleInformation,
   getUniqueAktivitetstillfalleIds,
+  getUniqueKurstillfalleIds,
   isRapportor,
   searchAllAktStudieresultat,
   searchAllUtbStudieresultat,
@@ -109,6 +111,7 @@ async function checkDestination(
 ) {
   const sections = await canvasClient.getSections(courseId);
 
+  // Check if destination is an aktiivitetstillfalle
   if ("aktivitetstillfalleUID" in destination) {
     if (
       getUniqueAktivitetstillfalleIds(sections).includes(
@@ -121,6 +124,37 @@ async function checkDestination(
       throw new Error("");
     }
   }
+
+  // Check if destination is a kurstillfalle+utbildningsinstans
+  const kurstillfalleUID = getUniqueKurstillfalleIds(sections).find(
+    (id) => id === destination.kurstillfalleUID
+  );
+
+  if (!kurstillfalleUID) {
+    throw new Error("4xx");
+  }
+
+  const kurstillfalle = await completeKurstillfalleInformation(
+    kurstillfalleUID
+  );
+
+  // Destination is "final grade"
+  if (
+    kurstillfalle.utbildningsinstansUID === destination.utbildningsinstansUID
+  ) {
+    return;
+  }
+
+  // Destination is a module
+  if (
+    kurstillfalle.modules.find(
+      (m) => m.utbildningsinstansUID === destination.utbildningsinstansUID
+    )
+  ) {
+    return;
+  }
+
+  throw new Error("4xx");
 }
 
 export async function getGradesHandler(
