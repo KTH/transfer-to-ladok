@@ -1,6 +1,32 @@
 import { Request, Response } from "express";
-import { createResult, updateResult } from "../../externalApis/ladokApi";
-import { getLadokResults, GradesDestination, LadokResult } from "./utils";
+import {
+  createResult,
+  getSkaFinnasStudenter,
+  SokResultat,
+  updateResult,
+} from "../../externalApis/ladokApi";
+import {
+  isRapportor,
+  searchAllAktStudieresultat,
+  searchAllUtbStudieresultat,
+} from "./utils";
+
+type GradesDestination =
+  | {
+      utbildningsinstansUID: string;
+      kurstillfalleUID: string;
+    }
+  | {
+      aktivitetstillfalleUID: string;
+    };
+
+interface LadokResult {
+  studentUID: string;
+  studieresultatUID: string;
+  resultatUID: string | null;
+  utbildningsinstansUID: string;
+  hasPermission: boolean;
+}
 
 interface BodyParams {
   destination: GradesDestination;
@@ -27,6 +53,51 @@ interface ResponseBody {
         | "unknown_error";
     };
   }[];
+}
+
+export async function getLadokResults(
+  destination: GradesDestination,
+  personUID: string
+): Promise<LadokResult[]> {
+  let sokResultat: SokResultat;
+
+  if ("aktivitetstillfalleUID" in destination) {
+    const kurstillfalleUID = await getSkaFinnasStudenter(
+      destination.aktivitetstillfalleUID
+    ).then((sfi) => sfi.Utbildningstillfalle.map((u) => u.Uid));
+
+    sokResultat = await searchAllAktStudieresultat(
+      destination.aktivitetstillfalleUID,
+      kurstillfalleUID
+    );
+  } else {
+    sokResultat = await searchAllUtbStudieresultat(
+      destination.utbildningsinstansUID,
+      [destination.kurstillfalleUID]
+    );
+  }
+
+  // Normalize results
+  const ladokResults: LadokResult[] = [];
+
+  for (const studieResultat of sokResultat.Resultat) {
+    const hasPermission = await isRapportor(
+      personUID,
+      studieResultat.Rapporteringskontext.UtbildningsinstansUID
+    );
+
+    ladokResults.push({
+      studentUID: studieResultat.Student.Uid,
+      studieresultatUID: studieResultat.Uid,
+      utbildningsinstansUID:
+        studieResultat.Rapporteringskontext.UtbildningsinstansUID,
+      resultatUID:
+        studieResultat.ResultatPaUtbildningar?.[0].Arbetsunderlag.Uid || null,
+      hasPermission,
+    });
+  }
+
+  return ladokResults;
 }
 
 export async function getGradesHandler(

@@ -3,7 +3,6 @@ import {
   searchAktivitetstillfalleStudieresultat,
   searchUtbildningsinstansStudieresultat,
   getRapportor,
-  getSkaFinnasStudenter,
 } from "../../externalApis/ladokApi";
 
 // Transform a "sok" function into a function where it does all searches automatically
@@ -44,71 +43,3 @@ export async function isRapportor(
   const rapportorer = await getRapportor(utbildningsinstansUID);
   return rapportorer.Anvandare.some((rapportor) => rapportor.Uid === personUID);
 }
-
-export type GradesDestination =
-  | {
-      utbildningsinstansUID: string;
-      kurstillfalleUID: string;
-    }
-  | {
-      aktivitetstillfalleUID: string;
-    };
-
-export interface LadokResult {
-  studentUID: string;
-  studieresultatUID: string;
-  resultatUID: string | null;
-  utbildningsinstansUID: string;
-  hasPermission: boolean;
-}
-
-export async function getLadokResults(
-  destination: GradesDestination,
-  personUID: string
-): Promise<LadokResult[]> {
-  let sokResultat: SokResultat;
-
-  if ("aktivitetstillfalleUID" in destination) {
-    const kurstillfalleUID = await getSkaFinnasStudenter(
-      destination.aktivitetstillfalleUID
-    ).then((sfi) => sfi.Utbildningstillfalle.map((u) => u.Uid));
-
-    sokResultat = await searchAllAktStudieresultat(
-      destination.aktivitetstillfalleUID,
-      kurstillfalleUID
-    );
-  } else {
-    sokResultat = await searchAllUtbStudieresultat(
-      destination.utbildningsinstansUID,
-      [destination.kurstillfalleUID]
-    );
-  }
-
-  // Normalize results
-  const ladokResults: LadokResult[] = [];
-
-  for (const studieResultat of sokResultat.Resultat) {
-    const hasPermission = await isRapportor(
-      personUID,
-      studieResultat.Rapporteringskontext.UtbildningsinstansUID
-    );
-
-    ladokResults.push({
-      studentUID: studieResultat.Student.Uid,
-      studieresultatUID: studieResultat.Uid,
-      utbildningsinstansUID:
-        studieResultat.Rapporteringskontext.UtbildningsinstansUID,
-      resultatUID:
-        studieResultat.ResultatPaUtbildningar?.[0].Arbetsunderlag.Uid || null,
-      hasPermission,
-    });
-  }
-
-  return ladokResults;
-}
-
-/** Checks that the "destination" is part of the given courseId */
-export async function checkDestination(
-  courseId: string,
-  destination: GradesDestination
-) {}
