@@ -7,13 +7,7 @@ import {
   getKurstillfalleStructure,
 } from "../../externalApis/ladokApi";
 
-/** Path parameters required by this handler */
-interface PathParameters {
-  courseId: string;
-}
-
-/** Object returned by the API */
-export interface T2LSections {
+export interface ResponseBody {
   aktivitetstillfalle: {
     id: string;
     name: string;
@@ -102,8 +96,8 @@ async function completeKurstillfalleInformation(uid: string) {
  *   will also return all the modules in such kurstillfälle
  */
 export default async function sectionsHandler(
-  req: Request<PathParameters>,
-  res: Response<T2LSections>
+  req: Request<{ courseId: string }>,
+  res: Response<ResponseBody>
 ) {
   const canvasApi = new CanvasClient(req);
   const courseId = req.params.courseId;
