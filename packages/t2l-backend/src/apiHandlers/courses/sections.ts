@@ -6,6 +6,7 @@ import {
   getAktivitetstillfalle,
   getKurstillfalleStructure,
 } from "../../externalApis/ladokApi";
+import { getUniqueAktivitetstillfalleIds } from "./utils";
 
 export interface ResponseBody {
   aktivitetstillfalle: {
@@ -22,21 +23,6 @@ export interface ResponseBody {
       name: string;
     }[];
   }[];
-}
-
-/**
- * Given a list of CanvasSection, return a list of unique UIDs when the
- * section refers to a aktivitetstillfalle.
- */
-function getUniqueAktivitetstillfalleIds(sections: CanvasSection[]): string[] {
-  // Regex: AKT.<<UID>>.<optional suffix>
-  const AKTIVITETSTILLFALLE_REGEX = /^AKT\.([a-z0-9-]+)(\.\w+)?$/;
-
-  const ids = sections
-    .map((s) => AKTIVITETSTILLFALLE_REGEX.exec(s.sis_section_id)?.[1])
-    .filter((id): id is string => id !== undefined);
-
-  return Array.from(new Set(ids));
 }
 
 /**

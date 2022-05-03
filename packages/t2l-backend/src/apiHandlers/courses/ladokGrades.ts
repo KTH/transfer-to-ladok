@@ -5,7 +5,9 @@ import {
   SokResultat,
   updateResult,
 } from "../../externalApis/ladokApi";
+import CanvasClient from "../../externalApis/canvasApi";
 import {
+  getUniqueAktivitetstillfalleIds,
   isRapportor,
   searchAllAktStudieresultat,
   searchAllUtbStudieresultat,
@@ -100,14 +102,38 @@ export async function getLadokResults(
   return ladokResults;
 }
 
+async function checkDestination(
+  canvasClient: CanvasClient,
+  courseId: string,
+  destination: GradesDestination
+) {
+  const sections = await canvasClient.getSections(courseId);
+
+  if ("aktivitetstillfalleUID" in destination) {
+    if (
+      getUniqueAktivitetstillfalleIds(sections).includes(
+        destination.aktivitetstillfalleUID
+      )
+    ) {
+      return;
+    } else {
+      // TODO: 4xx error handling
+      throw new Error("");
+    }
+  }
+}
+
 export async function getGradesHandler(
-  req: Request<{ courseId: string }, any, any, GradesDestination>,
+  req: Request<{ courseId: string }, unknown, unknown, GradesDestination>,
   res: Response<LadokResult[]>
 ) {
-  // TODO: check if the courseId matches with GradeDestination
+  // check if the courseId matches with GradeDestination
+  const canvasClient = new CanvasClient(req);
+  await checkDestination(canvasClient, req.params.courseId, req.query);
+
   // TODO: get user LadokUID from session
 
-  const ladokResults = await getLadokResults(req.body.destination, "");
+  const ladokResults = await getLadokResults(req.query, "");
   res.send(ladokResults);
 }
 

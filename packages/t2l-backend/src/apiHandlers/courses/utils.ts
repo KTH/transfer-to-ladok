@@ -1,3 +1,4 @@
+import { CanvasSection } from "../../externalApis/canvasApi";
 import {
   SokResultat,
   searchAktivitetstillfalleStudieresultat,
@@ -42,4 +43,21 @@ export async function isRapportor(
 ) {
   const rapportorer = await getRapportor(utbildningsinstansUID);
   return rapportorer.Anvandare.some((rapportor) => rapportor.Uid === personUID);
+}
+
+/**
+ * Given a list of CanvasSection, return a list of unique UIDs when the
+ * section refers to a aktivitetstillfalle.
+ */
+export function getUniqueAktivitetstillfalleIds(
+  sections: CanvasSection[]
+): string[] {
+  // Regex: AKT.<<UID>>.<optional suffix>
+  const AKTIVITETSTILLFALLE_REGEX = /^AKT\.([a-z0-9-]+)(\.\w+)?$/;
+
+  const ids = sections
+    .map((s) => AKTIVITETSTILLFALLE_REGEX.exec(s.sis_section_id)?.[1])
+    .filter((id): id is string => id !== undefined);
+
+  return Array.from(new Set(ids));
 }
