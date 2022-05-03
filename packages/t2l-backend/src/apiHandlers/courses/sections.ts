@@ -1,36 +1,19 @@
 import { CanvasApiError } from "@kth/canvas-api";
 import { Request, Response } from "express";
 import { EndpointError } from "../../error";
-import CanvasClient, { CanvasSection } from "../../externalApis/canvasApi";
-import {
-  getAktivitetstillfalle,
-  getKurstillfalleStructure,
-} from "../../externalApis/ladokApi";
+import CanvasClient from "../../externalApis/canvasApi";
+import { getAktivitetstillfalle } from "../../externalApis/ladokApi";
 import {
   completeKurstillfalleInformation,
   getUniqueAktivitetstillfalleIds,
   getUniqueKurstillfalleIds,
 } from "./utils";
-
-export interface ResponseBody {
-  aktivitetstillfalle: {
-    id: string;
-    name: string;
-  }[];
-  kurstillfalle: {
-    id: string;
-    utbildningsinstansUID: string;
-    name: string;
-    modules: {
-      utbildningsinstansUID: string;
-      examCode: string;
-      name: string;
-    }[];
-  }[];
-}
+import type { AktSection, Sections } from "./types";
 
 /** Given an Aktivitetstillfalle UID, get extra information from Ladok */
-async function completeAktivitetstillfalleInformation(uid: string) {
+async function completeAktivitetstillfalleInformation(
+  uid: string
+): Promise<AktSection> {
   const ladokAkt = await getAktivitetstillfalle(uid);
 
   // Name format: cours+exam codes - exam date
@@ -56,7 +39,7 @@ async function completeAktivitetstillfalleInformation(uid: string) {
  */
 export default async function sectionsHandler(
   req: Request<{ courseId: string }>,
-  res: Response<ResponseBody>
+  res: Response<Sections>
 ) {
   const canvasApi = new CanvasClient(req);
   const courseId = req.params.courseId;

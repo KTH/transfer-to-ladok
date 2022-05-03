@@ -6,6 +6,7 @@ import {
   getRapportor,
   getKurstillfalleStructure,
 } from "../../externalApis/ladokApi";
+import type { AktSection, KurSection } from "./types";
 
 // Transform a "sok" function into a function where it does all searches automatically
 export function searchAll(
@@ -79,16 +80,18 @@ export function getUniqueKurstillfalleIds(sections: CanvasSection[]): string[] {
 }
 
 /** Given an Kurstillfälle UID, get extra information from Ladok */
-export async function completeKurstillfalleInformation(uid: string) {
+export async function completeKurstillfalleInformation(
+  uid: string
+): Promise<KurSection> {
   const ladokKur = await getKurstillfalleStructure(uid);
 
   return {
     id: uid,
     utbildningsinstansUID: ladokKur.UtbildningsinstansUID,
-    name: ladokKur.Kurstillfalleskod,
+    code: ladokKur.Kurstillfalleskod,
     modules: ladokKur.IngaendeMoment.map((m) => ({
       utbildningsinstansUID: m.UtbildningsinstansUID,
-      examCode: m.Utbildningskod,
+      code: m.Utbildningskod,
       name: m.Benamning.sv,
     })),
   };
