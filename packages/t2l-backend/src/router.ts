@@ -1,10 +1,10 @@
 import { Router } from "express";
-import sectionsHandler from "./apiHandlers/sections";
-import assignmentsHandler from "./apiHandlers/assignments";
+import sectionsHandler from "./apiHandlers/courses/sections";
+import assignmentsHandler from "./apiHandlers/courses/assignments";
 import {
   assignmentGradesHandler,
   courseGradesHandler,
-} from "./apiHandlers/canvasGrades";
+} from "./apiHandlers/courses/canvasGrades";
 import auth from "./apiHandlers/auth";
 import { errorHandler } from "./error";
 const router = Router();

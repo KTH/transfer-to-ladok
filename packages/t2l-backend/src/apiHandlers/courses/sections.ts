@@ -1,11 +1,11 @@
 import { CanvasApiError } from "@kth/canvas-api";
 import { Request, Response } from "express";
-import { EndpointError } from "../error";
-import CanvasClient, { CanvasSection } from "../externalApis/canvasApi";
+import { EndpointError } from "../../error";
+import CanvasClient, { CanvasSection } from "../../externalApis/canvasApi";
 import {
   getAktivitetstillfalle,
   getKurstillfalleStructure,
-} from "../externalApis/ladokApi";
+} from "../../externalApis/ladokApi";
 
 /** Path parameters required by this handler */
 interface PathParameters {

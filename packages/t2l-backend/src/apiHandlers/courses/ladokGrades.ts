@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { createResult, updateResult } from "../../externalApis/ladokApi";
-import { getLadokResults, GradesDestination } from "./utils";
+import { getLadokResults, GradesDestination, LadokResult } from "./utils";
 
 interface BodyParams {
   destination: GradesDestination;
@@ -29,7 +29,18 @@ interface ResponseBody {
   }[];
 }
 
-export default async function postGradesHandler(
+export async function getGradesHandler(
+  req: Request<{ courseId: string }, any, any, GradesDestination>,
+  res: Response<LadokResult[]>
+) {
+  // TODO: check if the courseId matches with GradeDestination
+  // TODO: get user LadokUID from session
+
+  const ladokResults = await getLadokResults(req.body.destination, "");
+  res.send(ladokResults);
+}
+
+export async function postGradesHandler(
   req: Request<{ courseId: string }, any, BodyParams>,
   res: Response<ResponseBody>
 ) {

@@ -106,3 +106,9 @@ export async function getLadokResults(
 
   return ladokResults;
 }
+
+/** Checks that the "destination" is part of the given courseId */
+export async function checkDestination(
+  courseId: string,
+  destination: GradesDestination
+) {}

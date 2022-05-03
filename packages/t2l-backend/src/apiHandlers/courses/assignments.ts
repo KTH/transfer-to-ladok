@@ -1,7 +1,7 @@
 import { CanvasApiError } from "@kth/canvas-api";
 import { Request, Response } from "express";
-import { EndpointError } from "../error";
-import CanvasClient from "../externalApis/canvasApi";
+import { EndpointError } from "../../error";
+import CanvasClient from "../../externalApis/canvasApi";
 
 /** Object returned by the API */
 export type ResponseBody = {
