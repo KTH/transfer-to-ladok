@@ -95,7 +95,7 @@ export interface SokResultat {
 
     /** Present if there is a grade in form of utkast */
     ResultatPaUtbildningar?: Array<{
-      Arbetsunderlag: {
+      Arbetsunderlag?: {
         Betygsgradobjekt: {
           ID: number;
           Kod: string;

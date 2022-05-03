@@ -92,11 +92,16 @@ export async function getGradesHandler(
     };
 
     if (content.ResultatPaUtbildningar) {
-      const arbetsunderlag = content.ResultatPaUtbildningar[0].Arbetsunderlag;
-      const grade = arbetsunderlag.Betygsgradobjekt.Kod;
-      const examinationDate = arbetsunderlag.Examinationsdatum;
+      const arbetsunderlag = content.ResultatPaUtbildningar.find(
+        (rpu) => rpu.Arbetsunderlag
+      )?.Arbetsunderlag;
 
-      result.draft = { grade, examinationDate };
+      if (arbetsunderlag) {
+        const grade = arbetsunderlag.Betygsgradobjekt.Kod;
+        const examinationDate = arbetsunderlag.Examinationsdatum;
+
+        result.draft = { grade, examinationDate };
+      }
     }
 
     return result;
