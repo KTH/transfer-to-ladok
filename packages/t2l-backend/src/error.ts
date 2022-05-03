@@ -1,36 +1,30 @@
+import { CanvasApiError } from "@kth/canvas-api";
 import { Request, Response, NextFunction } from "express";
 import log from "skog";
 
-export type ErrorCode = "not_authorized";
-
-/**
- * Errors that must be handled by the client.
- */
-export class EndpointError extends Error {
-  code: ErrorCode;
-
-  constructor(message: string, code: ErrorCode) {
-    super(message);
-    this.code = code;
-  }
-
-  toObject() {
-    return {
-      code: this.code,
-      message: this.message,
-    };
-  }
+interface ApiError {
+  code: string;
+  message: string;
 }
 
 export function errorHandler(
   err: unknown,
   req: Request,
-  res: Response,
+  res: Response<ApiError>,
   next: NextFunction
 ) {
-  if (err instanceof EndpointError) {
-    res.status(401).json(err.toObject());
-    return;
+  if (err instanceof CanvasApiError) {
+    if (err.code === 401) {
+      return res.status(401).json({
+        code: "invalid_access_token",
+        message: "Invalid access token",
+      });
+    } else if (err.code === 404) {
+      return res.status(404).json({
+        code: "not_found",
+        message: "Not found",
+      });
+    }
   }
 
   if (err instanceof Error) {

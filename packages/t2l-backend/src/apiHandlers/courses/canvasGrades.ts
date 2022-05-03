@@ -1,6 +1,4 @@
-import { CanvasApiError } from "@kth/canvas-api";
 import { Request, Response } from "express";
-import { EndpointError } from "../../error";
 import CanvasClient from "../../externalApis/canvasApi";
 import { CanvasGrades } from "./types";
 
@@ -12,18 +10,7 @@ export async function assignmentGradesHandler(
   const courseId = req.params.courseId;
   const assignmentId = req.params.assignmentId;
 
-  const submissions = await canvasApi
-    .getSubmissions(courseId, assignmentId)
-    .catch((err) => {
-      if (err instanceof CanvasApiError && err.code === 401) {
-        throw new EndpointError(
-          "Invalid canvas access token",
-          "not_authorized"
-        );
-      }
-
-      throw err;
-    });
+  const submissions = await canvasApi.getSubmissions(courseId, assignmentId);
 
   res.json(
     submissions.map((s) => ({
@@ -41,14 +28,7 @@ export async function courseGradesHandler(
 ) {
   const canvasApi = new CanvasClient(req);
   const courseId = req.params.courseId;
-
-  const enrollments = await canvasApi.getFinalGrades(courseId).catch((err) => {
-    if (err instanceof CanvasApiError && err.code === 401) {
-      throw new EndpointError("Invalid canvas access token", "not_authorized");
-    }
-
-    throw err;
-  });
+  const enrollments = await canvasApi.getFinalGrades(courseId);
 
   res.json(
     enrollments.map((e) => ({
