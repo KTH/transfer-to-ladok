@@ -5,10 +5,14 @@ import {
   searchUtbildningsinstansStudieresultat,
   getRapportor,
   getKurstillfalleStructure,
+  getSkaFinnasStudenter,
 } from "../../externalApis/ladokApi";
-import type { AktSection, KurSection } from "./types";
+import type { AktSection, GradesDestination, KurSection } from "./types";
 
-// Transform a "sok" function into a function where it does all searches automatically
+/**
+ * Transform a LadokAPI "sok" function into a function that does the search
+ * through all pages
+ */
 export function searchAll(
   sokFn: (arg1: string, arg2: string[], page: number) => Promise<SokResultat>
 ): (arg1: string, arg2: string[]) => Promise<SokResultat> {
@@ -38,7 +42,9 @@ export const searchAllUtbStudieresultat = searchAll(
   searchUtbildningsinstansStudieresultat
 );
 
-// Check if a person is a rapportor
+/**
+ * Checks if a user has permission to send grade to the given utbildningsinstansUID
+ */
 export async function isRapportor(
   personUID: string,
   utbildningsinstansUID: string
@@ -48,8 +54,8 @@ export async function isRapportor(
 }
 
 /**
- * Given a list of CanvasSection, return a list of unique UIDs when the
- * section refers to a aktivitetstillfalle.
+ * Given a list of CanvasSection, return a list of unique UIDs of the
+ * sections that refer to a aktivitetstillfalle.
  */
 export function getUniqueAktivitetstillfalleIds(
   sections: CanvasSection[]
@@ -65,8 +71,8 @@ export function getUniqueAktivitetstillfalleIds(
 }
 
 /**
- * Given a list of CanvasSection, returns a list of unique UIDs when the
- * section refers to a kurstillfalle
+ * Given a list of CanvasSection, returns a list of unique UIDs of the
+ * sections that refer to a kurstillfalle
  */
 export function getUniqueKurstillfalleIds(sections: CanvasSection[]): string[] {
   // Regex: AA0000VT211
@@ -79,10 +85,10 @@ export function getUniqueKurstillfalleIds(sections: CanvasSection[]): string[] {
   return Array.from(new Set(ids));
 }
 
-/** Given an Kurstillfälle UID, get extra information from Ladok */
-export async function completeKurstillfalleInformation(
-  uid: string
-): Promise<KurSection> {
+/**
+ * Given an Kurstillfälle UID, returns information about the kurstillfälle in Ladok
+ */
+export async function completeKurstillfalle(uid: string): Promise<KurSection> {
   const ladokKur = await getKurstillfalleStructure(uid);
 
   return {
@@ -95,4 +101,26 @@ export async function completeKurstillfalleInformation(
       name: m.Benamning.sv,
     })),
   };
+}
+
+/**
+ * Given a Destination, get a list of people that can have grades sent to them.
+ */
+export async function getLadokResults(
+  destination: GradesDestination
+): Promise<SokResultat> {
+  if ("aktivitetstillfalle" in destination) {
+    const kurstillfalleUID = await getSkaFinnasStudenter(
+      destination.aktivitetstillfalle
+    ).then((sfi) => sfi.Utbildningstillfalle.map((u) => u.Uid));
+
+    return searchAllAktStudieresultat(
+      destination.aktivitetstillfalle,
+      kurstillfalleUID
+    );
+  } else {
+    return await searchAllUtbStudieresultat(destination.utbildningsinstans, [
+      destination.kurstillfalle,
+    ]);
+  }
 }

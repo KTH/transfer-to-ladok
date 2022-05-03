@@ -1,71 +1,12 @@
 import { Request, Response } from "express";
-import {
-  getSkaFinnasStudenter,
-  SokResultat,
-} from "../../externalApis/ladokApi";
 import CanvasClient, { CanvasSection } from "../../externalApis/canvasApi";
 import {
-  completeKurstillfalleInformation,
+  completeKurstillfalle,
+  getLadokResults,
   getUniqueAktivitetstillfalleIds,
   getUniqueKurstillfalleIds,
-  isRapportor,
-  searchAllAktStudieresultat,
-  searchAllUtbStudieresultat,
 } from "./utils";
 import type { GradesDestination, GradeableStudents } from "./types";
-
-interface LadokResult {
-  studentUID: string;
-  studieresultatUID: string;
-  resultatUID: string | null;
-  utbildningsinstansUID: string;
-  hasPermission: boolean;
-}
-
-export async function getLadokResults(
-  destination: GradesDestination,
-  personUID: string
-): Promise<LadokResult[]> {
-  let sokResultat: SokResultat;
-
-  if ("aktivitetstillfalle" in destination) {
-    const kurstillfalleUID = await getSkaFinnasStudenter(
-      destination.aktivitetstillfalle
-    ).then((sfi) => sfi.Utbildningstillfalle.map((u) => u.Uid));
-
-    sokResultat = await searchAllAktStudieresultat(
-      destination.aktivitetstillfalle,
-      kurstillfalleUID
-    );
-  } else {
-    sokResultat = await searchAllUtbStudieresultat(
-      destination.utbildningsinstans,
-      [destination.kurstillfalle]
-    );
-  }
-
-  // Normalize results
-  const ladokResults: LadokResult[] = [];
-
-  for (const studieResultat of sokResultat.Resultat) {
-    const hasPermission = await isRapportor(
-      personUID,
-      studieResultat.Rapporteringskontext.UtbildningsinstansUID
-    );
-
-    ladokResults.push({
-      studentUID: studieResultat.Student.Uid,
-      studieresultatUID: studieResultat.Uid,
-      utbildningsinstansUID:
-        studieResultat.Rapporteringskontext.UtbildningsinstansUID,
-      resultatUID:
-        studieResultat.ResultatPaUtbildningar?.[0].Arbetsunderlag.Uid || null,
-      hasPermission,
-    });
-  }
-
-  return ladokResults;
-}
 
 function assertAktivitetstillfalle(
   sections: CanvasSection[],
@@ -91,8 +32,9 @@ async function assertUtbildningsinstans(
   kurstillfalleUID: string,
   utbildningsinstansUID: string
 ) {
-  const { utbildningsinstans, modules } =
-    await completeKurstillfalleInformation(kurstillfalleUID);
+  const { utbildningsinstans, modules } = await completeKurstillfalle(
+    kurstillfalleUID
+  );
 
   if (utbildningsinstans === utbildningsinstansUID) {
     return;
@@ -127,10 +69,8 @@ export async function getGradesHandler(
   req: Request<{ courseId: string }, unknown, unknown, GradesDestination>,
   res: Response<GradeableStudents>
 ) {
-  await checkDestination(req, req.query);
+  const destination = req.query;
+  await checkDestination(req, destination);
 
-  // TODO: get user LadokUID from session
-
-  const ladokResults = await getLadokResults(req.query, "");
-  // res.send(ladokResults);
+  const sokResultat = await getLadokResults(destination);
 }

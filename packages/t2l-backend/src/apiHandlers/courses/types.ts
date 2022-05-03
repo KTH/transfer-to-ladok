@@ -107,11 +107,14 @@ export type GradesResults = {
   /** Student ID */
   id: string;
 
-  /** Letter grade */
-  grade: string;
+  /** Grade to be sent as "utkast" */
+  draft: {
+    /** Letter grade */
+    grade: string;
 
-  /** Examination date */
-  examinationDate: string;
+    /** Examination date */
+    examinationDate: string;
+  };
 }[];
 
 /**
@@ -127,6 +130,12 @@ export type GetLadokGradesInput = GradesDestination;
 export type GradeableStudents = {
   /** Student ID */
   id: string;
+
+  /** Grade in "utkast" if any */
+  draft?: {
+    grade: string;
+    examinationDate: string;
+  };
 }[];
 
 /**

@@ -4,7 +4,7 @@ import { EndpointError } from "../../error";
 import CanvasClient from "../../externalApis/canvasApi";
 import { getAktivitetstillfalle } from "../../externalApis/ladokApi";
 import {
-  completeKurstillfalleInformation,
+  completeKurstillfalle,
   getUniqueAktivitetstillfalleIds,
   getUniqueKurstillfalleIds,
 } from "./utils";
@@ -54,7 +54,7 @@ export default async function sectionsHandler(
   );
 
   const kurstillfalle = await Promise.all(
-    getUniqueKurstillfalleIds(allSections).map(completeKurstillfalleInformation)
+    getUniqueKurstillfalleIds(allSections).map(completeKurstillfalle)
   );
 
   res.json({
