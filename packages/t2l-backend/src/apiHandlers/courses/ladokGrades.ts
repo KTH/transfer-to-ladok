@@ -73,4 +73,21 @@ export async function getGradesHandler(
   await checkDestination(req, destination);
 
   const sokResultat = await getLadokResults(destination);
+  const response = sokResultat.Resultat.map((content) => {
+    const result: GradeableStudents[number] = {
+      id: content.Student.Uid,
+    };
+
+    if (content.ResultatPaUtbildningar) {
+      const arbetsunderlag = content.ResultatPaUtbildningar[0].Arbetsunderlag;
+      const grade = arbetsunderlag.Betygsgradobjekt.Kod;
+      const examinationDate = arbetsunderlag.Examinationsdatum;
+
+      result.draft = { grade, examinationDate };
+    }
+
+    return result;
+  });
+
+  res.json(response);
 }

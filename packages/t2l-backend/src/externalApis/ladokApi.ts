@@ -100,6 +100,8 @@ export interface SokResultat {
           ID: number;
           Kod: string;
         };
+
+        Examinationsdatum: string;
         /**
          * This is the "ResultatUID" that you need to send to Ladok in order to
          * update or delete a result
