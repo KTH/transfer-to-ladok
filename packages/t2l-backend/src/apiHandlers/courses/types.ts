@@ -20,7 +20,7 @@ export interface Sections {
     id: string;
 
     /** Use this parameter to send final grades to this kurstillfälle */
-    utbildningsinstansUID: string;
+    utbildningsinstans: string;
 
     /** Example: "50071" */
     code: string;
@@ -28,7 +28,7 @@ export interface Sections {
     /** Modules in the kurstillfälle */
     modules: {
       /** Use this identifier to send grades to this specific module */
-      utbildningsinstansUID: string;
+      utbildningsinstans: string;
 
       /** Human readable short name of the module. Example: "TEN1" */
       code: string;
@@ -93,11 +93,11 @@ export type CanvasGrades = {
  */
 export type GradesDestination =
   | {
-      utbildningsinstansUID: string;
-      kurstillfalleUID: string;
+      utbildningsinstans: string;
+      kurstillfalle: string;
     }
   | {
-      aktivitetstillfalleUID: string;
+      aktivitetstillfalle: string;
     };
 
 /**

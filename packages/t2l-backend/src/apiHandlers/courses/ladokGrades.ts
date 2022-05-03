@@ -3,7 +3,7 @@ import {
   getSkaFinnasStudenter,
   SokResultat,
 } from "../../externalApis/ladokApi";
-import CanvasClient from "../../externalApis/canvasApi";
+import CanvasClient, { CanvasSection } from "../../externalApis/canvasApi";
 import {
   completeKurstillfalleInformation,
   getUniqueAktivitetstillfalleIds,
@@ -12,11 +12,7 @@ import {
   searchAllAktStudieresultat,
   searchAllUtbStudieresultat,
 } from "./utils";
-import type {
-  GradesDestination,
-  GradeableStudents,
-  PostLadokGradesInput,
-} from "./types";
+import type { GradesDestination, GradeableStudents } from "./types";
 
 interface LadokResult {
   studentUID: string;
@@ -32,19 +28,19 @@ export async function getLadokResults(
 ): Promise<LadokResult[]> {
   let sokResultat: SokResultat;
 
-  if ("aktivitetstillfalleUID" in destination) {
+  if ("aktivitetstillfalle" in destination) {
     const kurstillfalleUID = await getSkaFinnasStudenter(
-      destination.aktivitetstillfalleUID
+      destination.aktivitetstillfalle
     ).then((sfi) => sfi.Utbildningstillfalle.map((u) => u.Uid));
 
     sokResultat = await searchAllAktStudieresultat(
-      destination.aktivitetstillfalleUID,
+      destination.aktivitetstillfalle,
       kurstillfalleUID
     );
   } else {
     sokResultat = await searchAllUtbStudieresultat(
-      destination.utbildningsinstansUID,
-      [destination.kurstillfalleUID]
+      destination.utbildningsinstans,
+      [destination.kurstillfalle]
     );
   }
 
@@ -71,128 +67,70 @@ export async function getLadokResults(
   return ladokResults;
 }
 
+function assertAktivitetstillfalle(
+  sections: CanvasSection[],
+  aktivitetstillfalleUID: string
+) {
+  if (
+    !getUniqueAktivitetstillfalleIds(sections).includes(aktivitetstillfalleUID)
+  ) {
+    throw new Error("404");
+  }
+}
+
+function assertKurstillfalle(
+  sections: CanvasSection[],
+  kurstillfalleUID: string
+) {
+  if (!getUniqueKurstillfalleIds(sections).includes(kurstillfalleUID)) {
+    throw new Error("404");
+  }
+}
+
+async function assertUtbildningsinstans(
+  kurstillfalleUID: string,
+  utbildningsinstansUID: string
+) {
+  const { utbildningsinstans, modules } =
+    await completeKurstillfalleInformation(kurstillfalleUID);
+
+  if (utbildningsinstans === utbildningsinstansUID) {
+    return;
+  }
+
+  if (modules.find((m) => m.utbildningsinstans === utbildningsinstansUID)) {
+    return;
+  }
+
+  throw new Error("404");
+}
+
 async function checkDestination(
-  canvasClient: CanvasClient,
-  courseId: string,
+  req: Request<{ courseId: string }>,
   destination: GradesDestination
 ) {
+  const courseId = req.params.courseId;
+  const canvasClient = new CanvasClient(req);
   const sections = await canvasClient.getSections(courseId);
 
-  // Check if destination is an aktiivitetstillfalle
-  if ("aktivitetstillfalleUID" in destination) {
-    if (
-      getUniqueAktivitetstillfalleIds(sections).includes(
-        destination.aktivitetstillfalleUID
-      )
-    ) {
-      return;
-    } else {
-      // TODO: 4xx error handling
-      throw new Error("");
-    }
+  if ("aktivitetstillfalle" in destination) {
+    assertAktivitetstillfalle(sections, destination.aktivitetstillfalle);
+  } else {
+    const { kurstillfalle, utbildningsinstans } = destination;
+    assertKurstillfalle(sections, kurstillfalle);
+
+    await assertUtbildningsinstans(kurstillfalle, utbildningsinstans);
   }
-
-  // Check if destination is a kurstillfalle+utbildningsinstans
-  const kurstillfalleUID = getUniqueKurstillfalleIds(sections).find(
-    (id) => id === destination.kurstillfalleUID
-  );
-
-  if (!kurstillfalleUID) {
-    throw new Error("4xx");
-  }
-
-  const kurstillfalle = await completeKurstillfalleInformation(
-    kurstillfalleUID
-  );
-
-  // Destination is "final grade"
-  if (
-    kurstillfalle.utbildningsinstansUID === destination.utbildningsinstansUID
-  ) {
-    return;
-  }
-
-  // Destination is a module
-  if (
-    kurstillfalle.modules.find(
-      (m) => m.utbildningsinstansUID === destination.utbildningsinstansUID
-    )
-  ) {
-    return;
-  }
-
-  throw new Error("4xx");
 }
 
 export async function getGradesHandler(
   req: Request<{ courseId: string }, unknown, unknown, GradesDestination>,
   res: Response<GradeableStudents>
 ) {
-  // check if the courseId matches with GradeDestination
-  const canvasClient = new CanvasClient(req);
-  await checkDestination(canvasClient, req.params.courseId, req.query);
+  await checkDestination(req, req.query);
 
   // TODO: get user LadokUID from session
 
   const ladokResults = await getLadokResults(req.query, "");
   // res.send(ladokResults);
-}
-
-export async function postGradesHandler(
-  req: Request<{ courseId: string }, unknown, PostLadokGradesInput>,
-  res: Response<{}>
-) {
-  const { destination, results } = req.body;
-  const ladokResults = await getLadokResults(destination, "");
-  // const response: ResponseBody["results"] = [];
-
-  // for (const result of results) {
-  //   const ladokResult = ladokResults.find(
-  //     (r) => r.studentUID === result.studentUID
-  //   );
-  //   if (!ladokResult) {
-  //     response.push({
-  //       studentUID: result.studentUID,
-  //       status: "error",
-  //       error: {
-  //         code: "non_existing_grade",
-  //       },
-  //     });
-  //     continue;
-  //   }
-
-  //   if (!ladokResult.hasPermission) {
-  //     response.push({
-  //       studentUID: result.studentUID,
-  //       status: "error",
-  //       error: {
-  //         code: "unauthorized",
-  //       },
-  //     });
-  //     continue;
-  //   }
-
-  //   if (ladokResult.resultatUID) {
-  //     await updateResult(ladokResult.resultatUID, {
-  //       // TODO: Convert "grade" into correct ID
-  //       Betygsgrad: 0,
-  //       BetygsskalaID: 0,
-  //       Examinationsdatum: "",
-  //     }).catch((err) => {
-  //       // TODO
-  //     });
-
-  //     // TODO
-  //   } else {
-  //     await createResult(
-  //       ladokResult.studieresultatUID,
-  //       ladokResult.utbildningsinstansUID,
-  //       {
-  //         Betygsgrad: 0,
-  //         BetygsskalaID: 0,
-  //         Examinationsdatum: "",
-  //       }
-  //     );
-  //   }
-  // }
 }

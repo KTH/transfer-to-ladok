@@ -87,10 +87,10 @@ export async function completeKurstillfalleInformation(
 
   return {
     id: uid,
-    utbildningsinstansUID: ladokKur.UtbildningsinstansUID,
+    utbildningsinstans: ladokKur.UtbildningsinstansUID,
     code: ladokKur.Kurstillfalleskod,
     modules: ladokKur.IngaendeMoment.map((m) => ({
-      utbildningsinstansUID: m.UtbildningsinstansUID,
+      utbildningsinstans: m.UtbildningsinstansUID,
       code: m.Utbildningskod,
       name: m.Benamning.sv,
     })),
