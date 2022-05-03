@@ -1,3 +1,4 @@
+import assert from "node:assert/strict";
 import { Request, Response } from "express";
 import CanvasClient, { CanvasSection } from "../../externalApis/canvasApi";
 import {
@@ -49,11 +50,12 @@ async function assertUtbildningsinstans(
 
 function assertGradesDestination(q: any): asserts q is GradesDestination {
   if ("aktivitetstillfalle" in q) {
-    return;
+    assert(typeof q.aktivitetstillfalle === "string");
   }
 
   if ("kurstillfalle" in q && "utbildningsinstans" in q) {
-    return;
+    assert(typeof q.kurstillfalle === "string");
+    assert(typeof q.utbildningsinstans === "string");
   }
 
   throw new Error();
