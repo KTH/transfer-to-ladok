@@ -1,7 +1,12 @@
 /**
  * This module are functions to call Ladok API. They do not contain any logic
  */
-import got from "got";
+import got, {
+  HTTPError,
+  Method,
+  Headers,
+  OptionsOfJSONResponseBody,
+} from "got";
 
 const gotClient = got.extend({
   prefixUrl: process.env.LADOK_API_BASEURL,
@@ -14,6 +19,59 @@ const gotClient = got.extend({
     passphrase: process.env.LADOK_API_PFX_PASSPHRASE,
   },
 });
+
+export class LadokApiError extends Error {
+  public options?: {
+    headers: Headers;
+    url: string;
+    method: Method;
+  };
+
+  public response?: {
+    body: unknown;
+    headers: Headers;
+    ip?: string;
+    retryCount: number;
+    statusCode: number;
+    statusMessage?: string;
+  };
+
+  public code: number;
+
+  constructor(gotError: HTTPError) {
+    super(gotError.message);
+    Error.captureStackTrace(this);
+    this.code = gotError.response.statusCode;
+    this.name = "LadokApiError";
+    this.options = {
+      headers: gotError.options.headers,
+      url: gotError.options.url.toString(),
+      method: gotError.options.method,
+    };
+    this.response = gotError.response;
+
+    this.options.headers.authorization = "[HIDDEN]";
+  }
+}
+
+const minimalErrorHandler = (err2: Error) => (err: unknown) => {
+  if (err instanceof HTTPError) {
+    const error = new LadokApiError(err);
+    error.response = {
+      body: err.response.body,
+      headers: err.response.headers,
+      ip: err.response.ip,
+      retryCount: err.response.retryCount,
+      statusCode: err.response.statusCode,
+      statusMessage: err.response.statusMessage,
+    };
+    error.stack = err2.stack;
+
+    throw error;
+  }
+
+  throw err;
+};
 
 export interface Aktivitetstillfalle {
   Aktiviteter: {
@@ -112,6 +170,22 @@ export interface SokResultat {
   }>;
 }
 
+function ladokGet<T>(endpoint: string) {
+  const err = new Error();
+  return gotClient
+    .get<T>(endpoint)
+    .then((response) => response.body)
+    .catch(minimalErrorHandler(err));
+}
+
+function ladokPut<T>(endpoint: string, options: OptionsOfJSONResponseBody) {
+  const err = new Error();
+  return gotClient
+    .put<T>(endpoint, options)
+    .then((response) => response.body)
+    .catch(minimalErrorHandler(err));
+}
+
 export interface Rapportor {
   Anvandare: {
     Uid: string;
@@ -122,25 +196,21 @@ export interface Rapportor {
 }
 
 export async function getAktivitetstillfalle(aktivitetstillfalleUID: string) {
-  return gotClient
-    .get<Aktivitetstillfalle>(
-      `resultat/aktivitetstillfalle/${aktivitetstillfalleUID}`
-    )
-    .then((response) => response.body);
+  return ladokGet<Aktivitetstillfalle>(
+    `resultat/aktivitetstillfalle/${aktivitetstillfalleUID}`
+  );
 }
 
 export function getSkaFinnasStudenter(aktivitetstillfalleUID: string) {
-  return gotClient
-    .get<SkaFinnasStudenter>(
-      `resultat/kurstillfalle/aktivitetstillfalle/skafinnasstudenter/${aktivitetstillfalleUID}`
-    )
-    .then((response) => response.body);
+  return ladokGet<SkaFinnasStudenter>(
+    `resultat/kurstillfalle/aktivitetstillfalle/skafinnasstudenter/${aktivitetstillfalleUID}`
+  );
 }
 
 export function getKurstillfalleStructure(kurstillfalleUID: string) {
-  return gotClient
-    .get<Kurstillfalle>(`resultat/kurstillfalle/${kurstillfalleUID}/moment`)
-    .then((response) => response.body);
+  return ladokGet<Kurstillfalle>(
+    `resultat/kurstillfalle/${kurstillfalleUID}/momaaaent`
+  );
 }
 
 export function searchUtbildningsinstansStudieresultat(
@@ -148,18 +218,16 @@ export function searchUtbildningsinstansStudieresultat(
   KurstillfallenUID: string[],
   page: number = 1
 ) {
-  return gotClient
-    .put<SokResultat>(
-      `resultat/studieresultat/rapportera/utbildningsinstans/${utbildningsinstansUID}/sok`,
-      {
-        json: {
-          Filtrering: ["OBEHANDLADE", "UTKAST"],
-          KurstillfallenUID,
-          Page: page,
-        },
-      }
-    )
-    .then((r) => r.body);
+  return ladokPut<SokResultat>(
+    `resultat/studieresultat/rapportera/utbildningsinstans/${utbildningsinstansUID}/sok`,
+    {
+      json: {
+        Filtrering: ["OBEHANDLADE", "UTKAST"],
+        KurstillfallenUID,
+        Page: page,
+      },
+    }
+  );
 }
 
 export function searchAktivitetstillfalleStudieresultat(
@@ -167,26 +235,22 @@ export function searchAktivitetstillfalleStudieresultat(
   KurstillfallenUID: string[],
   page: number = 1
 ) {
-  return gotClient
-    .put<SokResultat>(
-      `resultat/studieresultat/rapportera/aktivitetstillfalle/${aktivitetstillfalleUID}/sok`,
-      {
-        json: {
-          Filtrering: ["OBEHANDLADE", "UTKAST"],
-          KurstillfallenUID,
-          Page: page,
-        },
-      }
-    )
-    .then((r) => r.body);
+  return ladokPut<SokResultat>(
+    `resultat/studieresultat/rapportera/aktivitetstillfalle/${aktivitetstillfalleUID}/sok`,
+    {
+      json: {
+        Filtrering: ["OBEHANDLADE", "UTKAST"],
+        KurstillfallenUID,
+        Page: page,
+      },
+    }
+  );
 }
 
 export function getRapportor(utbildningsinstansUID: string) {
-  return gotClient
-    .get<Rapportor>(
-      `resultat/anvandare/resultatrattighet/utbildningsinstans?utbildningsinstansUID=${utbildningsinstansUID}`
-    )
-    .then((r) => r.body);
+  return ladokGet<Rapportor>(
+    `resultat/anvandare/resultatrattighet/utbildningsinstans?utbildningsinstansUID=${utbildningsinstansUID}`
+  );
 }
 
 export function createResult(
