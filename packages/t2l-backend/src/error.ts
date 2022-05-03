@@ -2,6 +2,18 @@ import { CanvasApiError } from "@kth/canvas-api";
 import { Request, Response, NextFunction } from "express";
 import log from "skog";
 
+export class BadRequestError extends Error {
+  constructor(message: string) {
+    super(message);
+  }
+}
+
+export class UnprocessableEntityError extends Error {
+  constructor(message: string) {
+    super(message);
+  }
+}
+
 export function errorHandler(
   err: unknown,
   req: Request,
@@ -23,6 +35,20 @@ export function errorHandler(
         message: "Not found",
       });
     }
+  }
+
+  if (err instanceof BadRequestError) {
+    return res.status(400).json({
+      code: "bad_request",
+      message: err.message,
+    });
+  }
+
+  if (err instanceof UnprocessableEntityError) {
+    return res.status(422).json({
+      code: "unprocessable_entity",
+      message: err.message,
+    });
   }
 
   if (err instanceof Error) {

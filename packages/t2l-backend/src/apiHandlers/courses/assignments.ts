@@ -8,7 +8,6 @@ export default async function assignmentsHandler(
 ) {
   const canvasApi = new CanvasClient(req);
   const courseId = req.params.courseId;
-
   const allAssignments = await canvasApi.getAssignments(courseId);
 
   res.json(

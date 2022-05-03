@@ -9,9 +9,7 @@ import {
 import type { AktSection, Sections } from "./types";
 
 /** Given an Aktivitetstillfalle UID, get extra information from Ladok */
-async function completeAktivitetstillfalleInformation(
-  uid: string
-): Promise<AktSection> {
+async function completeAktivitetstillfalle(uid: string): Promise<AktSection> {
   const ladokAkt = await getAktivitetstillfalle(uid);
   const codes = ladokAkt.Aktiviteter.map(
     (a) =>
@@ -41,7 +39,7 @@ export default async function sectionsHandler(
 
   const aktivitetstillfalle = await Promise.all(
     getUniqueAktivitetstillfalleIds(allSections).map(
-      completeAktivitetstillfalleInformation
+      completeAktivitetstillfalle
     )
   );
 

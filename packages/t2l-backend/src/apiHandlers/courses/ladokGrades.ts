@@ -8,6 +8,7 @@ import {
   getUniqueKurstillfalleIds,
 } from "./utils";
 import type { GradesDestination, GradeableStudents } from "./types";
+import { BadRequestError, UnprocessableEntityError } from "../../error";
 
 function assertAktivitetstillfalle(
   sections: CanvasSection[],
@@ -16,7 +17,9 @@ function assertAktivitetstillfalle(
   if (
     !getUniqueAktivitetstillfalleIds(sections).includes(aktivitetstillfalleUID)
   ) {
-    throw new Error("404");
+    throw new UnprocessableEntityError(
+      "Provided [aktivitetstillfalle] doesn't exist in examroom"
+    );
   }
 }
 
@@ -25,7 +28,9 @@ function assertKurstillfalle(
   kurstillfalleUID: string
 ) {
   if (!getUniqueKurstillfalleIds(sections).includes(kurstillfalleUID)) {
-    throw new Error("404");
+    throw new UnprocessableEntityError(
+      "Provided [kurstillfalle] doesn't exist in courseroom"
+    );
   }
 }
 
@@ -45,20 +50,33 @@ async function assertUtbildningsinstans(
     return;
   }
 
-  throw new Error("404");
+  throw new UnprocessableEntityError(
+    `Provided [utbildningsinstans] doesn't exist in [kurstillfalle]`
+  );
 }
 
 function assertGradesDestination(q: any): asserts q is GradesDestination {
   if ("aktivitetstillfalle" in q) {
-    assert(typeof q.aktivitetstillfalle === "string");
+    assert(
+      typeof q.aktivitetstillfalle === "string",
+      new BadRequestError("aktivitetstillfalle must be a string")
+    );
   }
 
   if ("kurstillfalle" in q && "utbildningsinstans" in q) {
-    assert(typeof q.kurstillfalle === "string");
-    assert(typeof q.utbildningsinstans === "string");
+    assert(
+      typeof q.kurstillfalle === "string",
+      new BadRequestError("kurstillfalle must be a string")
+    );
+    assert(
+      typeof q.utbildningsinstans === "string",
+      new BadRequestError("utbildningsinstans must be a string")
+    );
   }
 
-  throw new Error();
+  throw new BadRequestError(
+    "You must specify either [aktivitetstillfalle] or [kurstillfalle and utbildningsinstans]"
+  );
 }
 
 async function checkDestination(

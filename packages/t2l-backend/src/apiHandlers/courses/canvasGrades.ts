@@ -9,7 +9,6 @@ export async function assignmentGradesHandler(
   const canvasApi = new CanvasClient(req);
   const courseId = req.params.courseId;
   const assignmentId = req.params.assignmentId;
-
   const submissions = await canvasApi.getSubmissions(courseId, assignmentId);
 
   res.json(
