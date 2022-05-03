@@ -47,6 +47,18 @@ async function assertUtbildningsinstans(
   throw new Error("404");
 }
 
+function assertGradesDestination(q: any): asserts q is GradesDestination {
+  if ("aktivitetstillfalle" in q) {
+    return;
+  }
+
+  if ("kurstillfalle" in q && "utbildningsinstans" in q) {
+    return;
+  }
+
+  throw new Error();
+}
+
 async function checkDestination(
   req: Request<{ courseId: string }>,
   destination: GradesDestination
@@ -66,10 +78,11 @@ async function checkDestination(
 }
 
 export async function getGradesHandler(
-  req: Request<{ courseId: string }, unknown, unknown, GradesDestination>,
+  req: Request<{ courseId: string }>,
   res: Response<GradeableStudents>
 ) {
   const destination = req.query;
+  assertGradesDestination(destination);
   await checkDestination(req, destination);
 
   const sokResultat = await getLadokResults(destination);
