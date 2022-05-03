@@ -2,15 +2,13 @@ import { CanvasApiError } from "@kth/canvas-api";
 import { Request, Response, NextFunction } from "express";
 import log from "skog";
 
-interface ApiError {
-  code: string;
-  message: string;
-}
-
 export function errorHandler(
   err: unknown,
   req: Request,
-  res: Response<ApiError>,
+  res: Response<{
+    code: string;
+    message: string;
+  }>,
   next: NextFunction
 ) {
   if (err instanceof CanvasApiError) {
