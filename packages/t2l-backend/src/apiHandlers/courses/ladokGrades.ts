@@ -55,7 +55,9 @@ async function assertUtbildningsinstans(
   );
 }
 
-function assertGradesDestination(q: any): asserts q is GradesDestination {
+function assertGradesDestinationStructure(
+  q: any
+): asserts q is GradesDestination {
   if ("aktivitetstillfalle" in q) {
     assert(
       typeof q.aktivitetstillfalle === "string",
@@ -79,7 +81,7 @@ function assertGradesDestination(q: any): asserts q is GradesDestination {
   );
 }
 
-async function checkDestination(
+async function assertGradesDestination(
   req: Request<{ courseId: string }>,
   destination: GradesDestination
 ) {
@@ -102,8 +104,8 @@ export async function getGradesHandler(
   res: Response<GradeableStudents>
 ) {
   const destination = req.query;
-  assertGradesDestination(destination);
-  await checkDestination(req, destination);
+  assertGradesDestinationStructure(destination);
+  await assertGradesDestination(req, destination);
 
   const sokResultat = await getLadokResults(destination);
   const response = sokResultat.Resultat.map((content) => {
