@@ -91,6 +91,8 @@ export interface SokResultat {
     Rapporteringskontext: {
       /** Use this to check if a user is "rapportor" or not */
       UtbildningsinstansUID: string;
+
+      BetygsskalaID: number;
     };
 
     /** Present if there is a grade in form of utkast */
@@ -119,6 +121,11 @@ export interface Rapportor {
     Efternamn: string;
     Fornamn: string;
   }[];
+}
+
+export interface Betygsgrad {
+  ID: number;
+  Kod: string;
 }
 
 export async function getAktivitetstillfalle(aktivitetstillfalleUID: string) {
@@ -216,4 +223,54 @@ export function updateResult(
       },
     }
   );
+}
+
+export function getBetyg(betygsskalaID: number): Betygsgrad[] {
+  if (betygsskalaID === 131656) {
+    return [
+      {
+        ID: 131658,
+        Kod: "P",
+      },
+      {
+        ID: 131663,
+        Kod: "F",
+      },
+    ];
+  }
+
+  if (betygsskalaID === 131657) {
+    return [
+      {
+        ID: 131661,
+        Kod: "A",
+      },
+      {
+        ID: 131667,
+        Kod: "B",
+      },
+      {
+        ID: 131673,
+        Kod: "C",
+      },
+      {
+        ID: 131679,
+        Kod: "D",
+      },
+      {
+        ID: 131691,
+        Kod: "E",
+      },
+      {
+        ID: 131696,
+        Kod: "FX",
+      },
+      {
+        ID: 131697,
+        Kod: "F",
+      },
+    ];
+  }
+
+  return [];
 }

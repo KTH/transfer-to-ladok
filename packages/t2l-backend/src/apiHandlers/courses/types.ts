@@ -100,11 +100,7 @@ export type GradesDestination =
       aktivitetstillfalle: string;
     };
 
-/**
- * Specificies which grades should be sent to Ladok.
- */
-export type GradesResults = {
-  /** Student ID */
+export interface GradeResult {
   id: string;
 
   /** Grade to be sent as "utkast" */
@@ -115,7 +111,7 @@ export type GradesResults = {
     /** Examination date */
     examinationDate: string;
   };
-}[];
+}
 
 /**
  * Query request of endpoint
@@ -131,6 +127,9 @@ export type GradeableStudents = {
   /** Student ID */
   id: string;
 
+  /** List of grades you can set */
+  scale: string[];
+
   /** Grade in "utkast" if any */
   draft?: {
     grade: string;
@@ -144,5 +143,5 @@ export type GradeableStudents = {
  */
 export interface PostLadokGradesInput {
   destination: GradesDestination;
-  results: GradesResults;
+  results: GradeResult[];
 }

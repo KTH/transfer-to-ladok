@@ -93,6 +93,9 @@ export async function getGradesHandler(
   const response = sokResultat.Resultat.map((content) => {
     const result: GradeableStudents[number] = {
       id: content.Student.Uid,
+      scale: getBetyg(content.Rapporteringskontext.BetygsskalaID).map(
+        (b) => b.Kod
+      ),
     };
 
     if (content.ResultatPaUtbildningar) {
