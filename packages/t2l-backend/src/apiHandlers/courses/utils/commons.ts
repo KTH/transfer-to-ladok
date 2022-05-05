@@ -55,33 +55,25 @@ export async function isRapportor(
 }
 
 /**
- * Given a list of CanvasSection, return a list of unique UIDs of the
- * sections that refer to a aktivitetstillfalle.
+ * Given a list of CanvasSection, identifies which CanvasSection are linked to
+ * a Ladok kurstillfälle and which ones to a Ladok aktivitetstillfälle.
  */
-export function getUniqueAktIds(sections: CanvasSection[]): string[] {
-  // Regex: AKT.<<UID>>.<optional suffix>
+export function splitSections(sections: CanvasSection[]) {
   const AKTIVITETSTILLFALLE_REGEX = /^AKT\.([a-z0-9-]+)(\.\w+)?$/;
+  const KURSTILLFALLE_REGEX = /^\w{6,7}(HT|VT)\d{3}$/;
 
-  const ids = sections
+  const aktIds = sections
     .map((s) => AKTIVITETSTILLFALLE_REGEX.exec(s.sis_section_id)?.[1])
     .filter((id): id is string => id !== undefined);
 
-  return Array.from(new Set(ids));
-}
-
-/**
- * Given a list of CanvasSection, returns a list of unique UIDs of the
- * sections that refer to a kurstillfalle
- */
-export function getUniqueKurIds(sections: CanvasSection[]): string[] {
-  // Regex: AA0000VT211
-  const KURSTILLFALLE_REGEX = /^\w{6,7}(HT|VT)\d{3}$/;
-
-  const ids = sections
+  const kurIds = sections
     .filter((s) => KURSTILLFALLE_REGEX.test(s.sis_section_id))
     .map((s) => s.integration_id);
 
-  return Array.from(new Set(ids));
+  return {
+    aktivitetstillfalleIds: Array.from(new Set(aktIds)),
+    kurstillfalleIds: Array.from(new Set(kurIds)),
+  };
 }
 
 /**

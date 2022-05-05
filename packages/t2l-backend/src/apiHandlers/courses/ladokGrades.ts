@@ -1,10 +1,10 @@
 import { Request, Response } from "express";
+import assert from "node:assert/strict";
 import CanvasClient, { CanvasSection } from "../../externalApis/canvasApi";
 import {
   getExtraKurInformation,
   getLadokResults,
-  getUniqueAktIds,
-  getUniqueKurIds,
+  splitSections,
 } from "./utils/commons";
 import type {
   GradesDestination,
@@ -22,28 +22,6 @@ import {
   SokResultat,
   updateResult,
 } from "../../externalApis/ladokApi";
-
-function validateAktivitetstillfalle(
-  sections: CanvasSection[],
-  aktivitetstillfalleUID: string
-) {
-  if (!getUniqueAktIds(sections).includes(aktivitetstillfalleUID)) {
-    throw new UnprocessableEntityError(
-      "Provided [aktivitetstillfalle] doesn't exist in examroom"
-    );
-  }
-}
-
-function validateKurstillfalle(
-  sections: CanvasSection[],
-  kurstillfalleUID: string
-) {
-  if (!getUniqueKurIds(sections).includes(kurstillfalleUID)) {
-    throw new UnprocessableEntityError(
-      "Provided [kurstillfalle] doesn't exist in courseroom"
-    );
-  }
-}
 
 async function validateUtbildningsinstans(
   kurstillfalleUID: string,
@@ -66,19 +44,28 @@ async function validateUtbildningsinstans(
   );
 }
 
-async function validateGradesDestination(
-  req: Request<{ courseId: string }>,
-  destination: GradesDestination
+/** Checks if the destination exists in a given list of sections */
+async function checkDestinationInSections(
+  destination: GradesDestination,
+  sections: CanvasSection[]
 ) {
-  const courseId = req.params.courseId;
-  const canvasClient = new CanvasClient(req);
-  const sections = await canvasClient.getSections(courseId);
+  const { aktivitetstillfalleIds, kurstillfalleIds } = splitSections(sections);
 
   if ("aktivitetstillfalle" in destination) {
-    validateAktivitetstillfalle(sections, destination.aktivitetstillfalle);
+    assert(
+      aktivitetstillfalleIds.includes(destination.aktivitetstillfalle),
+      new UnprocessableEntityError(
+        "Provided [aktivitetstillfalle] doesn't exist in examroom"
+      )
+    );
   } else {
     const { kurstillfalle, utbildningsinstans } = destination;
-    validateKurstillfalle(sections, kurstillfalle);
+    assert(
+      kurstillfalleIds.includes(kurstillfalle),
+      new UnprocessableEntityError(
+        "Provided [kurstillfalle] doesn't exist in courseroom"
+      )
+    );
 
     await validateUtbildningsinstans(kurstillfalle, utbildningsinstans);
   }
@@ -88,19 +75,15 @@ export async function getGradesHandler(
   req: Request<{ courseId: string }>,
   res: Response<GradeableStudents>
 ) {
-  const destination = req.query;
-  try {
-    assertGradesDestination(destination);
-  } catch (err) {
-    if (err instanceof TypeError) {
-      throw new BadRequestError(err.message);
-    }
-    throw err;
-  }
+  assertGradesDestination(req.query, BadRequestError);
 
-  await validateGradesDestination(req, destination);
+  const courseId = req.params.courseId;
+  const canvasClient = new CanvasClient(req);
+  const sections = await canvasClient.getSections(courseId);
 
-  const sokResultat = await getLadokResults(destination);
+  await checkDestinationInSections(req.query, sections);
+
+  const sokResultat = await getLadokResults(req.query);
   const response = sokResultat.Resultat.map((content) => {
     const result: GradeableStudents[number] = {
       id: content.Student.Uid,
@@ -186,13 +169,16 @@ export async function postGradesHandler(
   res: Response<{}>
 ) {
   assertPostLadokGradesInput(req.body);
-  const { destination, results } = req.body;
 
-  await validateGradesDestination(req, destination);
-  const sokResultat = await getLadokResults(destination);
+  const courseId = req.params.courseId;
+  const canvasClient = new CanvasClient(req);
+  const sections = await canvasClient.getSections(courseId);
+  await checkDestinationInSections(req.body.destination, sections);
+
+  const sokResultat = await getLadokResults(req.body.destination);
 
   const response = [];
-  for (const result of results) {
+  for (const result of req.body.results) {
     response.push(await postOneResult(sokResultat, req, result));
   }
 

@@ -3,8 +3,7 @@ import CanvasClient from "../../externalApis/canvasApi";
 import {
   getExtraAktInformation,
   getExtraKurInformation,
-  getUniqueAktIds,
-  getUniqueKurIds,
+  splitSections,
 } from "./utils/commons";
 import type { Sections } from "./utils/types";
 
@@ -22,13 +21,15 @@ export default async function sectionsHandler(
   const canvasApi = new CanvasClient(req);
   const courseId = req.params.courseId;
   const allSections = await canvasApi.getSections(courseId);
+  const { aktivitetstillfalleIds, kurstillfalleIds } =
+    splitSections(allSections);
 
   const aktivitetstillfalle = await Promise.all(
-    getUniqueAktIds(allSections).map(getExtraAktInformation)
+    aktivitetstillfalleIds.map(getExtraAktInformation)
   );
 
   const kurstillfalle = await Promise.all(
-    getUniqueKurIds(allSections).map(getExtraKurInformation)
+    kurstillfalleIds.map(getExtraKurInformation)
   );
 
   res.json({
