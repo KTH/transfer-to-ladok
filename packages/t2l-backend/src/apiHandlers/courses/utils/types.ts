@@ -6,42 +6,44 @@
  */
 export interface Sections {
   /** Sections that are linked with a aktivitetstillfälle in Ladok */
-  aktivitetstillfalle: {
-    /** Ladok identifier */
-    id: string;
-
-    /** Human readable name of the aktivitetstillfälle. Example: `HF0025 TEN1 & ML0025 TEN1 - 2022-01-01` */
-    name: string;
-  }[];
+  aktivitetstillfalle: AktSection[];
 
   /** Sections that are linked with a kurstillfälle in Ladok */
-  kurstillfalle: {
-    /** Ladok identifier */
-    id: string;
-
-    /** Use this parameter to send final grades to this kurstillfälle */
-    utbildningsinstans: string;
-
-    /** Example: "50071" */
-    code: string;
-
-    /** Modules in the kurstillfälle */
-    modules: {
-      /** Use this identifier to send grades to this specific module */
-      utbildningsinstans: string;
-
-      /** Human readable short name of the module. Example: "TEN1" */
-      code: string;
-
-      /** Human readable name of the module. Example: "Examination" */
-      name: string;
-    }[];
-  }[];
+  kurstillfalle: KurSection[];
 }
 
-// The following types are exported for convinience
-export type AktSection = Sections["aktivitetstillfalle"][number];
-export type KurSection = Sections["kurstillfalle"][number];
+/** A Canvas Section linked with a Ladok aktivitetstillfälle */
+export interface AktSection {
+  /** Ladok identifier for the Aktivitetstillfälle */
+  id: string;
+
+  /** Human readable name of the aktivitetstillfälle. Example: `HF0025 TEN1 & ML0025 TEN1 - 2022-01-01` */
+  name: string;
+}
+
+/** A Canvas Section linked with a Ladok kurstillfalle  */
+export type KurSection = {
+  /** Ladok identifier for the Kurstillfälle */
+  id: string;
+
+  /** Use this parameter to send final grades to this kurstillfälle */
+  utbildningsinstans: string;
+
+  /** Example: "50071" */
+  code: string;
+
+  /** Modules in the kurstillfälle */
+  modules: {
+    /** Use this identifier to send grades to this specific module */
+    utbildningsinstans: string;
+
+    /** Human readable short name of the module. Example: "TEN1" */
+    code: string;
+
+    /** Human readable name of the module. Example: "Examination" */
+    name: string;
+  }[];
+};
 
 /**
  * Response of endpoint
