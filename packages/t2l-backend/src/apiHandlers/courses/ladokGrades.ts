@@ -1,4 +1,3 @@
-import assert from "node:assert/strict";
 import { Request, Response } from "express";
 import CanvasClient, { CanvasSection } from "../../externalApis/canvasApi";
 import {
@@ -9,8 +8,9 @@ import {
 } from "./utils";
 import type { GradesDestination, GradeableStudents } from "./types";
 import { BadRequestError, UnprocessableEntityError } from "../../error";
+import { assertGradesDestination } from "./asserts";
 
-function assertAktivitetstillfalle(
+function validateAktivitetstillfalle(
   sections: CanvasSection[],
   aktivitetstillfalleUID: string
 ) {
@@ -23,7 +23,7 @@ function assertAktivitetstillfalle(
   }
 }
 
-function assertKurstillfalle(
+function validateKurstillfalle(
   sections: CanvasSection[],
   kurstillfalleUID: string
 ) {
@@ -34,7 +34,7 @@ function assertKurstillfalle(
   }
 }
 
-async function assertUtbildningsinstans(
+async function validateUtbildningsinstans(
   kurstillfalleUID: string,
   utbildningsinstansUID: string
 ) {
@@ -55,33 +55,7 @@ async function assertUtbildningsinstans(
   );
 }
 
-function assertGradesDestinationStructure(
-  q: any
-): asserts q is GradesDestination {
-  if ("aktivitetstillfalle" in q) {
-    assert(
-      typeof q.aktivitetstillfalle === "string",
-      new BadRequestError("aktivitetstillfalle must be a string")
-    );
-  }
-
-  if ("kurstillfalle" in q && "utbildningsinstans" in q) {
-    assert(
-      typeof q.kurstillfalle === "string",
-      new BadRequestError("kurstillfalle must be a string")
-    );
-    assert(
-      typeof q.utbildningsinstans === "string",
-      new BadRequestError("utbildningsinstans must be a string")
-    );
-  }
-
-  throw new BadRequestError(
-    "You must specify either [aktivitetstillfalle] or [kurstillfalle and utbildningsinstans]"
-  );
-}
-
-async function assertGradesDestination(
+async function validateGradesDestination(
   req: Request<{ courseId: string }>,
   destination: GradesDestination
 ) {
@@ -90,12 +64,12 @@ async function assertGradesDestination(
   const sections = await canvasClient.getSections(courseId);
 
   if ("aktivitetstillfalle" in destination) {
-    assertAktivitetstillfalle(sections, destination.aktivitetstillfalle);
+    validateAktivitetstillfalle(sections, destination.aktivitetstillfalle);
   } else {
     const { kurstillfalle, utbildningsinstans } = destination;
-    assertKurstillfalle(sections, kurstillfalle);
+    validateKurstillfalle(sections, kurstillfalle);
 
-    await assertUtbildningsinstans(kurstillfalle, utbildningsinstans);
+    await validateUtbildningsinstans(kurstillfalle, utbildningsinstans);
   }
 }
 
@@ -104,8 +78,16 @@ export async function getGradesHandler(
   res: Response<GradeableStudents>
 ) {
   const destination = req.query;
-  assertGradesDestinationStructure(destination);
-  await assertGradesDestination(req, destination);
+  try {
+    assertGradesDestination(destination);
+  } catch (err) {
+    if (err instanceof TypeError) {
+      throw new BadRequestError(err.message);
+    }
+    throw err;
+  }
+
+  await validateGradesDestination(req, destination);
 
   const sokResultat = await getLadokResults(destination);
   const response = sokResultat.Resultat.map((content) => {
@@ -130,4 +112,11 @@ export async function getGradesHandler(
   });
 
   res.json(response);
+}
+
+export async function postGradesHandler(
+  req: Request<{ courseId: string }>,
+  res: Response<{}>
+) {
+  req.body;
 }
