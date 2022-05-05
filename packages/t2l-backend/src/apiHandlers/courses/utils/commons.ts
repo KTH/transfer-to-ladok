@@ -1,4 +1,4 @@
-import { CanvasSection } from "../../externalApis/canvasApi";
+import { CanvasSection } from "../../../externalApis/canvasApi";
 import {
   SokResultat,
   searchAktivitetstillfalleStudieresultat,
@@ -6,7 +6,7 @@ import {
   getRapportor,
   getKurstillfalleStructure,
   getSkaFinnasStudenter,
-} from "../../externalApis/ladokApi";
+} from "../../../externalApis/ladokApi";
 import type { AktSection, GradesDestination, KurSection } from "./types";
 
 /**

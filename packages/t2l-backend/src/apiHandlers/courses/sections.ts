@@ -5,8 +5,8 @@ import {
   completeKurstillfalle,
   getUniqueAktivitetstillfalleIds,
   getUniqueKurstillfalleIds,
-} from "./utils";
-import type { AktSection, Sections } from "./types";
+} from "./utils/commons";
+import type { AktSection, Sections } from "./utils/types";
 
 /** Given an Aktivitetstillfalle UID, get extra information from Ladok */
 async function completeAktivitetstillfalle(uid: string): Promise<AktSection> {

@@ -5,10 +5,23 @@ import {
   getLadokResults,
   getUniqueAktivitetstillfalleIds,
   getUniqueKurstillfalleIds,
-} from "./utils";
-import type { GradesDestination, GradeableStudents } from "./types";
+} from "./utils/commons";
+import type {
+  GradesDestination,
+  GradeableStudents,
+  GradeResult,
+} from "./utils/types";
 import { BadRequestError, UnprocessableEntityError } from "../../error";
-import { assertGradesDestination } from "./asserts";
+import {
+  assertGradesDestination,
+  assertPostLadokGradesInput,
+} from "./utils/asserts";
+import {
+  createResult,
+  getBetyg,
+  SokResultat,
+  updateResult,
+} from "../../externalApis/ladokApi";
 
 function validateAktivitetstillfalle(
   sections: CanvasSection[],
@@ -117,9 +130,73 @@ export async function getGradesHandler(
   res.json(response);
 }
 
+async function postOneResult(
+  sokResultat: SokResultat,
+  req: Request<unknown>,
+  newGrade: GradeResult
+) {
+  const student = sokResultat.Resultat.find(
+    (r) => r.Student.Uid === newGrade.id
+  );
+
+  if (!student) {
+    throw new UnprocessableEntityError(
+      `Student with id ${newGrade.id} doesn't exist in destination`
+    );
+  }
+
+  // TODO: check that you have permissions
+
+  const scale = student.Rapporteringskontext.BetygsskalaID;
+  const gradeID = getBetyg(scale).find(
+    (b) => b.Kod === newGrade.draft.grade
+  )?.ID;
+
+  if (!gradeID) {
+    throw new UnprocessableEntityError(
+      `You cannot set grade ${newGrade.draft.grade} for student ${newGrade.id}`
+    );
+  }
+
+  const arbetsunderlag = student.ResultatPaUtbildningar?.find(
+    (rpu) => rpu.Arbetsunderlag
+  )?.Arbetsunderlag;
+
+  if (arbetsunderlag) {
+    // Update result
+    await updateResult(arbetsunderlag.Uid, {
+      BetygsskalaID: scale,
+      Betygsgrad: gradeID,
+      Examinationsdatum: newGrade.draft.examinationDate,
+    });
+  } else {
+    // Create result
+    await createResult(
+      student.Uid,
+      student.Rapporteringskontext.UtbildningsinstansUID,
+      {
+        BetygsskalaID: scale,
+        Betygsgrad: gradeID,
+        Examinationsdatum: newGrade.draft.examinationDate,
+      }
+    );
+  }
+}
+
 export async function postGradesHandler(
   req: Request<{ courseId: string }>,
   res: Response<{}>
 ) {
-  req.body;
+  assertPostLadokGradesInput(req.body);
+  const { destination, results } = req.body;
+
+  await validateGradesDestination(req, destination);
+  const sokResultat = await getLadokResults(destination);
+
+  const response = [];
+  for (const result of results) {
+    response.push(await postOneResult(sokResultat, req, result));
+  }
+
+  res.send(response);
 }

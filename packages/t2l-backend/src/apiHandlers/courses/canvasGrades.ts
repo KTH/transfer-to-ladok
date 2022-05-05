@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import CanvasClient from "../../externalApis/canvasApi";
-import { CanvasGrades } from "./types";
+import { CanvasGrades } from "./utils/types";
 
 export async function assignmentGradesHandler(
   req: Request<{ courseId: string; assignmentId: string }>,
