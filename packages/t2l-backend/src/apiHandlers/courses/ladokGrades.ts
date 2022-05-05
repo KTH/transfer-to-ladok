@@ -1,10 +1,10 @@
 import { Request, Response } from "express";
 import CanvasClient, { CanvasSection } from "../../externalApis/canvasApi";
 import {
-  completeKurstillfalle,
+  getExtraKurInformation,
   getLadokResults,
-  getUniqueAktivitetstillfalleIds,
-  getUniqueKurstillfalleIds,
+  getUniqueAktIds,
+  getUniqueKurIds,
 } from "./utils/commons";
 import type {
   GradesDestination,
@@ -27,9 +27,7 @@ function validateAktivitetstillfalle(
   sections: CanvasSection[],
   aktivitetstillfalleUID: string
 ) {
-  if (
-    !getUniqueAktivitetstillfalleIds(sections).includes(aktivitetstillfalleUID)
-  ) {
+  if (!getUniqueAktIds(sections).includes(aktivitetstillfalleUID)) {
     throw new UnprocessableEntityError(
       "Provided [aktivitetstillfalle] doesn't exist in examroom"
     );
@@ -40,7 +38,7 @@ function validateKurstillfalle(
   sections: CanvasSection[],
   kurstillfalleUID: string
 ) {
-  if (!getUniqueKurstillfalleIds(sections).includes(kurstillfalleUID)) {
+  if (!getUniqueKurIds(sections).includes(kurstillfalleUID)) {
     throw new UnprocessableEntityError(
       "Provided [kurstillfalle] doesn't exist in courseroom"
     );
@@ -51,7 +49,7 @@ async function validateUtbildningsinstans(
   kurstillfalleUID: string,
   utbildningsinstansUID: string
 ) {
-  const { utbildningsinstans, modules } = await completeKurstillfalle(
+  const { utbildningsinstans, modules } = await getExtraKurInformation(
     kurstillfalleUID
   );
 

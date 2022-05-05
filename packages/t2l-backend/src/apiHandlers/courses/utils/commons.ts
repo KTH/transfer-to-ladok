@@ -6,6 +6,7 @@ import {
   getRapportor,
   getKurstillfalleStructure,
   getSkaFinnasStudenter,
+  getAktivitetstillfalle,
 } from "../../../externalApis/ladokApi";
 import type { AktSection, GradesDestination, KurSection } from "./types";
 
@@ -57,9 +58,7 @@ export async function isRapportor(
  * Given a list of CanvasSection, return a list of unique UIDs of the
  * sections that refer to a aktivitetstillfalle.
  */
-export function getUniqueAktivitetstillfalleIds(
-  sections: CanvasSection[]
-): string[] {
+export function getUniqueAktIds(sections: CanvasSection[]): string[] {
   // Regex: AKT.<<UID>>.<optional suffix>
   const AKTIVITETSTILLFALLE_REGEX = /^AKT\.([a-z0-9-]+)(\.\w+)?$/;
 
@@ -74,7 +73,7 @@ export function getUniqueAktivitetstillfalleIds(
  * Given a list of CanvasSection, returns a list of unique UIDs of the
  * sections that refer to a kurstillfalle
  */
-export function getUniqueKurstillfalleIds(sections: CanvasSection[]): string[] {
+export function getUniqueKurIds(sections: CanvasSection[]): string[] {
   // Regex: AA0000VT211
   const KURSTILLFALLE_REGEX = /^\w{6,7}(HT|VT)\d{3}$/;
 
@@ -88,7 +87,7 @@ export function getUniqueKurstillfalleIds(sections: CanvasSection[]): string[] {
 /**
  * Given an Kurstillfälle UID, returns information about the kurstillfälle in Ladok
  */
-export async function completeKurstillfalle(uid: string): Promise<KurSection> {
+export async function getExtraKurInformation(uid: string): Promise<KurSection> {
   const ladokKur = await getKurstillfalleStructure(uid);
 
   return {
@@ -100,6 +99,21 @@ export async function completeKurstillfalle(uid: string): Promise<KurSection> {
       code: m.Utbildningskod,
       name: m.Benamning.sv,
     })),
+  };
+}
+
+export async function getExtraAktInformation(uid: string): Promise<AktSection> {
+  const ladokAkt = await getAktivitetstillfalle(uid);
+  const codes = ladokAkt.Aktiviteter.map(
+    (a) =>
+      `${a.Kursinstans.Utbildningskod} ${a.Utbildningsinstans.Utbildningskod}`
+  );
+  const date = ladokAkt.Datumperiod.Startdatum;
+  const name = codes.join(" & ") + " - " + date;
+
+  return {
+    id: uid,
+    name,
   };
 }
 
