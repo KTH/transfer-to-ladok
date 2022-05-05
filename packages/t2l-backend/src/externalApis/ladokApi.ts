@@ -69,49 +69,54 @@ export interface SkaFinnasStudenter {
   }[];
 }
 
-export interface SokResultat {
-  TotalAntalPoster: number;
-  Resultat: Array<{
-    Avbrott?: {
-      Avbrottsdatum: string;
-    };
-    Student: {
-      Efternamn: string;
-      Fornamn: string;
+/**
+ * An object that contains information to create or edit grades in Ladok
+ */
+export interface Studieresultat {
+  Avbrott?: {
+    Avbrottsdatum: string;
+  };
+  Student: {
+    Efternamn: string;
+    Fornamn: string;
 
-      /** Use this ID to match the student in Ladok with same person in Canvas */
+    /** Use this ID to match the student in Ladok with same person in Canvas */
+    Uid: string;
+  };
+  /**
+   * This is the "StudieresultatUID" that you need to send to Ladok to create
+   * a result in Ladok
+   */
+  Uid: string;
+
+  Rapporteringskontext: {
+    /** Use this to check if a user is "rapportor" or not */
+    UtbildningsinstansUID: string;
+
+    BetygsskalaID: number;
+  };
+
+  /** Present if there is a grade in form of utkast */
+  ResultatPaUtbildningar?: Array<{
+    Arbetsunderlag?: {
+      Betygsgradobjekt: {
+        ID: number;
+        Kod: string;
+      };
+
+      Examinationsdatum: string;
+      /**
+       * This is the "ResultatUID" that you need to send to Ladok in order to
+       * update or delete a result
+       */
       Uid: string;
     };
-    /**
-     * This is the "StudieresultatUID" that you need to send to Ladok to create
-     * a result in Ladok
-     */
-    Uid: string;
-
-    Rapporteringskontext: {
-      /** Use this to check if a user is "rapportor" or not */
-      UtbildningsinstansUID: string;
-
-      BetygsskalaID: number;
-    };
-
-    /** Present if there is a grade in form of utkast */
-    ResultatPaUtbildningar?: Array<{
-      Arbetsunderlag?: {
-        Betygsgradobjekt: {
-          ID: number;
-          Kod: string;
-        };
-
-        Examinationsdatum: string;
-        /**
-         * This is the "ResultatUID" that you need to send to Ladok in order to
-         * update or delete a result
-         */
-        Uid: string;
-      };
-    }>;
   }>;
+}
+
+export interface SokResultat {
+  TotalAntalPoster: number;
+  Resultat: Array<Studieresultat>;
 }
 
 export interface Rapportor {

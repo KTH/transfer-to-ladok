@@ -7,41 +7,54 @@ import {
   getKurstillfalleStructure,
   getSkaFinnasStudenter,
   getAktivitetstillfalle,
+  Studieresultat,
 } from "../../../externalApis/ladokApi";
 import type { AktSection, GradesDestination, KurSection } from "./types";
 
 /**
- * Transform a LadokAPI "sok" function into a function that does the search
- * through all pages
+ * Given a "sok" function and its arguments, go through all pages and returns
+ * a list of StudieResultat
  */
-export function searchAll(
-  sokFn: (arg1: string, arg2: string[], page: number) => Promise<SokResultat>
-): (arg1: string, arg2: string[]) => Promise<SokResultat> {
-  return async (arg1: string, arg2: string[]): Promise<SokResultat> => {
-    let page = 1;
-    const allResults: SokResultat["Resultat"] = [];
+export async function searchAll(
+  sokFn: (arg1: string, arg2: string[], page: number) => Promise<SokResultat>,
+  arg1: string,
+  arg2: string[]
+): Promise<Studieresultat[]> {
+  let page = 1;
+  const allResults: Studieresultat[] = [];
+  const result = await sokFn(arg1, arg2, page);
+  allResults.push(...result.Resultat);
+
+  while (result.TotalAntalPoster > allResults.length) {
+    page++;
     const result = await sokFn(arg1, arg2, page);
     allResults.push(...result.Resultat);
+  }
 
-    while (result.TotalAntalPoster > allResults.length) {
-      page++;
-      const result = await sokFn(arg1, arg2, page);
-      allResults.push(...result.Resultat);
-    }
-
-    return {
-      TotalAntalPoster: allResults.length,
-      Resultat: allResults,
-    };
-  };
+  return allResults;
 }
 
-export const searchAllAktStudieresultat = searchAll(
-  searchAktivitetstillfalleStudieresultat
-);
-export const searchAllUtbStudieresultat = searchAll(
-  searchUtbildningsinstansStudieresultat
-);
+export function searchAllAktivitetstillfalleStudieresultat(
+  aktivitetstillfalleUID: string,
+  kurstillfallenUID: string[]
+) {
+  return searchAll(
+    searchAktivitetstillfalleStudieresultat,
+    aktivitetstillfalleUID,
+    kurstillfallenUID
+  );
+}
+
+export function searchAllUtbildningsinstansStudieresultat(
+  utbildningsinstansUID: string,
+  kurstillfallenUID: string[]
+) {
+  return searchAll(
+    searchUtbildningsinstansStudieresultat,
+    utbildningsinstansUID,
+    kurstillfallenUID
+  );
+}
 
 /**
  * Checks if a user has permission to send grade to the given utbildningsinstansUID
@@ -110,23 +123,24 @@ export async function getExtraAktInformation(uid: string): Promise<AktSection> {
 }
 
 /**
- * Given a Destination, get a list of people that can have grades sent to them.
+ * Given a Destination, get a list of all StudieResultat in that destination
  */
-export async function getLadokResults(
+export async function getAllStudieresultat(
   destination: GradesDestination
-): Promise<SokResultat> {
+): Promise<Studieresultat[]> {
   if ("aktivitetstillfalle" in destination) {
     const kurstillfalleUID = await getSkaFinnasStudenter(
       destination.aktivitetstillfalle
     ).then((sfi) => sfi.Utbildningstillfalle.map((u) => u.Uid));
 
-    return searchAllAktStudieresultat(
+    return searchAllAktivitetstillfalleStudieresultat(
       destination.aktivitetstillfalle,
       kurstillfalleUID
     );
   } else {
-    return await searchAllUtbStudieresultat(destination.utbildningsinstans, [
-      destination.kurstillfalle,
-    ]);
+    return await searchAllUtbildningsinstansStudieresultat(
+      destination.utbildningsinstans,
+      [destination.kurstillfalle]
+    );
   }
 }

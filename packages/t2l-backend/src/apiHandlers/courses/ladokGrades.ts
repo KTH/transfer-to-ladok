@@ -3,14 +3,10 @@ import assert from "node:assert/strict";
 import CanvasClient, { CanvasSection } from "../../externalApis/canvasApi";
 import {
   getExtraKurInformation,
-  getLadokResults,
+  getAllStudieresultat,
   splitSections,
 } from "./utils/commons";
-import type {
-  GradesDestination,
-  GradeableStudents,
-  GradeResult,
-} from "./utils/types";
+import type { GradesDestination, GradeableStudents } from "./utils/types";
 import { BadRequestError, UnprocessableEntityError } from "../../error";
 import {
   assertGradesDestination,
@@ -19,28 +15,29 @@ import {
 import {
   createResult,
   getBetyg,
-  SokResultat,
+  Studieresultat,
   updateResult,
+  Resultat,
 } from "../../externalApis/ladokApi";
 
-async function validateUtbildningsinstans(
-  kurstillfalleUID: string,
-  utbildningsinstansUID: string
+async function checkUtbildningsinstansInKurstillfalle(
+  utbildningsinstansUID: string,
+  kurstillfalleUID: string
 ) {
   const { utbildningsinstans, modules } = await getExtraKurInformation(
     kurstillfalleUID
   );
 
-  if (utbildningsinstans === utbildningsinstansUID) {
-    return;
-  }
+  const isFinalGrade = utbildningsinstans === utbildningsinstansUID;
+  const isModule = modules.some(
+    (m) => m.utbildningsinstans === utbildningsinstansUID
+  );
 
-  if (modules.find((m) => m.utbildningsinstans === utbildningsinstansUID)) {
-    return;
-  }
-
-  throw new UnprocessableEntityError(
-    `Provided [utbildningsinstans] doesn't exist in [kurstillfalle]`
+  assert(
+    isFinalGrade || isModule,
+    new UnprocessableEntityError(
+      `Provided utbildningsinstans [${utbildningsinstansUID}] doesn't refer to a module or the final grade of the kurstillfälle [${kurstillfalleUID}]`
+    )
   );
 }
 
@@ -55,7 +52,7 @@ async function checkDestinationInSections(
     assert(
       aktivitetstillfalleIds.includes(destination.aktivitetstillfalle),
       new UnprocessableEntityError(
-        "Provided [aktivitetstillfalle] doesn't exist in examroom"
+        `Provided aktivitetstillfalle [${destination.aktivitetstillfalle}] doesn't exist in examroom`
       )
     );
   } else {
@@ -63,11 +60,14 @@ async function checkDestinationInSections(
     assert(
       kurstillfalleIds.includes(kurstillfalle),
       new UnprocessableEntityError(
-        "Provided [kurstillfalle] doesn't exist in courseroom"
+        `Provided kurstillfalle [${destination.kurstillfalle}] doesn't exist in courseroom`
       )
     );
 
-    await validateUtbildningsinstans(kurstillfalle, utbildningsinstans);
+    await checkUtbildningsinstansInKurstillfalle(
+      utbildningsinstans,
+      kurstillfalle
+    );
   }
 }
 
@@ -83,8 +83,8 @@ export async function getGradesHandler(
 
   await checkDestinationInSections(req.query, sections);
 
-  const sokResultat = await getLadokResults(req.query);
-  const response = sokResultat.Resultat.map((content) => {
+  const studieResultat = await getAllStudieresultat(req.query);
+  const response = studieResultat.map((content) => {
     const result: GradeableStudents[number] = {
       id: content.Student.Uid,
       scale: getBetyg(content.Rapporteringskontext.BetygsskalaID).map(
@@ -111,57 +111,52 @@ export async function getGradesHandler(
   res.json(response);
 }
 
-async function postOneResult(
-  sokResultat: SokResultat,
-  req: Request<unknown>,
-  newGrade: GradeResult
+function getStudentsStudieresultat(
+  studentId: string,
+  sokResultat: Studieresultat[]
 ) {
-  const student = sokResultat.Resultat.find(
-    (r) => r.Student.Uid === newGrade.id
-  );
+  const r = sokResultat.find((r) => r.Student.Uid === studentId);
 
-  if (!student) {
-    throw new UnprocessableEntityError(
-      `Student with id ${newGrade.id} doesn't exist in destination`
+  if (!r) {
+    throw new Error(`Student [${studentId}] cannot have results`);
+  }
+
+  return r;
+}
+
+function getLadokGradeIds(
+  letterGrade: string,
+  studentResultat: Studieresultat
+) {
+  const scaleId = studentResultat.Rapporteringskontext.BetygsskalaID;
+  const gradeId = getBetyg(scaleId).find((b) => b.Kod === letterGrade)?.ID;
+
+  if (!gradeId) {
+    throw new Error(
+      `You cannot set grade [${letterGrade}] for student ${studentResultat.Student.Uid}`
     );
   }
 
-  // TODO: check that you have permissions
+  return { scaleId, gradeId };
+}
 
-  const scale = student.Rapporteringskontext.BetygsskalaID;
-  const gradeID = getBetyg(scale).find(
-    (b) => b.Kod === newGrade.draft.grade
-  )?.ID;
-
-  if (!gradeID) {
-    throw new UnprocessableEntityError(
-      `You cannot set grade ${newGrade.draft.grade} for student ${newGrade.id}`
-    );
-  }
-
-  const arbetsunderlag = student.ResultatPaUtbildningar?.find(
+function getExistingDraft(studentResultat: Studieresultat) {
+  const arbetsunderlag = studentResultat.ResultatPaUtbildningar?.find(
     (rpu) => rpu.Arbetsunderlag
   )?.Arbetsunderlag;
 
-  if (arbetsunderlag) {
-    // Update result
-    await updateResult(arbetsunderlag.Uid, {
-      BetygsskalaID: scale,
-      Betygsgrad: gradeID,
-      Examinationsdatum: newGrade.draft.examinationDate,
-    });
-  } else {
-    // Create result
-    await createResult(
-      student.Uid,
-      student.Rapporteringskontext.UtbildningsinstansUID,
-      {
-        BetygsskalaID: scale,
-        Betygsgrad: gradeID,
-        Examinationsdatum: newGrade.draft.examinationDate,
-      }
-    );
-  }
+  return arbetsunderlag;
+}
+
+async function createLadokResult(
+  oneStudieResultat: Studieresultat,
+  newValue: Resultat
+) {
+  return createResult(
+    oneStudieResultat.Uid,
+    oneStudieResultat.Rapporteringskontext.UtbildningsinstansUID,
+    newValue
+  );
 }
 
 export async function postGradesHandler(
@@ -175,12 +170,37 @@ export async function postGradesHandler(
   const sections = await canvasClient.getSections(courseId);
   await checkDestinationInSections(req.body.destination, sections);
 
-  const sokResultat = await getLadokResults(req.body.destination);
+  const allStudieresultat = await getAllStudieresultat(req.body.destination);
 
-  const response = [];
-  for (const result of req.body.results) {
-    response.push(await postOneResult(sokResultat, req, result));
+  // const response = [];
+  for (const resultInput of req.body.results) {
+    try {
+      const oneStudieResultat = getStudentsStudieresultat(
+        resultInput.id,
+        allStudieresultat
+      );
+      const { gradeId, scaleId } = getLadokGradeIds(
+        resultInput.draft.grade,
+        oneStudieResultat
+      );
+
+      const draft = getExistingDraft(oneStudieResultat);
+      if (draft) {
+        await updateResult(draft.Uid, {
+          Betygsgrad: gradeId,
+          BetygsskalaID: scaleId,
+          Examinationsdatum: resultInput.draft.examinationDate,
+        });
+      } else {
+        await createLadokResult(oneStudieResultat, {
+          Betygsgrad: gradeId,
+          BetygsskalaID: scaleId,
+          Examinationsdatum: resultInput.draft.examinationDate,
+        });
+      }
+    } catch (err) {}
+    // response.push(await postOneResult(sokResultat, result));
   }
 
-  res.send(response);
+  // res.send(response);
 }

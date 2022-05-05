@@ -7,8 +7,6 @@ import {
 } from "./utils/commons";
 import type { Sections } from "./utils/types";
 
-/** Given an Aktivitetstillfalle UID, get extra information from Ladok */
-
 /**
  * Return all sections in a canvas course room
  * - If the section is linked with a kurstillfälle in Ladok, this endpoint
