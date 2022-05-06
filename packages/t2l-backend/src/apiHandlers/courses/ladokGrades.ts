@@ -108,7 +108,7 @@ export async function getGradesHandler(
       )?.Arbetsunderlag;
 
       if (arbetsunderlag) {
-        const grade = arbetsunderlag.Betygsgradobjekt.Kod;
+        const grade = arbetsunderlag.Betygsgradsobjekt.Kod;
         const examinationDate = arbetsunderlag.Examinationsdatum;
 
         result.draft = { grade, examinationDate };

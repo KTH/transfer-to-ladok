@@ -99,7 +99,7 @@ export interface Studieresultat {
   /** Present if there is a grade in form of utkast */
   ResultatPaUtbildningar?: Array<{
     Arbetsunderlag?: {
-      Betygsgradobjekt: {
+      Betygsgradsobjekt: {
         ID: number;
         Kod: string;
       };
