@@ -183,10 +183,11 @@ function errorHandler(
       }
     }
 
-    log.error(
-      err,
-      `Error from Ladok [${err.message}] when trying to set grade [${context.draft.grade}] to student [${context.id}]`
-    );
+    if (typeof err.response.body === "string") {
+      log.error(
+        `Error from Ladok: [${err.response.body}] when trying to set grade [${context.draft.grade}] to student [${context.id}]`
+      );
+    }
 
     return {
       code: "unknown_ladok_error",
@@ -232,11 +233,15 @@ export async function postGradesHandler(
 
       const draft = getExistingDraft(oneStudieResultat);
       if (draft) {
-        await updateResult(draft.Uid, {
-          Betygsgrad: gradeId,
-          BetygsskalaID: scaleId,
-          Examinationsdatum: resultInput.draft.examinationDate,
-        });
+        await updateResult(
+          draft.Uid,
+          {
+            Betygsgrad: gradeId,
+            BetygsskalaID: scaleId,
+            Examinationsdatum: resultInput.draft.examinationDate,
+          },
+          draft.SenasteResultatandring
+        );
         resultOutput.push({
           id: resultInput.id,
           draft: resultInput.draft,

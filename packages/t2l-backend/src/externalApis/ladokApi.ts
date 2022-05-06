@@ -104,6 +104,8 @@ export interface Studieresultat {
         Kod: string;
       };
 
+      SenasteResultatandring: string;
+
       Examinationsdatum: string;
       /**
        * This is the "ResultatUID" that you need to send to Ladok in order to
@@ -225,14 +227,14 @@ export function createResult(
 export function updateResult(
   resultatUID: string,
   newValue: Resultat,
-  currentDate?: Date
+  SenasteResultatandring: string
 ) {
   return gotClient.put<any>(
     `resultat/studieresultat/resultat/${resultatUID}/`,
     {
       json: {
         ...newValue,
-        SenasteResultatandring: (currentDate || new Date()).toISOString(),
+        SenasteResultatandring,
       },
     }
   );
