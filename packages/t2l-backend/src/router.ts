@@ -5,7 +5,10 @@ import {
   assignmentGradesHandler,
   courseGradesHandler,
 } from "./apiHandlers/courses/canvasGrades";
-import { getGradesHandler } from "./apiHandlers/courses/ladokGrades";
+import {
+  getGradesHandler,
+  postGradesHandler,
+} from "./apiHandlers/courses/ladokGrades";
 import auth from "./apiHandlers/auth";
 import { errorHandler } from "./error";
 const router = Router();
@@ -36,7 +39,9 @@ router.get(
 router.get("/api/courses/:courseId/ladok-grades", (req, res, next) =>
   getGradesHandler(req, res).catch(next)
 );
-router.post("/api/courses/:courseId/ladok-grades");
+router.post("/api/courses/:courseId/ladok-grades", (req, res, next) =>
+  postGradesHandler(req, res).catch(next)
+);
 
 router.use("/api", errorHandler);
 

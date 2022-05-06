@@ -147,3 +147,24 @@ export interface PostLadokGradesInput {
   destination: GradesDestination;
   results: GradeResult[];
 }
+
+export interface ResultOutput {
+  id: string;
+  status: "success" | "error";
+  draft: {
+    grade: string;
+    examinationDate: string;
+  };
+  error?: {
+    code: string;
+    message: string;
+  };
+}
+
+export interface PostLadokGradesOutput {
+  summary: {
+    success: number;
+    error: number;
+  };
+  results: ResultOutput[];
+}

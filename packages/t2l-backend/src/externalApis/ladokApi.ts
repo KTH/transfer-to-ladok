@@ -133,6 +133,12 @@ export interface Betygsgrad {
   Kod: string;
 }
 
+export interface LadokError {
+  Detaljkod: string;
+  FelUID: string;
+  Meddelande: string;
+}
+
 export async function getAktivitetstillfalle(aktivitetstillfalleUID: string) {
   return gotClient
     .get<Aktivitetstillfalle>(
@@ -206,12 +212,14 @@ export function createResult(
   utbildningsinstansUID: string,
   resultat: Resultat
 ) {
-  return gotClient.post<any>(
-    `resultat/studieresultat/${studieresultatUID}/utbildning/${utbildningsinstansUID}/resultat`,
-    {
-      json: resultat,
-    }
-  );
+  return gotClient
+    .post<any>(
+      `resultat/studieresultat/${studieresultatUID}/utbildning/${utbildningsinstansUID}/resultat`,
+      {
+        json: resultat,
+      }
+    )
+    .then((response) => response.body);
 }
 
 export function updateResult(

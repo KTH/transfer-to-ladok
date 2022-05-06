@@ -6,11 +6,18 @@ import {
   getAllStudieresultat,
   splitSections,
 } from "./utils/commons";
-import type { GradesDestination, GradeableStudents } from "./utils/types";
+import type {
+  GradesDestination,
+  GradeableStudents,
+  ResultOutput,
+  GradeResult,
+  PostLadokGradesOutput,
+} from "./utils/types";
 import { BadRequestError, UnprocessableEntityError } from "../../error";
 import {
   assertGradesDestination,
   assertPostLadokGradesInput,
+  isLadokError,
 } from "./utils/asserts";
 import {
   createResult,
@@ -19,7 +26,10 @@ import {
   updateResult,
   Resultat,
 } from "../../externalApis/ladokApi";
+import log from "skog";
+import { HTTPError } from "got/dist/source";
 
+/** Checks if the given `utbildningsinstans` belongs to the given `kurstillfalle` */
 async function checkUtbildningsinstansInKurstillfalle(
   utbildningsinstansUID: string,
   kurstillfalleUID: string
@@ -111,6 +121,7 @@ export async function getGradesHandler(
   res.json(response);
 }
 
+/** Given a list of `studieResultat`, get the one that belongs to a given `student` */
 function getStudentsStudieresultat(
   studentId: string,
   sokResultat: Studieresultat[]
@@ -124,6 +135,7 @@ function getStudentsStudieresultat(
   return r;
 }
 
+/** Returns the Ladok scale ID and grade ID of a given letter grade in a Studieresultat */
 function getLadokGradeIds(
   letterGrade: string,
   studentResultat: Studieresultat
@@ -140,6 +152,7 @@ function getLadokGradeIds(
   return { scaleId, gradeId };
 }
 
+/** Gets the draft in a Studieresultat */
 function getExistingDraft(studentResultat: Studieresultat) {
   const arbetsunderlag = studentResultat.ResultatPaUtbildningar?.find(
     (rpu) => rpu.Arbetsunderlag
@@ -148,20 +161,53 @@ function getExistingDraft(studentResultat: Studieresultat) {
   return arbetsunderlag;
 }
 
-async function createLadokResult(
-  oneStudieResultat: Studieresultat,
-  newValue: Resultat
-) {
-  return createResult(
-    oneStudieResultat.Uid,
-    oneStudieResultat.Rapporteringskontext.UtbildningsinstansUID,
-    newValue
+function errorHandler(
+  err: unknown,
+  context: GradeResult
+): ResultOutput["error"] {
+  if (err instanceof HTTPError) {
+    const body = err.response.body;
+
+    if (isLadokError(body)) {
+      switch (body.Meddelande) {
+        default:
+          log.error(
+            { err: body },
+            `Error from Ladok [${body.Meddelande}] when trying to set grade [${context.draft.grade}] to student [${context.id}]`
+          );
+
+          return {
+            code: "unprocessed_ladok_error",
+            message: body.Meddelande,
+          };
+      }
+    }
+
+    log.error(
+      err,
+      `Error from Ladok [${err.message}] when trying to set grade [${context.draft.grade}] to student [${context.id}]`
+    );
+
+    return {
+      code: "unknown_ladok_error",
+      message: "Unknown problem in Ladok. Please try again later",
+    };
+  }
+
+  log.fatal(
+    `Error from Ladok when trying to set grade [${context.draft.grade}] to student [${context.id}]. The function did not throw an error object`
   );
+
+  // Unknown error
+  return {
+    code: "unknown_error",
+    message: "Unknown error. Please try again later",
+  };
 }
 
 export async function postGradesHandler(
   req: Request<{ courseId: string }>,
-  res: Response<{}>
+  res: Response<PostLadokGradesOutput>
 ) {
   assertPostLadokGradesInput(req.body);
 
@@ -171,8 +217,8 @@ export async function postGradesHandler(
   await checkDestinationInSections(req.body.destination, sections);
 
   const allStudieresultat = await getAllStudieresultat(req.body.destination);
+  const resultOutput: ResultOutput[] = [];
 
-  // const response = [];
   for (const resultInput of req.body.results) {
     try {
       const oneStudieResultat = getStudentsStudieresultat(
@@ -191,16 +237,63 @@ export async function postGradesHandler(
           BetygsskalaID: scaleId,
           Examinationsdatum: resultInput.draft.examinationDate,
         });
-      } else {
-        await createLadokResult(oneStudieResultat, {
-          Betygsgrad: gradeId,
-          BetygsskalaID: scaleId,
-          Examinationsdatum: resultInput.draft.examinationDate,
+        resultOutput.push({
+          id: resultInput.id,
+          draft: resultInput.draft,
+          status: "success",
         });
+        log.info(
+          {
+            student: resultInput.id,
+            studieresultat: oneStudieResultat.Uid,
+            grade: resultInput.draft.grade,
+            examinationDate: resultInput.draft.examinationDate,
+          },
+          "Updated grade!"
+        );
+      } else {
+        await createResult(
+          oneStudieResultat.Uid,
+          oneStudieResultat.Rapporteringskontext.UtbildningsinstansUID,
+          {
+            Betygsgrad: gradeId,
+            BetygsskalaID: scaleId,
+            Examinationsdatum: resultInput.draft.examinationDate,
+          }
+        );
+
+        resultOutput.push({
+          id: resultInput.id,
+          draft: resultInput.draft,
+          status: "success",
+        });
+        log.info(
+          {
+            student: resultInput.id,
+            studieresultat: oneStudieResultat.Uid,
+            grade: resultInput.draft.grade,
+            examinationDate: resultInput.draft.examinationDate,
+          },
+          "Created grade!"
+        );
       }
-    } catch (err) {}
-    // response.push(await postOneResult(sokResultat, result));
+    } catch (err) {
+      resultOutput.push({
+        id: resultInput.id,
+        draft: resultInput.draft,
+        status: "error",
+        error: errorHandler(err, resultInput),
+      });
+    }
   }
 
-  // res.send(response);
+  const summary = {
+    success: resultOutput.filter((r) => r.status === "success").length,
+    error: resultOutput.filter((r) => r.status === "error").length,
+  };
+
+  res.send({
+    summary,
+    results: resultOutput,
+  });
 }
