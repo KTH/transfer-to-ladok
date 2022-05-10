@@ -15,7 +15,7 @@ import type { AktSection, GradesDestination, KurSection } from "./types";
  * Given a "sok" function and its arguments, go through all pages and returns
  * a list of StudieResultat
  */
-export async function searchAll(
+async function searchAll(
   sokFn: (arg1: string, arg2: string[], page: number) => Promise<SokResultat>,
   arg1: string,
   arg2: string[]
@@ -34,7 +34,12 @@ export async function searchAll(
   return allResults;
 }
 
-export function searchAllAktivitetstillfalleStudieresultat(
+/**
+ * @private Get all {@link Studieresultat} in an Aktivitetstillfälle.
+ *
+ * This function is used internally by {@link getAllStudieresultat}
+ */
+function searchAllAktivitetstillfalleStudieresultat(
   aktivitetstillfalleUID: string,
   kurstillfallenUID: string[]
 ) {
@@ -45,7 +50,12 @@ export function searchAllAktivitetstillfalleStudieresultat(
   );
 }
 
-export function searchAllUtbildningsinstansStudieresultat(
+/**
+ * @private Get all {@link Studieresultat} in an Utbildningsinstans.
+ *
+ * This function is used internally by {@link getAllStudieresultat}
+ */
+function searchAllUtbildningsinstansStudieresultat(
   utbildningsinstansUID: string,
   kurstillfallenUID: string[]
 ) {
@@ -57,7 +67,8 @@ export function searchAllUtbildningsinstansStudieresultat(
 }
 
 /**
- * Checks if a user has permission to send grade to the given utbildningsinstansUID
+ * Checks if a user has permission to send grades to the given utbildningsinstansUID
+ * according to Ladok.
  */
 export async function isRapportor(
   personUID: string,
@@ -68,8 +79,14 @@ export async function isRapportor(
 }
 
 /**
- * Given a list of CanvasSection, identifies which CanvasSection are linked to
+ * Given a list of {@link CanvasSection}, identifies which ones are linked to
  * a Ladok kurstillfälle and which ones to a Ladok aktivitetstillfälle.
+ *
+ * @returns an object with two lists `aktivitetstillfalleIds` and
+ * `kurstillfalleIds`, which are lists of Ladok IDs found in the sections.
+ *
+ * Note: this function does not make calls to Ladok and it does not guarantee
+ * that the returned list are actual Ladok IDs
  */
 export function splitSections(sections: CanvasSection[]) {
   const AKTIVITETSTILLFALLE_REGEX = /^AKT\.([a-z0-9-]+)(\.\w+)?$/;
@@ -107,6 +124,7 @@ export async function getExtraKurInformation(uid: string): Promise<KurSection> {
   };
 }
 
+/** Given an Aktivitetstillfälle UID, returns Ladok information about it */
 export async function getExtraAktInformation(uid: string): Promise<AktSection> {
   const ladokAkt = await getAktivitetstillfalle(uid);
   const codes = ladokAkt.Aktiviteter.map(
@@ -123,7 +141,8 @@ export async function getExtraAktInformation(uid: string): Promise<AktSection> {
 }
 
 /**
- * Given a Destination, get a list of all StudieResultat in that destination
+ * Given a destination ({@link GradesDestination}), get a list of all
+ * {@link Studieresultat} in that destination
  */
 export async function getAllStudieresultat(
   destination: GradesDestination

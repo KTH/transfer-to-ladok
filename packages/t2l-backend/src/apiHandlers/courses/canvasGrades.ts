@@ -2,6 +2,12 @@ import { Request, Response } from "express";
 import CanvasClient from "../../externalApis/canvasApi";
 import { CanvasGrades } from "./utils/types";
 
+/**
+ * HTTP request: `GET /courses/:courseId/assignments/:assignmentId`
+ * Get the grades given a Canvas `:courseId` and `:assignmentId`
+ *
+ * @see {@link CanvasGrades} to see how the response looks like
+ */
 export async function assignmentGradesHandler(
   req: Request<{ courseId: string; assignmentId: string }>,
   res: Response<CanvasGrades>
@@ -21,6 +27,12 @@ export async function assignmentGradesHandler(
   );
 }
 
+/**
+ * HTTP request: `GET /courses/:courseId/grades`
+ * Get the final grades ("summa kolumnen") given a Canvas `:courseId`
+ *
+ * @see {@link CanvasGrades} to see how the response looks like
+ */
 export async function courseGradesHandler(
   req: Request<{ courseId: string }>,
   res: Response<CanvasGrades>

@@ -1,8 +1,10 @@
 /** Collection of types of all endpoints: query/body parameters and responses */
 
 /**
- * Response of endpoint
- * GET /api/courses/:courseId/sections
+ * Response of endpoint `GET /api/courses/:courseId/sections`
+ *
+ * Object with two lists `aktivitetstillfälle` and `kurstillfälle` that contains
+ * the sections in a course separated by type.
  */
 export interface Sections {
   /** Sections that are linked with a aktivitetstillfälle in Ladok */

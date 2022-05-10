@@ -8,9 +8,16 @@ import {
 import type { Sections } from "./utils/types";
 
 /**
- * Return all sections in a canvas course room
- * - If the section is linked with a kurstillfälle in Ladok, this endpoint
- *   will also return all the modules in such kurstillfälle
+ * HTTP request: `GET /courses/:courseId/sections`
+ * Get the sections in a given Canvas `:courseId`
+ *
+ * Return information about the sections, separated by type (are they linked
+ * with an aktivitetstillfälle or a kurstillfälle?).
+ *
+ * Sections not linked with any aktivitetstillfälle or kurstillfälle will not
+ * be included in the response.
+ *
+ * @see {@link Sections} to see how the response looks like
  */
 export default async function sectionsHandler(
   req: Request<{ courseId: string }>,

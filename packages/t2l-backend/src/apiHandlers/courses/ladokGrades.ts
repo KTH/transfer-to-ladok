@@ -81,6 +81,14 @@ async function checkDestinationInSections(
   }
 }
 
+/**
+ * HTTP request: `GET /courses/:courseId/ladok-grades`
+ * Get a list of students that can have grades in a certain destination.
+ * Such destination is defined in the request query
+ * ({@link GradesDestination} to see its format)
+ *
+ * @see {@link GradeableStudents} to see how the response looks like
+ */
 export async function getGradesHandler(
   req: Request<{ courseId: string }>,
   res: Response<GradeableStudents>

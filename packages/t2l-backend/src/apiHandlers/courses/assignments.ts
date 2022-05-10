@@ -2,6 +2,12 @@ import { Request, Response } from "express";
 import CanvasClient from "../../externalApis/canvasApi";
 import { Assignments } from "./utils/types";
 
+/**
+ * HTTP request: `GET /courses/:courseId/assignments`
+ * Get the assignments in a given Canvas `:courseId`
+ *
+ * @see {@link Assignments} to see how the response looks like
+ */
 export default async function assignmentsHandler(
   req: Request<{ courseId: string }>,
   res: Response<Assignments>
