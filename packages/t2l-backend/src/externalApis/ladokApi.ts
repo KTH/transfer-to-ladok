@@ -241,6 +241,7 @@ export function updateResult(
 }
 
 export function getBetyg(betygsskalaID: number): Betygsgrad[] {
+  // TODO: Define constants as global vars?
   if (betygsskalaID === 131656) {
     return [
       {
