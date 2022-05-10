@@ -74,23 +74,26 @@ export default class CanvasClient {
       .toArray();
   }
 
-  getSubmissions(courseId: string, assignmentId: string) {
+  getSubmissions(courseId: string, assignmentId: string, page: number) {
     return this.client
-      .listItems<Submission>(
+      .get<Submission[]>(
         `courses/${courseId}/assignments/${assignmentId}/submissions`,
         {
-          per_page: 100,
           include: ["user"],
+          per_page: 50,
+          page,
         }
       )
-      .toArray();
+      .then((r) => r.body);
   }
 
-  getFinalGrades(courseId: string) {
+  getFinalGrades(courseId: string, page: number) {
     return this.client
-      .listItems<Enrollment>(`courses/${courseId}/enrollments`, {
+      .get<Enrollment[]>(`courses/${courseId}/enrollments`, {
         include: ["user"],
+        per_page: 50,
+        page,
       })
-      .toArray();
+      .then((r) => r.body);
   }
 }

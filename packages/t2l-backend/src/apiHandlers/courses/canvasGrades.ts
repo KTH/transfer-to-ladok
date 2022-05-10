@@ -2,6 +2,18 @@ import { Request, Response } from "express";
 import CanvasClient from "../../externalApis/canvasApi";
 import { CanvasGrades } from "./utils/types";
 
+function getPage(req: Request) {
+  const { page } = req.query;
+
+  if (typeof page !== "string") {
+    return 1;
+  }
+
+  const pageNumber = parseInt(page, 10);
+
+  return isNaN(pageNumber) ? 1 : pageNumber;
+}
+
 export async function assignmentGradesHandler(
   req: Request<{ courseId: string; assignmentId: string }>,
   res: Response<CanvasGrades>
@@ -9,7 +21,11 @@ export async function assignmentGradesHandler(
   const canvasApi = new CanvasClient(req);
   const courseId = req.params.courseId;
   const assignmentId = req.params.assignmentId;
-  const submissions = await canvasApi.getSubmissions(courseId, assignmentId);
+  const submissions = await canvasApi.getSubmissions(
+    courseId,
+    assignmentId,
+    getPage(req)
+  );
 
   res.json(
     submissions.map((s) => ({
@@ -27,7 +43,7 @@ export async function courseGradesHandler(
 ) {
   const canvasApi = new CanvasClient(req);
   const courseId = req.params.courseId;
-  const enrollments = await canvasApi.getFinalGrades(courseId);
+  const enrollments = await canvasApi.getFinalGrades(courseId, getPage(req));
 
   res.json(
     enrollments.map((e) => ({
