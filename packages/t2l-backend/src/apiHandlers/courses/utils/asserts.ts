@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { LadokError } from "../../../externalApis/ladokApi";
+import { LadokApiError } from "../../../externalApis/ladokApi";
 import type {
   GradeResult,
   GradesDestination,
@@ -92,7 +92,7 @@ export function assertPostLadokGradesInput(
   obj.results.forEach((result: any) => assertGradeResult(result, TypeError));
 }
 
-export function isLadokError(obj: any): obj is LadokError {
+export function isLadokApiError(obj: any): obj is LadokApiError {
   return (
     typeof obj?.Detaljkod === "string" &&
     typeof obj?.FelUID === "string" &&

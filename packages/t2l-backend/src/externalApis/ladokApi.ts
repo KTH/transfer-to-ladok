@@ -135,7 +135,7 @@ export interface Betygsgrad {
   Kod: string;
 }
 
-export interface LadokError {
+export interface LadokApiError {
   Detaljkod: string;
   FelUID: string;
   Meddelande: string;

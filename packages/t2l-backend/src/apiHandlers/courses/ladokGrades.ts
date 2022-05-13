@@ -17,17 +17,9 @@ import { BadRequestError, UnprocessableEntityError } from "../../error";
 import {
   assertGradesDestination,
   assertPostLadokGradesInput,
-  isLadokError,
 } from "./utils/asserts";
-import {
-  createResult,
-  getBetyg,
-  Studieresultat,
-  updateResult,
-  Resultat,
-} from "../../externalApis/ladokApi";
-import log from "skog";
-import { HTTPError } from "got/dist/source";
+import { getBetyg } from "../../externalApis/ladokApi";
+import postOneResult from "./utils/postOneResult";
 
 /** Checks if the given `utbildningsinstans` belongs to the given `kurstillfalle` */
 async function checkUtbildningsinstansInKurstillfalle(
@@ -129,91 +121,6 @@ export async function getGradesHandler(
   res.json(response);
 }
 
-/** Given a list of `studieResultat`, get the one that belongs to a given `student` */
-function getStudentsStudieresultat(
-  studentId: string,
-  sokResultat: Studieresultat[]
-) {
-  const r = sokResultat.find((r) => r.Student.Uid === studentId);
-
-  if (!r) {
-    throw new Error(`Student [${studentId}] cannot have results`);
-  }
-
-  return r;
-}
-
-/** Returns the Ladok scale ID and grade ID of a given letter grade in a Studieresultat */
-function getLadokGradeIds(
-  letterGrade: string,
-  studentResultat: Studieresultat
-) {
-  const scaleId = studentResultat.Rapporteringskontext.BetygsskalaID;
-  const gradeId = getBetyg(scaleId).find((b) => b.Kod === letterGrade)?.ID;
-
-  if (!gradeId) {
-    throw new Error(
-      `You cannot set grade [${letterGrade}] for student ${studentResultat.Student.Uid}`
-    );
-  }
-
-  return { scaleId, gradeId };
-}
-
-/** Gets the draft in a Studieresultat */
-function getExistingDraft(studentResultat: Studieresultat) {
-  const arbetsunderlag = studentResultat.ResultatPaUtbildningar?.find(
-    (rpu) => rpu.Arbetsunderlag
-  )?.Arbetsunderlag;
-
-  return arbetsunderlag;
-}
-
-function errorHandler(
-  err: unknown,
-  context: GradeResult
-): ResultOutput["error"] {
-  if (err instanceof HTTPError) {
-    const body = err.response.body;
-
-    if (isLadokError(body)) {
-      switch (body.Meddelande) {
-        default:
-          log.error(
-            { err: body },
-            `Error from Ladok [${body.Meddelande}] when trying to set grade [${context.draft.grade}] to student [${context.id}]`
-          );
-
-          return {
-            code: "unprocessed_ladok_error",
-            message: body.Meddelande,
-          };
-      }
-    }
-
-    if (typeof err.response.body === "string") {
-      log.error(
-        `Error from Ladok: [${err.response.body}] when trying to set grade [${context.draft.grade}] to student [${context.id}]`
-      );
-    }
-
-    return {
-      code: "unknown_ladok_error",
-      message: "Unknown problem in Ladok. Please try again later",
-    };
-  }
-
-  log.fatal(
-    `Error from Ladok when trying to set grade [${context.draft.grade}] to student [${context.id}]. The function did not throw an error object`
-  );
-
-  // Unknown error
-  return {
-    code: "unknown_error",
-    message: "Unknown error. Please try again later",
-  };
-}
-
 export async function postGradesHandler(
   req: Request<{ courseId: string }>,
   res: Response<PostLadokGradesOutput>
@@ -226,87 +133,24 @@ export async function postGradesHandler(
   await checkDestinationInSections(req.body.destination, sections);
 
   const allStudieresultat = await getAllStudieresultat(req.body.destination);
-  const resultOutput: ResultOutput[] = [];
+
+  // TODO: use real email
+  const email = "carsai@kth.se";
+  const output: ResultOutput[] = [];
 
   for (const resultInput of req.body.results) {
-    try {
-      const oneStudieResultat = getStudentsStudieresultat(
-        resultInput.id,
-        allStudieresultat
-      );
-      const { gradeId, scaleId } = getLadokGradeIds(
-        resultInput.draft.grade,
-        oneStudieResultat
-      );
-
-      const draft = getExistingDraft(oneStudieResultat);
-      if (draft) {
-        await updateResult(
-          draft.Uid,
-          {
-            Betygsgrad: gradeId,
-            BetygsskalaID: scaleId,
-            Examinationsdatum: resultInput.draft.examinationDate,
-          },
-          draft.SenasteResultatandring
-        );
-        resultOutput.push({
-          id: resultInput.id,
-          draft: resultInput.draft,
-          status: "success",
-        });
-        log.info(
-          {
-            student: resultInput.id,
-            studieresultat: oneStudieResultat.Uid,
-            grade: resultInput.draft.grade,
-            examinationDate: resultInput.draft.examinationDate,
-          },
-          "Updated grade!"
-        );
-      } else {
-        await createResult(
-          oneStudieResultat.Uid,
-          oneStudieResultat.Rapporteringskontext.UtbildningsinstansUID,
-          {
-            Betygsgrad: gradeId,
-            BetygsskalaID: scaleId,
-            Examinationsdatum: resultInput.draft.examinationDate,
-          }
-        );
-
-        resultOutput.push({
-          id: resultInput.id,
-          draft: resultInput.draft,
-          status: "success",
-        });
-        log.info(
-          {
-            student: resultInput.id,
-            studieresultat: oneStudieResultat.Uid,
-            grade: resultInput.draft.grade,
-            examinationDate: resultInput.draft.examinationDate,
-          },
-          "Created grade!"
-        );
-      }
-    } catch (err) {
-      resultOutput.push({
-        id: resultInput.id,
-        draft: resultInput.draft,
-        status: "error",
-        error: errorHandler(err, resultInput),
-      });
-    }
+    await postOneResult(resultInput, email, allStudieresultat).then((o) => {
+      output.push(o);
+    });
   }
 
   const summary = {
-    success: resultOutput.filter((r) => r.status === "success").length,
-    error: resultOutput.filter((r) => r.status === "error").length,
+    success: output.filter((r) => r.status === "success").length,
+    error: output.filter((r) => r.status === "error").length,
   };
 
   res.send({
     summary,
-    results: resultOutput,
+    results: output,
   });
 }

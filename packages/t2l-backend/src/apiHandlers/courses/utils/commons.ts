@@ -67,18 +67,6 @@ function searchAllUtbildningsinstansStudieresultat(
 }
 
 /**
- * Checks if a user has permission to send grades to the given utbildningsinstansUID
- * according to Ladok.
- */
-export async function isRapportor(
-  personUID: string,
-  utbildningsinstansUID: string
-) {
-  const rapportorer = await getRapportor(utbildningsinstansUID);
-  return rapportorer.Anvandare.some((rapportor) => rapportor.Uid === personUID);
-}
-
-/**
  * Given a list of {@link CanvasSection}, identifies which ones are linked to
  * a Ladok kurstillfälle and which ones to a Ladok aktivitetstillfälle.
  *
