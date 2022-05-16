@@ -1,5 +1,7 @@
 /**
- * This module are functions to call Ladok API. They do not contain any logic
+ * This module are functions to call Ladok API. They do not contain any logic.
+ *
+ * NOTE: Some functions are strange because how Ladok works.
  */
 import got from "got";
 
@@ -64,7 +66,7 @@ export interface Kurstillfalle {
 
 export interface SkaFinnasStudenter {
   Utbildningstillfalle: {
-    /** Kurstillfalle UID */
+    /** Here is the Kurstillfalle UID */
     Uid: string;
   }[];
 }

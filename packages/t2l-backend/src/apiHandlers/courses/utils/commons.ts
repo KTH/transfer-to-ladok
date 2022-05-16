@@ -139,16 +139,17 @@ export async function getAllStudieresultat(
   destination: GradesDestination
 ): Promise<Studieresultat[]> {
   if ("aktivitetstillfalle" in destination) {
+    // We use this function only to get all Kurstillfälle that are linked with a given aktivitetstillfälle.
     const kurstillfalleUID = await getSkaFinnasStudenter(
       destination.aktivitetstillfalle
-    ).then((sfi) => sfi.Utbildningstillfalle.map((u) => u.Uid));
+    ).then((s) => s.Utbildningstillfalle.map((u) => u.Uid));
 
     return searchAllAktivitetstillfalleStudieresultat(
       destination.aktivitetstillfalle,
       kurstillfalleUID
     );
   } else {
-    return await searchAllUtbildningsinstansStudieresultat(
+    return searchAllUtbildningsinstansStudieresultat(
       destination.utbildningsinstans,
       [destination.kurstillfalle]
     );
