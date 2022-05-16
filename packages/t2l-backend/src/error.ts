@@ -14,6 +14,12 @@ export class UnprocessableEntityError extends Error {
   }
 }
 
+export class UnauthorizedError extends Error {
+  constructor(message: string) {
+    super(message);
+  }
+}
+
 export function errorHandler(
   err: unknown,
   req: Request,
@@ -26,7 +32,7 @@ export function errorHandler(
   if (err instanceof CanvasApiError) {
     if (err.code === 401) {
       return res.status(401).json({
-        code: "invalid_access_token",
+        code: "unauthorized",
         message: "Invalid access token",
       });
     } else if (err.code === 404) {
@@ -35,6 +41,13 @@ export function errorHandler(
         message: "Not found",
       });
     }
+  }
+
+  if (err instanceof UnauthorizedError) {
+    return res.status(401).json({
+      code: "unauthorized",
+      message: err.message,
+    });
   }
 
   if (err instanceof BadRequestError) {

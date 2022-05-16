@@ -2,8 +2,12 @@
  * This module contains functions to call Canvas API.
  * Functions do not contain any logic
  */
-import CanvasAPI, { minimalErrorHandler } from "@kth/canvas-api";
+import CanvasAPI, {
+  CanvasApiError,
+  minimalErrorHandler,
+} from "@kth/canvas-api";
 import { Request } from "express";
+import { UnauthorizedError } from "../error";
 
 export interface CanvasSection {
   sis_section_id: string;
@@ -48,7 +52,9 @@ function getToken(token: string = "") {
     return token.substring(7);
   }
 
-  throw new Error("Invalid token");
+  throw new UnauthorizedError(
+    "Unauthorized. You must access this endpoint either with a session or an authorization header"
+  );
 }
 
 export default class CanvasClient {
