@@ -26,12 +26,11 @@ async function checkUtbildningsinstansInKurstillfalle(
   utbildningsinstansUID: string,
   kurstillfalleUID: string
 ) {
-  const { utbildningsinstans, modules } = await getExtraKurInformation(
-    kurstillfalleUID
-  );
+  const ladokKurstillfalle = await getExtraKurInformation(kurstillfalleUID);
 
-  const isFinalGrade = utbildningsinstans === utbildningsinstansUID;
-  const isModule = modules.some(
+  const isFinalGrade =
+    ladokKurstillfalle.utbildningsinstans === utbildningsinstansUID;
+  const isModule = ladokKurstillfalle.modules.some(
     (m) => m.utbildningsinstans === utbildningsinstansUID
   );
 
@@ -44,7 +43,7 @@ async function checkUtbildningsinstansInKurstillfalle(
 }
 
 /** Checks if the destination exists in a given list of sections */
-async function checkDestinationInSections(
+async function assertDestinationInSections(
   destination: GradesDestination,
   sections: CanvasSection[]
 ) {
@@ -75,7 +74,7 @@ async function checkDestinationInSections(
 
 /**
  * HTTP request: `GET /courses/:courseId/ladok-grades`
- * Get a list of students that can have grades in a certain destination.
+ * Get a list of students that can have grades in a certain Ladok destination.
  * Such destination is defined in the request query
  * ({@link GradesDestination} to see its format)
  *
@@ -91,7 +90,8 @@ export async function getGradesHandler(
   const canvasClient = new CanvasClient(req);
   const sections = await canvasClient.getSections(courseId);
 
-  await checkDestinationInSections(req.query, sections);
+  // TODO: send the error type as parameter as in `assertGradesDestination`
+  await assertDestinationInSections(req.query, sections);
 
   const studieResultat = await getAllStudieresultat(req.query);
   const response = studieResultat.map((content) => {
@@ -130,7 +130,7 @@ export async function postGradesHandler(
   const courseId = req.params.courseId;
   const canvasClient = new CanvasClient(req);
   const sections = await canvasClient.getSections(courseId);
-  await checkDestinationInSections(req.body.destination, sections);
+  await assertDestinationInSections(req.body.destination, sections);
 
   const allStudieresultat = await getAllStudieresultat(req.body.destination);
 
