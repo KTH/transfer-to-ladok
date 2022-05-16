@@ -83,10 +83,10 @@ export type CanvasGrades = {
   /** Letter grade in Canvas. Available only if the assignment contains some letter grade */
   grade: string | null;
 
-  /** Date when the student get the grade */
+  /** Date when the teacher has written the grade. Note: this field will be always null for course grades */
   gradedAt: string | null;
 
-  /** Date when the student has sent a submission */
+  /** Date when the student has sent a submission. Note: this field will be always null for course grades */
   submittedAt: string | null;
 }[];
 

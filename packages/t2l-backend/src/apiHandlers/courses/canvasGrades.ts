@@ -39,7 +39,7 @@ export async function courseGradesHandler(
 ) {
   const canvasApi = new CanvasClient(req);
   const courseId = req.params.courseId;
-  const enrollments = await canvasApi.getFinalGrades(courseId);
+  const enrollments = await canvasApi.getEnrollments(courseId);
 
   res.json(
     enrollments.map((e) => ({

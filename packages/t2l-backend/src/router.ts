@@ -13,6 +13,8 @@ import auth from "./apiHandlers/auth";
 import { errorHandler } from "./error";
 const router = Router();
 
+// This endpoint is where the user lands after clicking "Transfer to Ladok"
+// from the left-side menu
 router.post("/", (req, res) => {
   const domain = req.body.custom_domain;
   const courseId = req.body.custom_courseid;
@@ -21,7 +23,12 @@ router.post("/", (req, res) => {
 
   res.redirect(`/transfer-to-ladok?courseId=${courseId}`);
 });
+
+// Authentication is handled via its own router under "/auth" endpoints
 router.use("/auth", auth);
+
+// From here, everything are api endpoints:
+
 router.get("/api/courses/:courseId/sections", (req, res, next) =>
   sectionsHandler(req, res).catch(next)
 );

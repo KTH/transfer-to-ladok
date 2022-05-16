@@ -38,6 +38,13 @@ export interface Submission {
 }
 
 export interface Enrollment {
+  /**
+   * An object containing canvas "final grades" for a student
+   *
+   * NOTE: There are four different values inside `grades` object but we have
+   * decided at this moment that `unposted_current_grade` is the correct value.
+   * The other returned values are omitted in this type definition on purpose.
+   */
   grades: {
     unposted_current_grade: string;
   };
@@ -92,7 +99,7 @@ export default class CanvasClient {
       .toArray();
   }
 
-  getFinalGrades(courseId: string) {
+  getEnrollments(courseId: string) {
     return this.client
       .listItems<Enrollment>(`courses/${courseId}/enrollments`, {
         include: ["user"],

@@ -88,6 +88,9 @@ export function splitSections(sections: CanvasSection[]) {
     .filter((s) => KURSTILLFALLE_REGEX.test(s.sis_section_id))
     .map((s) => s.integration_id);
 
+  // This function should return each ID once.
+  // Examrooms have multiple sections including same ID but with different
+  // suffixes.
   return {
     aktivitetstillfalleIds: Array.from(new Set(aktIds)),
     kurstillfalleIds: Array.from(new Set(kurIds)),
