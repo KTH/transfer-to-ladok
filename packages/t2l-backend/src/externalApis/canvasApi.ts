@@ -106,4 +106,8 @@ export default class CanvasClient {
       })
       .toArray();
   }
+
+  getSelf() {
+    return this.client.get<{ email: string }>("users/self").then((r) => r.body);
+  }
 }

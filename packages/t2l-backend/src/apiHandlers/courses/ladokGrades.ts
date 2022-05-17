@@ -130,9 +130,8 @@ export async function postGradesHandler(
   await assertDestinationInSections(req.body.destination, sections);
 
   const allStudieresultat = await getAllStudieresultat(req.body.destination);
+  const { email } = await canvasClient.getSelf();
 
-  // TODO: use real email
-  const email = "carsai@kth.se";
   const output: ResultOutput[] = [];
 
   for (const resultInput of req.body.results) {
