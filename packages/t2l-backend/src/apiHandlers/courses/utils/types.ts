@@ -119,13 +119,21 @@ export interface ResultInput {
   };
 }
 
+/** Represents the outcome of the operation of sending one result to Ladok */
 export interface ResultOutput {
+  /** Ladok student ID */
   id: string;
+
+  /** "success" if the Ladok Result was successfully sent to Ladok */
   status: "success" | "error";
+
+  /** Grade that the user wanted to send to Ladok */
   draft: {
     grade: string;
     examinationDate: string;
   };
+
+  /** Object containing details of a failed operation */
   error?: {
     code: string;
     message: string;
