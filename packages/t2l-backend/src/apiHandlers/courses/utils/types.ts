@@ -104,8 +104,8 @@ export type GradesDestination =
       aktivitetstillfalle: string;
     };
 
-/** Represents one result to be sent to Ladok */
-export interface GradeResult {
+/** Represents one result that the user wants to send to Ladok */
+export interface ResultInput {
   /** Ladok Student UID */
   id: string;
 
@@ -119,11 +119,18 @@ export interface GradeResult {
   };
 }
 
-/**
- * Query request of endpoint
- * GET /api/courses/:courseId/ladok-grades
- */
-export type GetLadokGradesInput = GradesDestination;
+export interface ResultOutput {
+  id: string;
+  status: "success" | "error";
+  draft: {
+    grade: string;
+    examinationDate: string;
+  };
+  error?: {
+    code: string;
+    message: string;
+  };
+}
 
 /**
  * Response of endpoint
@@ -149,20 +156,7 @@ export type GradeableStudents = {
  */
 export interface PostLadokGradesInput {
   destination: GradesDestination;
-  results: GradeResult[];
-}
-
-export interface ResultOutput {
-  id: string;
-  status: "success" | "error";
-  draft: {
-    grade: string;
-    examinationDate: string;
-  };
-  error?: {
-    code: string;
-    message: string;
-  };
+  results: ResultInput[];
 }
 
 export interface PostLadokGradesOutput {

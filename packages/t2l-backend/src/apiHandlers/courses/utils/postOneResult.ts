@@ -9,7 +9,7 @@ import {
 } from "../../../externalApis/ladokApi";
 import { isLadokApiError } from "./asserts";
 import { getExistingDraft } from "./commons";
-import { GradeResult, ResultOutput } from "./types";
+import { ResultInput, ResultOutput } from "./types";
 
 /** Errors when posting results that are detected by us */
 class PostResultError extends Error {
@@ -38,7 +38,7 @@ function getStudentsStudieresultat(
 }
 
 function formatInputForLadok(
-  input: GradeResult,
+  input: ResultInput,
   studieresultat: Studieresultat
 ) {
   const letterGrade = input.draft.grade;
@@ -135,7 +135,7 @@ function handleError(err: unknown): ResultOutput["error"] {
  * @param allStudieresultat A collection of "Studieresultat" from Ladok.
  */
 export default async function postOneResult(
-  input: GradeResult,
+  input: ResultInput,
   email: string,
   allStudieresultat: Studieresultat[]
 ): Promise<ResultOutput> {

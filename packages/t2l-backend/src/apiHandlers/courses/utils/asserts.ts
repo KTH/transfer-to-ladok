@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { LadokApiError } from "../../../externalApis/ladokApi";
 import type {
-  GradeResult,
+  ResultInput,
   GradesDestination,
   PostLadokGradesInput,
 } from "./types";
@@ -51,7 +51,7 @@ export function assertGradesDestination(
 export function assertGradeResult(
   obj: any,
   ErrorClass: new (message: string) => Error = TypeError
-): asserts obj is GradeResult {
+): asserts obj is ResultInput {
   assert("id" in obj, new ErrorClass("Missing required field [id]"));
   assert("draft" in obj, new ErrorClass("Missing required field [draft]"));
 

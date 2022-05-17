@@ -11,7 +11,6 @@ import type {
   GradesDestination,
   GradeableStudents,
   ResultOutput,
-  GradeResult,
   PostLadokGradesOutput,
 } from "./utils/types";
 import { BadRequestError, UnprocessableEntityError } from "../../error";
