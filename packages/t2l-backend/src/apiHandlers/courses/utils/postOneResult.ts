@@ -101,27 +101,26 @@ function handleError(err: unknown): ResultOutput["error"] {
       };
     }
 
-    if (err instanceof Error) {
-      log.error(err, "Unknown problem in Ladok");
-      return {
-        code: "unknown_error",
-        message: `Unknown Error: ${err.message}. Please contact IT-support`,
-      };
-    }
-
-    log.error(
-      "Unknown problem in Ladok. Even worse: `err` is not an instance of Error"
-    );
+    log.error(err);
 
     return {
-      code: "unknown_error",
-      message:
-        "Unknown problem. No readable error is returned. Please, contact IT-support",
+      code: "unknown_ladok_error",
+      message: `Unknown Ladok error (please, contact IT-support): ${err.message}`,
     };
   }
 
-  // Unknown error
-  // TODO: log as `error` since this can be a bug.
+  if (err instanceof Error) {
+    log.error(err, "Unknown Error from Ladok API");
+    return {
+      code: "unknown_error",
+      message: `Unknown Error: ${err.message}. Please contact IT-support`,
+    };
+  }
+
+  log.error(
+    "Unknown problem in Ladok. Even worse: `err` is not an instance of Error"
+  );
+
   return {
     code: "unknown_error",
     message: "Unknown problem. No error object is thrown",
