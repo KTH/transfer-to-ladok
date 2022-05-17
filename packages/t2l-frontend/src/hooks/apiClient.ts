@@ -18,7 +18,7 @@ async function apiFetch(endpoint: string) {
     const body = await response.json();
 
     if (response.status === 200) {
-      return response.json();
+      return body;
     }
 
     throw new ApiError(body.message, body.code);
