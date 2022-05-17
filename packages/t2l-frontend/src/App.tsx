@@ -7,7 +7,8 @@ import { useSections } from "./hooks/apiClient";
 const queryClient = new QueryClient();
 
 function Home() {
-  const query = useSections("1");
+  const courseId = new URLSearchParams(location.search).get("courseId");
+  const query = useSections(courseId);
 
   if (query.status === "loading") {
     return <div>loading...</div>;
