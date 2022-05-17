@@ -5,6 +5,7 @@ import {
   getExtraKurInformation,
   getAllStudieresultat,
   splitSections,
+  getExistingDraft,
 } from "./utils/commons";
 import type {
   GradesDestination,
@@ -93,26 +94,22 @@ export async function getGradesHandler(
   // TODO: send the error type as parameter as in `assertGradesDestination`
   await assertDestinationInSections(req.query, sections);
 
-  const studieResultat = await getAllStudieresultat(req.query);
-  const response = studieResultat.map((content) => {
+  const allStudieresultat = await getAllStudieresultat(req.query);
+  const response = allStudieresultat.map((oneStudieresultat) => {
     const result: GradeableStudents[number] = {
-      id: content.Student.Uid,
-      scale: getBetyg(content.Rapporteringskontext.BetygsskalaID).map(
+      id: oneStudieresultat.Student.Uid,
+      scale: getBetyg(oneStudieresultat.Rapporteringskontext.BetygsskalaID).map(
         (b) => b.Kod
       ),
     };
 
-    if (content.ResultatPaUtbildningar) {
-      const arbetsunderlag = content.ResultatPaUtbildningar.find(
-        (rpu) => rpu.Arbetsunderlag
-      )?.Arbetsunderlag;
+    const draft = getExistingDraft(oneStudieresultat);
 
-      if (arbetsunderlag) {
-        const grade = arbetsunderlag.Betygsgradsobjekt.Kod;
-        const examinationDate = arbetsunderlag.Examinationsdatum;
+    if (draft) {
+      const grade = draft.Betygsgradsobjekt.Kod;
+      const examinationDate = draft.Examinationsdatum;
 
-        result.draft = { grade, examinationDate };
-      }
+      result.draft = { grade, examinationDate };
     }
 
     return result;

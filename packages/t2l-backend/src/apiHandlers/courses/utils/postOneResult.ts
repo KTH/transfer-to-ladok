@@ -1,3 +1,4 @@
+import log from "skog";
 import { HTTPError } from "got";
 import {
   createResult,
@@ -7,6 +8,7 @@ import {
   updateResult,
 } from "../../../externalApis/ladokApi";
 import { isLadokApiError } from "./asserts";
+import { getExistingDraft } from "./commons";
 import { GradeResult, ResultOutput } from "./types";
 
 /** Errors when posting results that are detected by us */
@@ -28,7 +30,7 @@ function getStudentsStudieresultat(
 
   if (!r) {
     throw new PostResultError(
-      `Student [${studentId}] is not present in the list of gradeable students`
+      `Student [${studentId}] is not present in the list of gradeable students. Use endpoint GET /transfer-to-ladok/api/courses/:courseId/ladok-grades to get such list`
     );
   }
 
@@ -45,7 +47,7 @@ function formatInputForLadok(
 
   if (!gradeId) {
     throw new PostResultError(
-      `The grade [${letterGrade}] is not present in the list of grades for student [${studieresultat.Student.Uid}]`
+      `You cannot set the grade [${letterGrade}] to this student. Use endpoint GET /transfer-to-ladok/api/courses/:courseId/ladok-grades to get the list of possible grades`
     );
   }
 
@@ -54,14 +56,6 @@ function formatInputForLadok(
     Betygsgrad: gradeId,
     Examinationsdatum: input.draft.examinationDate,
   };
-}
-
-function getExistingDraft(studentResultat: Studieresultat) {
-  const arbetsunderlag = studentResultat.ResultatPaUtbildningar?.find(
-    (rpu) => rpu.Arbetsunderlag
-  )?.Arbetsunderlag;
-
-  return arbetsunderlag;
 }
 
 /**
@@ -76,7 +70,7 @@ async function checkPermission(email: string, utbildningsinstansUID: string) {
 
   if (!isRapportor) {
     throw new PostResultError(
-      `You don't have 'rapportor' permissions in utbilidningsinstans [${utbildningsinstansUID}]`
+      `You don't have 'rapportor' permissions in Ladok to set grades.`
     );
   }
 }
@@ -100,20 +94,34 @@ function handleError(err: unknown): ResultOutput["error"] {
     }
 
     if (typeof err.response.body === "string") {
+      log.error(err);
       return {
         code: "unknown_ladok_error",
-        message: `Unknown problem in Ladok: ${err.response.body}`,
+        message: `Unknown problem in Ladok (please contact IT-support): ${err.response.body}`,
       };
     }
 
+    if (err instanceof Error) {
+      log.error(err, "Unknown problem in Ladok");
+      return {
+        code: "unknown_error",
+        message: `Unknown Error: ${err.message}. Please contact IT-support`,
+      };
+    }
+
+    log.error(
+      "Unknown problem in Ladok. Even worse: `err` is not an instance of Error"
+    );
+
     return {
-      code: "unknown_ladok_error",
+      code: "unknown_error",
       message:
-        "Unknown problem in Ladok. No readable error is returned by Ladok",
+        "Unknown problem. No readable error is returned. Please, contact IT-support",
     };
   }
 
   // Unknown error
+  // TODO: log as `error` since this can be a bug.
   return {
     code: "unknown_error",
     message: "Unknown problem. No error object is thrown",
@@ -142,6 +150,8 @@ export default async function postOneResult(
       oneStudieResultat.Rapporteringskontext.UtbildningsinstansUID;
 
     await checkPermission(email, utbildningsinstansUID);
+    // Below this line the current user has permissions to change grades in Ladok
+    // so it is safe to call Ladok
 
     const draft = getExistingDraft(oneStudieResultat);
     if (draft) {

@@ -104,7 +104,9 @@ export type GradesDestination =
       aktivitetstillfalle: string;
     };
 
+/** Represents one result to be sent to Ladok */
 export interface GradeResult {
+  /** Ladok Student UID */
   id: string;
 
   /** Grade to be sent as "utkast" */

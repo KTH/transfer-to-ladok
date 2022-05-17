@@ -155,3 +155,12 @@ export async function getAllStudieresultat(
     );
   }
 }
+
+/** Get an existing draft in a "Studieresultat" */
+export function getExistingDraft(studentResultat: Studieresultat) {
+  const arbetsunderlag = studentResultat.ResultatPaUtbildningar?.find(
+    (rpu) => rpu.Arbetsunderlag
+  )?.Arbetsunderlag;
+
+  return arbetsunderlag;
+}
