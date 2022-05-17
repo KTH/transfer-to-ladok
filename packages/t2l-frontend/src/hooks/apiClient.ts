@@ -1,12 +1,11 @@
 /** Hooks that call the API Client */
 import { useQuery } from "react-query";
-import { T2LSections } from "../../../t2l-backend/src/apiHandlers/sections";
-import { ErrorCode } from "../../../t2l-backend/src/error";
+import type { Sections } from "../../../t2l-backend/src/apiHandlers/courses/utils/types";
 
 export class ApiError extends Error {
-  code: ErrorCode;
+  code: string;
 
-  constructor(message: string, code: ErrorCode) {
+  constructor(message: string, code: string) {
     super(message);
     this.code = code;
   }
@@ -30,18 +29,18 @@ async function apiFetch(endpoint: string) {
 }
 
 interface SectionsQuery {
-  sections: T2LSections | null;
+  sections: Sections | null;
   error: unknown;
   status: "loading" | "error" | "success" | "idle" | "unauthenticated";
 }
 
 export function useSections(courseId: string): SectionsQuery {
-  const query = useQuery<T2LSections>(
+  const query = useQuery<Sections>(
     ["sections", courseId],
     () => apiFetch(`/transfer-to-ladok/api/courses/${courseId}/sections`),
     {
       retry(failureCount: number, error: unknown) {
-        if (error instanceof ApiError && error.code === "not_authorized") {
+        if (error instanceof ApiError && error.code === "unauthorized") {
           return false;
         }
         if (failureCount > 3) {
@@ -56,7 +55,7 @@ export function useSections(courseId: string): SectionsQuery {
   if (query.isError) {
     if (
       query.error instanceof ApiError &&
-      query.error.code === "not_authorized"
+      query.error.code === "unauthorized"
     ) {
       return {
         status: "unauthenticated",
