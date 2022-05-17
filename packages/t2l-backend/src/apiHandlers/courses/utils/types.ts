@@ -77,8 +77,13 @@ export type Assignments = {
  * GET /api/courses/:courseId/grades
  */
 export type CanvasGrades = {
-  /** Ladok student identifier */
-  id: string;
+  student: {
+    /** Ladok student identifier */
+    id: string;
+
+    /** Sortable name according to Canvas */
+    sortableName: string;
+  };
 
   /** Letter grade in Canvas. Available only if the assignment contains some letter grade */
   grade: string | null;
@@ -145,8 +150,17 @@ export interface ResultOutput {
  * GET /api/courses/:courseId/ladok-grades
  */
 export type GradeableStudents = {
-  /** Student ID */
-  id: string;
+  /** Student data */
+  student: {
+    /** Ladok ID */
+    id: string;
+
+    /**
+     * Last name and first name. This is returned in this format for
+     * consistency with `CanvasGrades`
+     */
+    sortableName: string;
+  };
 
   /** List of grades you can set */
   scale: string[];

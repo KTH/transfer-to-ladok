@@ -96,7 +96,10 @@ export async function getGradesHandler(
   const allStudieresultat = await getAllStudieresultat(req.query);
   const response = allStudieresultat.map((oneStudieresultat) => {
     const result: GradeableStudents[number] = {
-      id: oneStudieresultat.Student.Uid,
+      student: {
+        id: oneStudieresultat.Student.Uid,
+        sortableName: `${oneStudieresultat.Student.Efternamn}, ${oneStudieresultat.Student.Fornamn}`,
+      },
       scale: getBetyg(oneStudieresultat.Rapporteringskontext.BetygsskalaID).map(
         (b) => b.Kod
       ),

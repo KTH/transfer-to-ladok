@@ -19,7 +19,10 @@ export async function assignmentGradesHandler(
 
   res.json(
     submissions.map((s) => ({
-      id: s.user.integration_id,
+      student: {
+        id: s.user.integration_id,
+        sortableName: s.user.sortable_name,
+      },
       grade: s.grade,
       gradedAt: s.graded_at,
       submittedAt: s.submitted_at,
@@ -43,7 +46,10 @@ export async function courseGradesHandler(
 
   res.json(
     enrollments.map((e) => ({
-      id: e.user.integration_id,
+      student: {
+        id: e.user.integration_id,
+        sortableName: e.user.sortable_name,
+      },
       grade: e.grades?.unposted_current_grade,
       gradedAt: null,
       submittedAt: null,
