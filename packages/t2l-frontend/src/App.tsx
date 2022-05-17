@@ -3,6 +3,7 @@ import { ErrorBoundary } from "react-error-boundary";
 import { QueryClient, QueryClientProvider } from "react-query";
 import FullPageError from "./components/FullPageError";
 import { useSections } from "./hooks/apiClient";
+import Unauthenticated from "./screens/Unauthenticated";
 
 const queryClient = new QueryClient();
 
@@ -15,7 +16,7 @@ function Home() {
   }
 
   if (query.status === "unauthenticated") {
-    return <div>You are not logged in</div>;
+    return <Unauthenticated courseId={courseId} />;
   }
 
   if (query.status === "error") {
