@@ -206,7 +206,7 @@ export function searchAktivitetstillfalleStudieresultat(
 export function getRapportor(utbildningsinstansUID: string) {
   return gotClient
     .get<Rapportor>(
-      `resultat/anvandare/resultatrattighet/utbildningsinstans?utbildningsinstansUID=${utbildningsinstansUID}`
+      `resultat/anvandare/resultatrattighet/rapportor/utbildningsinstans?utbildningsinstansUID=${utbildningsinstansUID}`
     )
     .then((r) => r.body);
 }
