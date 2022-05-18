@@ -38,7 +38,7 @@ function Home() {
   }
 
   if (sectionsQuery.isSuccess) {
-    return <Authenticated />;
+    return <Authenticated sections={sectionsQuery.data} />;
   }
 
   // WTF
