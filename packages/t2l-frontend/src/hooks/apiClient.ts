@@ -34,7 +34,7 @@ async function apiFetch(endpoint: string) {
 }
 
 interface SectionsQuery {
-  sections: Sections | null;
+  sections: Sections | undefined;
   error: unknown;
   status: "loading" | "error" | "success" | "idle" | "unauthenticated";
 }
@@ -64,13 +64,13 @@ export function useSections(courseId: string): SectionsQuery {
     ) {
       return {
         status: "unauthenticated",
-        sections: null,
+        sections: undefined,
         error: null,
       };
     } else {
       return {
         status: "error",
-        sections: null,
+        sections: undefined,
         error: query.error,
       };
     }
