@@ -17,6 +17,7 @@
     "parcel": "^2.4.1"
   },
   "dependencies": {
+    "t2l-backend": "file:../t2l-backend",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "react-error-boundary": "^3.1.4",

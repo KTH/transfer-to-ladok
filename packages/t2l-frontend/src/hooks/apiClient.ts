@@ -1,6 +1,11 @@
 /** Hooks that call the API Client */
 import { useQuery } from "react-query";
-import type { Sections } from "../../../t2l-backend/src/apiHandlers/courses/utils/types";
+import {
+  Assignments,
+  GradeableStudents,
+  GradesDestination,
+  Sections,
+} from "t2l-backend";
 
 export class ApiError extends Error {
   code: string;
@@ -76,4 +81,30 @@ export function useSections(courseId: string): SectionsQuery {
     sections: query.data,
     error: query.error,
   };
+}
+
+export function useAssignments(courseId: string) {
+  return useQuery<Assignments>(["assignments", courseId], () =>
+    apiFetch(`/transfer-to-ladok/api/courses/${courseId}/assignments`)
+  );
+}
+
+export function useGradeableStudents(
+  courseId: string,
+  destination: GradesDestination
+) {
+  return useQuery<GradeableStudents>(
+    ["gradeable-students", courseId, destination],
+    () => {
+      if ("aktivitetstillfalle" in destination) {
+        return apiFetch(
+          `/transfer-to-ladok/api/courses/${courseId}/ladok-grades?aktivitetstillfalle=${destination.aktivitetstillfalle}`
+        );
+      } else {
+        return apiFetch(
+          `/transfer-to-ladok/api/courses/${courseId}/ladok-grades?kurstillfalle=${destination.kurstillfalle}&utbildningsinstans=${destination.utbildningsinstans}`
+        );
+      }
+    }
+  );
 }
