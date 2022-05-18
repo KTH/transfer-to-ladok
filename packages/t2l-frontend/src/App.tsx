@@ -1,58 +1,48 @@
 import * as React from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { QueryClient, QueryClientProvider } from "react-query";
-import FullPageError from "./components/FullPageError";
-import { useSections } from "./hooks/apiClient";
-import Gradebook from "./screens/Gradebook";
+import { ApiError, useSections } from "./hooks/apiClient";
+
+import FullPageError from "./screens/FullPageError";
 import Unauthenticated from "./screens/Unauthenticated";
+import Authenticated from "./screens/Authenticated";
 
 const queryClient = new QueryClient();
 
-type Destination =
-  | {
-      aktivitetstillfalleId: string;
-    }
-  | {
-      kurstillfalleId: string;
-      utbildningsinstansId: string;
-    };
-
 function Home() {
   const courseId = new URLSearchParams(location.search).get("courseId");
-  const query = useSections(courseId);
-  const [destination, setDestination] = React.useState<Destination | null>(
-    null
-  );
 
-  if (query.status === "loading") {
+  if (!courseId) {
+    throw new Error("No courseId provided");
+  }
+
+  const sectionsQuery = useSections(courseId);
+
+  if (sectionsQuery.isLoading) {
+    // Since the "loading" takes less than 1 second, we don't need to show any
+    // spinner.
+    //
+    // Read more: https://www.nngroup.com/articles/response-times-3-important-limits/
     return <div></div>;
   }
 
-  if (query.status === "unauthenticated") {
-    return <Unauthenticated courseId={courseId} />;
+  if (sectionsQuery.isError) {
+    if (
+      sectionsQuery.error instanceof ApiError &&
+      sectionsQuery.error.code === "unauthorized"
+    ) {
+      return <Unauthenticated courseId={courseId} />;
+    }
+
+    throw sectionsQuery.error;
   }
 
-  if (query.status === "error") {
-    throw query.error;
+  if (sectionsQuery.isSuccess) {
+    return <Authenticated />;
   }
 
-  // If there is only one examination, just choose it
-  const { aktivitetstillfalle, kurstillfalle } = query.sections;
-  if (
-    !destination &&
-    aktivitetstillfalle.length === 1 &&
-    kurstillfalle.length === 0
-  ) {
-    setDestination({
-      aktivitetstillfalleId: aktivitetstillfalle[0].id,
-    });
-  }
-
-  if (!destination) {
-    return <div>Selector</div>;
-  }
-
-  return <Gradebook />;
+  // WTF
+  return <div></div>;
 }
 
 export default function App() {

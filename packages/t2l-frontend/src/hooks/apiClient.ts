@@ -33,14 +33,8 @@ async function apiFetch(endpoint: string) {
   }
 }
 
-interface SectionsQuery {
-  sections: Sections | undefined;
-  error: unknown;
-  status: "loading" | "error" | "success" | "idle" | "unauthenticated";
-}
-
-export function useSections(courseId: string): SectionsQuery {
-  const query = useQuery<Sections>(
+export function useSections(courseId: string) {
+  return useQuery<Sections>(
     ["sections", courseId],
     () => apiFetch(`/transfer-to-ladok/api/courses/${courseId}/sections`),
     {
@@ -56,31 +50,6 @@ export function useSections(courseId: string): SectionsQuery {
       },
     }
   );
-
-  if (query.isError) {
-    if (
-      query.error instanceof ApiError &&
-      query.error.code === "unauthorized"
-    ) {
-      return {
-        status: "unauthenticated",
-        sections: undefined,
-        error: null,
-      };
-    } else {
-      return {
-        status: "error",
-        sections: undefined,
-        error: query.error,
-      };
-    }
-  }
-
-  return {
-    status: query.status,
-    sections: query.data,
-    error: query.error,
-  };
 }
 
 export function useAssignments(courseId: string) {
