@@ -11,16 +11,17 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@parcel/transformer-sass": "^2.4.1",
     "@types/react": "^18.0.7",
     "@types/react-dom": "^18.0.2",
     "http-proxy-middleware": "^2.0.6",
     "parcel": "^2.4.1"
   },
   "dependencies": {
-    "t2l-backend": "file:../t2l-backend",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "react-error-boundary": "^3.1.4",
-    "react-query": "^3.38.0"
+    "react-query": "^3.38.0",
+    "t2l-backend": "file:../t2l-backend"
   }
 }
