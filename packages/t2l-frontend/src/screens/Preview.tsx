@@ -81,7 +81,7 @@ export default function Preview({ destination }: Params) {
         </div>
       </header>
       <main>
-        <GradesTable />
+        <GradesTable results={tableContent} />
       </main>
       <footer>
         <button>Transfer to Ladok</button>

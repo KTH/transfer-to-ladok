@@ -1,6 +1,6 @@
 import type { CanvasGrades, GradeableStudents } from "t2l-backend";
 
-interface TransferrableResult {
+export interface TransferableResult {
   student: {
     id: string;
     sortableName: string;
@@ -10,7 +10,7 @@ interface TransferrableResult {
     grade: string;
     examinationDate: string;
   };
-  message?: string;
+  message: string;
 }
 
 /**
@@ -22,17 +22,33 @@ interface TransferrableResult {
 export default function getResultsToBeTransferred(
   canvasGrades: CanvasGrades,
   ladokGradeableStudents: GradeableStudents
-): TransferrableResult[] {
+): TransferableResult[] {
   return ladokGradeableStudents.map((ladokGrade) => {
     const canvasGrade = canvasGrades.find(
       (g) => g.student.id === ladokGrade.student.id
     );
 
+    if (!canvasGrade) {
+      return {
+        student: ladokGrade.student,
+        transferrable: false,
+        message: "This student is not present in Canvas.",
+      };
+    }
+
     if (!canvasGrade?.grade) {
       return {
         student: ladokGrade.student,
         transferrable: false,
-        message: "No grade in Canvas",
+        message: "This student has no grade in Canvas",
+      };
+    }
+
+    if (canvasGrade.grade === "F") {
+      return {
+        student: ladokGrade.student,
+        transferrable: false,
+        message: "'F' will not be transferred",
       };
     }
 
@@ -55,6 +71,9 @@ export default function getResultsToBeTransferred(
         grade: canvasGrade.grade,
         examinationDate: "2022-01-01",
       },
+      message: ladokGrade.draft
+        ? "Current draft in Ladok will be overwritten"
+        : "",
     };
   });
 }
