@@ -8,6 +8,7 @@ import {
 } from "../hooks/apiClient";
 import getResultsToBeTransferred from "../utils/getResultsToBeTransferred";
 import { ArrowRight } from "../utils/icons";
+import { IndeterminateProgressBar } from "../components/ProgressBar";
 import "./Preview.scss";
 
 interface Params {
@@ -50,7 +51,6 @@ export default function Preview({ destination }: Params) {
 
   const ladokGradesQuery = useGradeableStudents(destination);
   const canvasGradesQuery = useCanvasGrades(assignmentId);
-  console.log(ladokGradesQuery.status, canvasGradesQuery.status);
 
   const tableContent = getResultsToBeTransferred(
     canvasGradesQuery.data ?? [],
@@ -81,6 +81,7 @@ export default function Preview({ destination }: Params) {
         </div>
       </header>
       <main>
+        <IndeterminateProgressBar visible={canvasGradesQuery.isFetching} />
         <GradesTable results={tableContent} />
       </main>
       <footer>

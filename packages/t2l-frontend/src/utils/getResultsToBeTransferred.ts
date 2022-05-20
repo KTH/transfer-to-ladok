@@ -23,6 +23,9 @@ export default function getResultsToBeTransferred(
   canvasGrades: CanvasGrades,
   ladokGradeableStudents: GradeableStudents
 ): TransferableResult[] {
+  if (canvasGrades.length === 0) {
+    return [];
+  }
   return ladokGradeableStudents.map((ladokGrade) => {
     const canvasGrade = canvasGrades.find(
       (g) => g.student.id === ladokGrade.student.id
@@ -48,7 +51,7 @@ export default function getResultsToBeTransferred(
       return {
         student: ladokGrade.student,
         transferrable: false,
-        message: "'F' will not be transferred",
+        message: "Will not be transferred",
       };
     }
 
@@ -60,7 +63,7 @@ export default function getResultsToBeTransferred(
           grade: canvasGrade.grade,
           examinationDate: "",
         },
-        message: `Grade "${canvasGrade.grade}" is not part of the Ladok grading scale`,
+        message: `Will not be transferred. "${canvasGrade.grade}" is not valid`,
       };
     }
 
