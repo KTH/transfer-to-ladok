@@ -1,8 +1,19 @@
 import React from "react";
+import { GradesDestination } from "t2l-backend";
+import { useAssignments } from "../hooks/apiClient";
 import { ArrowRight } from "../utils/icons";
 import "./Preview.scss";
 
-export default function Preview() {
+interface Params {
+  destination: GradesDestination;
+}
+
+export default function Preview({ destination }: Params) {
+  const assignmentsQuery = useAssignments();
+
+  if (assignmentsQuery.isSuccess) {
+    console.log(assignmentsQuery.data);
+  }
   return (
     <div className="Preview">
       <header>

@@ -64,7 +64,9 @@ export function useSections() {
   );
 }
 
-export function useAssignments(courseId: string) {
+export function useAssignments() {
+  const courseId = getCourseId();
+
   return useQuery<Assignments>(["assignments", courseId], () =>
     apiFetch(`/transfer-to-ladok/api/courses/${courseId}/assignments`)
   );

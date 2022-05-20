@@ -1,5 +1,6 @@
 import React from "react";
 import type { Sections, AktSection } from "t2l-backend";
+import Preview from "./Preview";
 
 function AppWithSelector() {
   // TODO: Implement this
@@ -7,7 +8,7 @@ function AppWithSelector() {
 }
 
 function AppWithoutSelector({ akt }: { akt: AktSection }) {
-  return <div>Transfer to Ladok for {akt.name}</div>;
+  return <Preview destination={{ aktivitetstillfalle: akt.id }} />;
 }
 
 export default function Authenticated({ sections }: { sections: Sections }) {
