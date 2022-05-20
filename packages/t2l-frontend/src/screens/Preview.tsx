@@ -8,20 +8,36 @@ interface Params {
   destination: GradesDestination;
 }
 
-export default function Preview({ destination }: Params) {
+function AssignmentSelector() {
   const assignmentsQuery = useAssignments();
+  if (assignmentsQuery.isLoading) {
+    return (
+      <select disabled>
+        <option>Loading assignments...</option>
+      </select>
+    );
+  }
 
   if (assignmentsQuery.isSuccess) {
-    console.log(assignmentsQuery.data);
+    return (
+      <select>
+        {assignmentsQuery.data.map((a) => (
+          <option>{a.name}</option>
+        ))}
+      </select>
+    );
   }
+
+  return <select></select>;
+}
+
+export default function Preview({ destination }: Params) {
   return (
     <div className="Preview">
       <header>
         <div>Select a Canvas assignment to transfer to the Ladok module</div>
         <div className="assignment">
-          <select>
-            <option>Select an assignment</option>
-          </select>
+          <AssignmentSelector />
           <ArrowRight />
           <div className="destination">ME1039 TENA: 2021-06-08</div>
         </div>
