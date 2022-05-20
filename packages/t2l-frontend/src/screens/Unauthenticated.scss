@@ -1,13 +1,10 @@
-$font-default: 400 16px/24px "Open Sans", sans-serif;
-$font-bold: 600 1rem/1.5rem "Open Sans", sans-serif;
-$font-h1: 600 2.75rem/4.125rem "Open Sans", sans-serif;
-$font-h2: 400 1.75rem/2.75rem "Open Sans", sans-serif;
-$font-h3: 400 1.5rem/2.5rem "Open Sans", sans-serif;
-
-$color-blue-700: #007FAE;
-$color-blue-900: #006388;
+@import "../utils/variables.scss";
 
 * {
+  box-sizing: border-box;
+}
+
+html {
   font: $font-default;
 }
 

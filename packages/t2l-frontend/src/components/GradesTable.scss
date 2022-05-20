@@ -1,0 +1,29 @@
+@import "../utils/variables.scss";
+
+.GradesTable {
+  width: 100%;
+  border-collapse: collapse;
+  font: $font-small;
+
+  tr {
+    border-top: 1px solid $color-gray-700;
+    border-bottom: 1px solid $color-gray-700;
+
+    .id {
+      width: 4rem;
+      padding: 0.5rem 1rem;
+    }
+
+    .name {
+      width: 20rem;
+    }
+
+    .grade {
+      width: 6rem;
+    }
+
+    .date {
+      width: 10rem;
+    }
+  }
+}
