@@ -2,6 +2,7 @@
 import { useQuery } from "react-query";
 import {
   Assignments,
+  CanvasGrades,
   GradeableStudents,
   GradesDestination,
   Sections,
@@ -85,6 +86,25 @@ export function useGradeableStudents(destination: GradesDestination) {
       } else {
         return apiFetch(
           `/transfer-to-ladok/api/courses/${courseId}/ladok-grades?kurstillfalle=${destination.kurstillfalle}&utbildningsinstans=${destination.utbildningsinstans}`
+        );
+      }
+    }
+  );
+}
+
+export function useCanvasGrades(assignmentId: string) {
+  const courseId = getCourseId();
+
+  return useQuery<CanvasGrades>(
+    ["canvas-grades", courseId, assignmentId],
+    () => {
+      if (assignmentId === "") {
+        return Promise.resolve([]);
+      } else if (assignmentId === "total") {
+        return apiFetch(`/transfer-to-ladok/api/courses/${courseId}/total`);
+      } else {
+        return apiFetch(
+          `/transfer-to-ladok/api/courses/${courseId}/assignments/${assignmentId}`
         );
       }
     }

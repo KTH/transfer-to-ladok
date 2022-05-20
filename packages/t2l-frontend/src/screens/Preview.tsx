@@ -1,7 +1,11 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { GradesDestination } from "t2l-backend";
 import MockedTable from "../components/MockedTable";
-import { useAssignments, useGradeableStudents } from "../hooks/apiClient";
+import {
+  useAssignments,
+  useCanvasGrades,
+  useGradeableStudents,
+} from "../hooks/apiClient";
 import { ArrowRight } from "../utils/icons";
 import "./Preview.scss";
 
@@ -9,7 +13,13 @@ interface Params {
   destination: GradesDestination;
 }
 
-function AssignmentSelector() {
+function AssignmentSelector({
+  value,
+  onChange,
+}: {
+  value: string;
+  onChange: (value: string) => void;
+}) {
   const assignmentsQuery = useAssignments();
   if (assignmentsQuery.isLoading) {
     return (
@@ -21,10 +31,12 @@ function AssignmentSelector() {
 
   if (assignmentsQuery.isSuccess) {
     return (
-      <select>
+      <select value={value} onChange={(e) => onChange(e.target.value)}>
+        <option value="">Select an assignment</option>
         {assignmentsQuery.data.map((a) => (
-          <option>{a.name}</option>
+          <option value={a.id}>{a.name}</option>
         ))}
+        <option value="total">Total column</option>
       </select>
     );
   }
@@ -33,15 +45,18 @@ function AssignmentSelector() {
 }
 
 export default function Preview({ destination }: Params) {
+  const [assignmentId, setAssignmentId] = useState<string>("");
+
   const ladokGradesQuery = useGradeableStudents(destination);
-  console.log(ladokGradesQuery.status);
+  const canvasGradesQuery = useCanvasGrades(assignmentId);
+  console.log(ladokGradesQuery.status, canvasGradesQuery.status);
 
   return (
     <div className="Preview">
       <header>
         <div>Select a Canvas assignment to transfer to the Ladok module</div>
         <div className="assignment">
-          <AssignmentSelector />
+          <AssignmentSelector value={assignmentId} onChange={setAssignmentId} />
           <ArrowRight />
           <div className="destination">ME1039 TENA: 2021-06-08</div>
         </div>
