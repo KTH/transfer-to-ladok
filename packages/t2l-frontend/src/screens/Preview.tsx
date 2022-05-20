@@ -80,9 +80,17 @@ export default function Preview({ destination }: Params) {
           </ul>
         </div>
       </header>
-      <main>
+      <main className="main">
         <IndeterminateProgressBar visible={canvasGradesQuery.isFetching} />
         <GradesTable results={tableContent} />
+        {assignmentId === "" && (
+          <div className="empty-state">
+            <div>
+              Choose an assignment to see a preview of what is going to be
+              transferred
+            </div>
+          </div>
+        )}
       </main>
       <footer>
         <button>Transfer to Ladok</button>

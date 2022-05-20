@@ -15,7 +15,7 @@
   }
 
   thead > tr {
-    border-bottom: 1px solid $color-gray-700;
+    border-bottom: 2px solid $color-gray-700;
   }
 
   tbody > tr {
@@ -41,19 +41,5 @@
     &.date {
       width: 10rem;
     }
-  }
-}
-
-.EmptyState {
-  background: $color-gray-200;
-  margin: 0;
-  padding: 0;
-  height: 200px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-
-  > div {
-    text-align: center;
   }
 }
