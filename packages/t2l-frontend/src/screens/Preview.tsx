@@ -1,7 +1,7 @@
 import React from "react";
 import { GradesDestination } from "t2l-backend";
 import MockedTable from "../components/MockedTable";
-import { useAssignments } from "../hooks/apiClient";
+import { useAssignments, useGradeableStudents } from "../hooks/apiClient";
 import { ArrowRight } from "../utils/icons";
 import "./Preview.scss";
 
@@ -33,6 +33,9 @@ function AssignmentSelector() {
 }
 
 export default function Preview({ destination }: Params) {
+  const ladokGradesQuery = useGradeableStudents(destination);
+  console.log(ladokGradesQuery.status);
+
   return (
     <div className="Preview">
       <header>

@@ -72,10 +72,9 @@ export function useAssignments() {
   );
 }
 
-export function useGradeableStudents(
-  courseId: string,
-  destination: GradesDestination
-) {
+export function useGradeableStudents(destination: GradesDestination) {
+  const courseId = getCourseId();
+
   return useQuery<GradeableStudents>(
     ["gradeable-students", courseId, destination],
     () => {
