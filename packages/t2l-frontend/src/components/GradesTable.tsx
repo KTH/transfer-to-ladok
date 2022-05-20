@@ -42,9 +42,11 @@ export default function GradesTable({
     compareFn(a.student.sortableName, b.student.sortableName)
   );
 
+  const [expanded, setExpanded] = React.useState(sortedResults.length < 7);
+
   return (
-    <div>
-      <table className="GradesTable">
+    <div className={["GradesTable", expanded && "expanded"].join(" ")}>
+      <table className="table">
         <thead>
           <Header />
         </thead>
@@ -54,6 +56,11 @@ export default function GradesTable({
           ))}
         </tbody>
       </table>
+      <div className="show-all">
+        <button className="secondary" onClick={() => setExpanded(true)}>
+          Show all
+        </button>
+      </div>
     </div>
   );
 }

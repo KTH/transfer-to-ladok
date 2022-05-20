@@ -1,12 +1,13 @@
 @import "../utils/variables.scss";
 
 .GradesTable {
-  width: 100%;
-  border-collapse: collapse;
-  font: $font-small;
+  max-height: 20rem;
+  overflow: hidden;
 
-  &.mocked {
-    filter: blur(6px);
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font: $font-small;
   }
 
   thead th {
@@ -42,4 +43,34 @@
       width: 10rem;
     }
   }
+
+  .show-all {
+    position: absolute;
+    bottom: 0;
+    padding: 1rem 0;
+    background: linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0) 0%,
+      rgba(255, 255, 255, 0.8) 100%
+    );
+
+    text-align: center;
+    width: 100%;
+  }
+
+  &.expanded {
+    max-height: none;
+    .show-all {
+      display: none;
+    }
+  }
+}
+
+.secondary {
+  background: white;
+  border: 1px solid black;
+  border-radius: 4px;
+  font: $font-small;
+  padding: 0 0.75rem;
+  height: 1.5rem;
 }
