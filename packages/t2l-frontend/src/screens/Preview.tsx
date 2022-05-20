@@ -1,5 +1,6 @@
 import React from "react";
 import { GradesDestination } from "t2l-backend";
+import MockedTable from "../components/MockedTable";
 import { useAssignments } from "../hooks/apiClient";
 import { ArrowRight } from "../utils/icons";
 import "./Preview.scss";
@@ -41,7 +42,7 @@ export default function Preview({ destination }: Params) {
           <ArrowRight />
           <div className="destination">ME1039 TENA: 2021-06-08</div>
         </div>
-        <div className="date">
+        <div className="date-selection">
           <div className="label">Options for examination date</div>
           <ul className="options">
             <li>
@@ -56,16 +57,17 @@ export default function Preview({ destination }: Params) {
         </div>
       </header>
       <main>
-        <table>
-          <tr>
-            <td>Mocked student</td>
-          </tr>
-        </table>
-        <div>
-          Choose an assignment to see a preview of what is going to be
-          transferred
+        <MockedTable />
+        <div className="overlay">
+          <div>
+            Choose an assignment to see a preview of what is going to be
+            transferred
+          </div>
         </div>
       </main>
+      <footer>
+        <button>Transfer to Ladok</button>
+      </footer>
     </div>
   );
 }

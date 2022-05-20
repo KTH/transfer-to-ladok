@@ -5,7 +5,16 @@
   border-collapse: collapse;
   font: $font-small;
 
-  tr {
+  &.mocked {
+    filter: blur(6px);
+  }
+
+  thead th {
+    text-align: left;
+    padding: 0.5rem 0;
+  }
+
+  tbody > tr {
     border-top: 1px solid $color-gray-700;
     border-bottom: 1px solid $color-gray-700;
 
