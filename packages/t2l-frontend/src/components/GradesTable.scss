@@ -10,29 +10,50 @@
   }
 
   thead th {
+    font-weight: 600;
     text-align: left;
-    padding: 0.5rem 0;
+  }
+
+  thead > tr {
+    border-bottom: 1px solid $color-gray-700;
   }
 
   tbody > tr {
     border-top: 1px solid $color-gray-700;
     border-bottom: 1px solid $color-gray-700;
+  }
 
-    .id {
+  td,
+  th {
+    &.id {
       width: 4rem;
       padding: 0.5rem 1rem;
     }
 
-    .name {
+    &.name {
       width: 20rem;
     }
 
-    .grade {
+    &.grade {
       width: 6rem;
     }
 
-    .date {
+    &.date {
       width: 10rem;
     }
+  }
+}
+
+.EmptyState {
+  background: $color-gray-200;
+  margin: 0;
+  padding: 0;
+  height: 200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  > div {
+    text-align: center;
   }
 }

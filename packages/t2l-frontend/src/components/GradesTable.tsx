@@ -1,24 +1,37 @@
 import React from "react";
 import "./GradesTable.scss";
 
-function GradeRow() {
+function Header() {
   return (
     <tr className="row">
-      <td className="id">1</td>
-      <td className="name">Svensson, Sven</td>
-      <td className="grade">C</td>
-      <td className="date">2021-01-01</td>
-      <td>Will not be transferred</td>
+      <th className="id">#</th>
+      <th className="name">Student</th>
+      <th className="grade">Grade</th>
+      <th className="date">Examination date</th>
+      <th></th>
     </tr>
+  );
+}
+
+function EmptyState() {
+  return (
+    <div className="EmptyState">
+      <div>
+        Choose an assignment to see a preview of what is going to be transferred
+      </div>
+    </div>
   );
 }
 
 export default function GradesTable() {
   return (
-    <table className="GradesTable">
-      <tbody>
-        <GradeRow />
-      </tbody>
-    </table>
+    <div>
+      <table className="GradesTable">
+        <thead>
+          <Header />
+        </thead>
+      </table>
+      <EmptyState />
+    </div>
   );
 }
