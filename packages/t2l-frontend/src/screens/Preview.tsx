@@ -1,11 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { GradesDestination } from "t2l-backend";
-import MockedTable from "../components/MockedTable";
+import GradesTable from "../components/GradesTable";
 import {
   useAssignments,
   useCanvasGrades,
   useGradeableStudents,
 } from "../hooks/apiClient";
+import getResultsToBeTransferred from "../utils/getResultsToBeTransferred";
 import { ArrowRight } from "../utils/icons";
 import "./Preview.scss";
 
@@ -51,6 +52,11 @@ export default function Preview({ destination }: Params) {
   const canvasGradesQuery = useCanvasGrades(assignmentId);
   console.log(ladokGradesQuery.status, canvasGradesQuery.status);
 
+  const tableContent = getResultsToBeTransferred(
+    canvasGradesQuery.data ?? [],
+    ladokGradesQuery.data ?? []
+  );
+
   return (
     <div className="Preview">
       <header>
@@ -75,13 +81,7 @@ export default function Preview({ destination }: Params) {
         </div>
       </header>
       <main>
-        <MockedTable />
-        <div className="overlay">
-          <div>
-            Choose an assignment to see a preview of what is going to be
-            transferred
-          </div>
-        </div>
+        <GradesTable />
       </main>
       <footer>
         <button>Transfer to Ladok</button>
