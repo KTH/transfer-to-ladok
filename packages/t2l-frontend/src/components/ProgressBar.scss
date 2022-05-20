@@ -1,0 +1,30 @@
+@import "../utils/variables.scss";
+
+@keyframes tracker-slide {
+  0% {
+    transform: translateX(0) scaleX(0);
+  }
+  40% {
+    transform: translateX(0) scaleX(0.4);
+  }
+  100% {
+    transform: translateX(100%) scaleX(0.5);
+  }
+}
+
+.IndeterminateProgressBar {
+  display: inline-block;
+  width: 20rem;
+  height: 4px;
+  border-radius: 2px;
+  background-color: $color-gray-200;
+  overflow: hidden;
+
+  .track {
+    height: 100%;
+    width: 100%;
+    background-color: $color-blue-700;
+    transform-origin: 0% 50%;
+    animation: tracker-slide 1s infinite linear;
+  }
+}
