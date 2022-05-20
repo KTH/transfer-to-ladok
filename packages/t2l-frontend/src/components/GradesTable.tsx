@@ -13,6 +13,7 @@ function Header() {
   );
 }
 
+// TODO: move it somewhere else
 function EmptyState() {
   return (
     <div className="EmptyState">
@@ -31,7 +32,6 @@ export default function GradesTable() {
           <Header />
         </thead>
       </table>
-      <EmptyState />
     </div>
   );
 }
