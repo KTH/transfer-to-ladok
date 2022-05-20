@@ -1,0 +1,48 @@
+@import "../utils/variables.scss";
+
+.Preview {
+  padding-top: 1rem;
+
+  .header {
+  }
+
+  // Assignment selector
+  .assignment {
+    display: flex;
+    align-items: center;
+    margin-top: 0.5rem;
+
+    select {
+      padding: 0.5rem;
+      width: 25rem;
+      border-radius: 0.25rem;
+      margin-right: 1rem;
+    }
+
+    .destination {
+      margin-left: 0.5rem;
+    }
+  }
+
+  .date {
+    margin-top: 1rem;
+    display: flex;
+    align-items: center;
+  }
+
+  .options {
+    margin: 0 0 0 2rem;
+    padding: 0;
+    list-style: none;
+    display: inline-flex;
+
+    li {
+      margin: 0 1rem 0 0;
+      padding: 0;
+    }
+
+    li label {
+      margin-left: 0.25rem;
+    }
+  }
+}
