@@ -10,13 +10,7 @@ import Authenticated from "./screens/Authenticated";
 const queryClient = new QueryClient();
 
 function Home() {
-  const courseId = new URLSearchParams(location.search).get("courseId");
-
-  if (!courseId) {
-    throw new Error("No courseId provided");
-  }
-
-  const sectionsQuery = useSections(courseId);
+  const sectionsQuery = useSections();
 
   if (sectionsQuery.isLoading) {
     // Since the "loading" takes less than 1 second, we don't need to show any
@@ -31,7 +25,7 @@ function Home() {
       sectionsQuery.error instanceof ApiError &&
       sectionsQuery.error.code === "unauthorized"
     ) {
-      return <Unauthenticated courseId={courseId} />;
+      return <Unauthenticated />;
     }
 
     throw sectionsQuery.error;

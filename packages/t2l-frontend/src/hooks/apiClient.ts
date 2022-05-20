@@ -7,6 +7,16 @@ import {
   Sections,
 } from "t2l-backend";
 
+function getCourseId() {
+  const courseId = new URLSearchParams(location.search).get("courseId");
+
+  if (!courseId) {
+    throw new Error("No course ID!");
+  }
+
+  return courseId;
+}
+
 export class ApiError extends Error {
   code: string;
 
@@ -33,7 +43,9 @@ async function apiFetch(endpoint: string) {
   }
 }
 
-export function useSections(courseId: string) {
+export function useSections() {
+  const courseId = getCourseId();
+
   return useQuery<Sections>(
     ["sections", courseId],
     () => apiFetch(`/transfer-to-ladok/api/courses/${courseId}/sections`),

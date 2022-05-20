@@ -1,12 +1,14 @@
 import React from "react";
 import "./Unauthenticated.scss";
 
-interface Params {
-  courseId: string;
-}
-
 /** Screen shown when the user is not logged in */
-export default function Unauthenticated({ courseId }: Params) {
+export default function Unauthenticated() {
+  const courseId = new URLSearchParams(location.search).get("courseId");
+
+  if (!courseId) {
+    throw new Error("No course ID!");
+  }
+
   return (
     <div className="container">
       <h1>KTH Transfer to Ladok</h1>
