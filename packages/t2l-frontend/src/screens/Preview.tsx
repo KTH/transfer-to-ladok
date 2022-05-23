@@ -6,13 +6,18 @@ import {
   useCanvasGrades,
   useGradeableStudents,
 } from "../hooks/apiClient";
-import getResultsToBeTransferred from "../utils/getResultsToBeTransferred";
+import {
+  getResultsToBeTransferred,
+  PreviewTableRow,
+} from "../utils/getResultsToBeTransferred";
 import { ArrowRight } from "../utils/icons";
 import { IndeterminateProgressBar } from "../components/ProgressBar";
 import "./Preview.scss";
+import { SendGradesInput } from "../hooks/useSendGrades";
 
 interface Params {
   destination: GradesDestination;
+  onSubmit(results: SendGradesInput): void;
 }
 
 function AssignmentSelector({
@@ -57,7 +62,7 @@ function AssignmentSelector({
   return <select></select>;
 }
 
-export default function Preview({ destination }: Params) {
+export default function Preview({ destination, onSubmit }: Params) {
   const [assignmentId, setAssignmentId] = useState<string>("");
 
   const ladokGradesQuery = useGradeableStudents(destination);
@@ -104,7 +109,11 @@ export default function Preview({ destination }: Params) {
         )}
       </main>
       <footer>
-        <button>Transfer to Ladok</button>
+        <button
+          onClick={() => onSubmit({ results: tableContent, destination })}
+        >
+          Transfer to Ladok
+        </button>
       </footer>
     </div>
   );

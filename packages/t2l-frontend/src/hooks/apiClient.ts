@@ -1,13 +1,11 @@
 /** Hooks that call the API Client */
-import { useMutation, useQuery } from "react-query";
+import { useQuery } from "react-query";
 import {
   Columns,
   CanvasGrades,
   GradeableStudents,
   GradesDestination,
   Sections,
-  PostLadokGradesOutput,
-  PostLadokGradesInput,
 } from "t2l-backend/src/types";
 
 function getCourseId() {
@@ -108,35 +106,6 @@ export function useCanvasGrades(assignmentId: string) {
         return apiFetch(
           `/transfer-to-ladok/api/courses/${courseId}/assignments/${assignmentId}`
         );
-      }
-    }
-  );
-}
-
-export function useSendGrades() {
-  const courseId = getCourseId();
-
-  return useMutation<PostLadokGradesOutput, unknown, PostLadokGradesInput>(
-    async (input: PostLadokGradesInput) => {
-      const response = await fetch(
-        `/transfer-to-ladok/api/courses/${courseId}/ladok-grades`,
-        {
-          method: "POST",
-          body: JSON.stringify(input),
-        }
-      );
-
-      try {
-        const body = await response.json();
-
-        if (response.status === 200) {
-          return body;
-        }
-
-        throw new ApiError(body.message, body.code);
-      } catch (err) {
-        // No way to parse the error message from the API
-        throw err;
       }
     }
   );

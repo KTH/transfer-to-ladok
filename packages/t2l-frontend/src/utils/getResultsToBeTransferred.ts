@@ -1,17 +1,55 @@
 import type { CanvasGrades, GradeableStudents } from "t2l-backend";
+import {
+  GradesDestination,
+  PostLadokGradesInput,
+  PostLadokGradesOutput,
+} from "t2l-backend/src/types";
 
-export interface TransferableResult {
+interface TransferableResult {
   student: {
     id: string;
     sortableName: string;
   };
-  transferrable: boolean;
+  message: string;
+  transferrable: true;
+  draft: {
+    grade: string;
+    examinationDate: string;
+  };
+}
+
+interface NonTransferrableResult {
+  student: {
+    id: string;
+    sortableName: string;
+  };
+  message: string;
+  transferrable: false;
   draft?: {
     grade: string;
     examinationDate: string;
   };
-  message: string;
 }
+
+interface TransferredResult {
+  student: {
+    id: string;
+    sortableName: string;
+  };
+  transferrable: true;
+  draft: {
+    grade: string;
+    examinationDate: string;
+  };
+  status: "success" | "error";
+  error?: {
+    code: string;
+    message: string;
+  };
+}
+
+export type PreviewTableRow = TransferableResult | NonTransferrableResult;
+export type TransferredTableRow = NonTransferrableResult | TransferredResult;
 
 /**
  *
@@ -19,10 +57,10 @@ export interface TransferableResult {
  * @param ladokGradeableStudents List of students that can have grades
  * @returns a list of transferrable results
  */
-export default function getResultsToBeTransferred(
+export function getResultsToBeTransferred(
   canvasGrades: CanvasGrades,
   ladokGradeableStudents: GradeableStudents
-): TransferableResult[] {
+): PreviewTableRow[] {
   if (canvasGrades.length === 0) {
     return [];
   }
@@ -77,6 +115,55 @@ export default function getResultsToBeTransferred(
       message: ladokGrade.draft
         ? "Current draft in Ladok will be overwritten"
         : "",
+    };
+  });
+}
+
+export function convertToApiInput(
+  destination: GradesDestination,
+  results: PreviewTableRow[]
+): PostLadokGradesInput {
+  return {
+    destination,
+    results: results
+      .filter((r): r is TransferableResult => r.transferrable)
+      .map((r) => ({
+        id: r.student.id,
+        draft: r.draft,
+      })),
+  };
+}
+
+export function processApiOutput(
+  input: PreviewTableRow[],
+  output: PostLadokGradesOutput
+): TransferredTableRow[] {
+  return input.map((row) => {
+    if (!row.transferrable) {
+      return row;
+    }
+
+    const o = output.results.find((r) => r.id === row.student.id);
+
+    if (o) {
+      return {
+        transferrable: true,
+        student: row.student,
+        status: o.status,
+        draft: o.draft,
+        error: o.error,
+      };
+    }
+
+    return {
+      transferrable: true,
+      student: row.student,
+      draft: row.draft,
+      status: "error",
+      error: {
+        message: "Unknown error",
+        code: "unknown",
+      },
     };
   });
 }
