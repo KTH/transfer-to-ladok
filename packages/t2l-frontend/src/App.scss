@@ -1,0 +1,33 @@
+@import "./utils/variables.scss";
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  font: $font-default;
+}
+
+body {
+  padding: 0;
+  margin: 0;
+}
+
+a {
+  text-decoration: none;
+}
+
+h1 {
+  font: $font-h1;
+  margin: 1.5rem 0 1.5rem;
+}
+
+h2 {
+  font: $font-h2;
+  margin: 1.5rem 0 1.5rem;
+}
+
+h3 {
+  font: $font-h3;
+  margin: 1rem 0;
+}

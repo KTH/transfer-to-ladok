@@ -7,6 +7,8 @@ import FullPageError from "./screens/FullPageError";
 import Unauthenticated from "./screens/Unauthenticated";
 import Authenticated from "./screens/Authenticated";
 
+import "./App.scss";
+
 const queryClient = new QueryClient();
 
 function Home() {
