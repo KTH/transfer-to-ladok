@@ -1,5 +1,5 @@
 import React from "react";
-import { Sections, AktSection, GradesDestination } from "t2l-backend";
+import { Sections, AktSection, GradesDestination } from "t2l-backend/src/types";
 import { SendGradesInput, useSendGrades } from "../hooks/useSendGrades";
 import Preview from "./Preview";
 import Done from "./Done";

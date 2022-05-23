@@ -13,6 +13,7 @@ export default function ModuleSelector({
   return (
     <div className="ModuleSelector">
       <h2>Select a module</h2>
+      <p>Select which module in Ladok you want to transfer results to</p>
       {sections.aktivitetstillfalle.length > 0 && (
         <section>
           <ul>
@@ -34,7 +35,9 @@ export default function ModuleSelector({
       )}
       {sections.kurstillfalle.map((ktf) => (
         <section>
-          <h3>{ktf.code}</h3>
+          <h3>
+            {ktf.courseCode} ({ktf.roundCode})
+          </h3>
           <ul>
             {ktf.modules.map((m) => (
               <li>

@@ -31,8 +31,11 @@ export type KurSection = {
   /** Use this parameter to send final grades to this kurstillfälle */
   utbildningsinstans: string;
 
-  /** Example: "50071" */
-  code: string;
+  /** Course code: "SF1624" */
+  courseCode: string;
+
+  /** Code for kurstillfälle: "50071" */
+  roundCode: string;
 
   /** Modules in the kurstillfälle */
   modules: {

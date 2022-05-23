@@ -106,7 +106,8 @@ export async function getExtraKurInformation(uid: string): Promise<KurSection> {
   return {
     id: uid,
     utbildningsinstans: ladokKur.UtbildningsinstansUID,
-    code: ladokKur.Kurstillfalleskod,
+    courseCode: ladokKur.Utbildningskod,
+    roundCode: ladokKur.Kurstillfalleskod,
     modules: ladokKur.IngaendeMoment.map((m) => ({
       utbildningsinstans: m.UtbildningsinstansUID,
       code: m.Utbildningskod,
