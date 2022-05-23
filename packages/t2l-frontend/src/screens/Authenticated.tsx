@@ -4,9 +4,26 @@ import { SendGradesInput, useSendGrades } from "../hooks/useSendGrades";
 import Preview from "./Preview";
 import Done from "./Done";
 
-function AppWithSelector() {
-  // TODO: Implement this
-  return <div>There are many things to choose from</div>;
+function AppWithSelector({ sections }: { sections: Sections }) {
+  return (
+    <div>
+      <h2>Select which module in Ladok you want to transfer results to</h2>
+      {sections.aktivitetstillfalle.length > 0 && <h3>Examinations</h3>}
+      {sections.kurstillfalle.map((ktf) => (
+        <section>
+          <h3>{ktf.code}</h3>
+          <ul>
+            {ktf.modules.map((m) => (
+              <li>
+                {m.code} {m.name}
+              </li>
+            ))}
+            <li>Final grade</li>
+          </ul>
+        </section>
+      ))}
+    </div>
+  );
 }
 
 function AppWithoutSelector({
@@ -58,5 +75,5 @@ export default function Authenticated({ sections }: { sections: Sections }) {
   }
 
   // Otherwise the user needs to choose a destination
-  return <AppWithSelector />;
+  return <AppWithSelector sections={sections} />;
 }
