@@ -1,15 +1,15 @@
 import React from "react";
-import { GradesTable2 } from "../components/GradesTable";
-import { TransferredTableRow } from "../utils/getResultsToBeTransferred";
+import { GradesTable } from "../components/GradesTable";
+import { RowAfter } from "../utils/getResultsToBeTransferred";
 
-export default function Done({ results }: { results: TransferredTableRow[] }) {
+export default function Done({ results }: { results: RowAfter[] }) {
   return (
     <div>
       <header>
         <h1>Transfer completed</h1>
       </header>
       <main>
-        <GradesTable2 results={results} />
+        <GradesTable results={results} />
       </main>
     </div>
   );

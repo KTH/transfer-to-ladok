@@ -5,51 +5,32 @@ import {
   PostLadokGradesOutput,
 } from "t2l-backend/src/types";
 
-interface TransferableResult {
+interface Row {
   student: {
     id: string;
     sortableName: string;
   };
-  message: string;
-  transferrable: true;
   draft: {
     grade: string;
     examinationDate: string;
   };
-}
-
-interface NonTransferrableResult {
-  student: {
-    id: string;
-    sortableName: string;
+  warning?: {
+    code: string;
+    message: string;
   };
-  message: string;
-  transferrable: false;
-  draft?: {
-    grade: string;
-    examinationDate: string;
-  };
-}
-
-interface TransferredResult {
-  student: {
-    id: string;
-    sortableName: string;
-  };
-  transferrable: true;
-  draft: {
-    grade: string;
-    examinationDate: string;
-  };
-  status: "success" | "error";
   error?: {
     code: string;
     message: string;
   };
 }
 
-export type PreviewTableRow = TransferableResult | NonTransferrableResult;
-export type TransferredTableRow = NonTransferrableResult | TransferredResult;
+export interface RowBefore extends Row {
+  status: "transferable" | "not_transferable";
+}
+
+export interface RowAfter extends Row {
+  status: "not_transferred" | "success" | "error";
+}
 
 /**
  *
@@ -60,11 +41,11 @@ export type TransferredTableRow = NonTransferrableResult | TransferredResult;
 export function getResultsToBeTransferred(
   canvasGrades: CanvasGrades,
   ladokGradeableStudents: GradeableStudents
-): PreviewTableRow[] {
+): RowBefore[] {
   if (canvasGrades.length === 0) {
     return [];
   }
-  return ladokGradeableStudents.map((ladokGrade) => {
+  return ladokGradeableStudents.map((ladokGrade): RowBefore => {
     const canvasGrade = canvasGrades.find(
       (g) => g.student.id === ladokGrade.student.id
     );
@@ -72,61 +53,91 @@ export function getResultsToBeTransferred(
     if (!canvasGrade) {
       return {
         student: ladokGrade.student,
-        transferrable: false,
-        message: "This student is not present in Canvas.",
+        status: "not_transferable",
+        draft: {
+          grade: "",
+          examinationDate: "",
+        },
+        error: {
+          code: "missing_in_canvas",
+          message: "Student is not present in Canvas",
+        },
       };
     }
 
     if (!canvasGrade?.grade) {
       return {
         student: ladokGrade.student,
-        transferrable: false,
-        message: "This student has no grade in Canvas",
+        status: "not_transferable",
+        draft: {
+          grade: "",
+          examinationDate: "",
+        },
+        error: {
+          code: "missing_grade_in_canvas",
+          message: "This student has no grade in Canvas",
+        },
       };
     }
 
     if (canvasGrade.grade === "F") {
       return {
         student: ladokGrade.student,
-        transferrable: false,
-        message: "Will not be transferred",
+        status: "not_transferable",
+        draft: {
+          grade: "",
+          examinationDate: "",
+        },
+        error: {
+          code: "grade_f",
+          message: "Will not be transferred",
+        },
       };
     }
 
     if (!ladokGrade.scale.includes(canvasGrade.grade)) {
       return {
         student: ladokGrade.student,
-        transferrable: false,
+        status: "not_transferable",
         draft: {
           grade: canvasGrade.grade,
           examinationDate: "",
         },
-        message: `Will not be transferred. "${canvasGrade.grade}" is not valid`,
+        error: {
+          code: "non_valid_grade",
+          message: `Will not be transferred. "${canvasGrade.grade}" is not valid`,
+        },
       };
     }
 
+    const warning =
+      ladokGrade.draft?.grade !== canvasGrade.grade
+        ? {
+            code: "overwritten",
+            message: "Draft in Ladok will be overwritten",
+          }
+        : undefined;
+
     return {
       student: ladokGrade.student,
-      transferrable: true,
+      status: "transferable",
       draft: {
         grade: canvasGrade.grade,
         examinationDate: "2022-01-01",
       },
-      message: ladokGrade.draft
-        ? "Current draft in Ladok will be overwritten"
-        : "",
+      warning,
     };
   });
 }
 
 export function convertToApiInput(
   destination: GradesDestination,
-  results: PreviewTableRow[]
+  results: RowBefore[]
 ): PostLadokGradesInput {
   return {
     destination,
     results: results
-      .filter((r): r is TransferableResult => r.transferrable)
+      .filter((r) => r.status === "transferable")
       .map((r) => ({
         id: r.student.id,
         draft: r.draft,
@@ -135,39 +146,48 @@ export function convertToApiInput(
 }
 
 export function processApiOutput(
-  input: PreviewTableRow[],
+  input: RowBefore[],
   output: PostLadokGradesOutput
-): TransferredTableRow[] {
-  return input.map((row) => {
-    if (!row.transferrable) {
+): RowAfter[] {
+  return input.map((inputRow): RowAfter => {
+    if (inputRow.status === "not_transferable") {
       return {
-        ...row,
-        message: "Not transferred to Ladok",
+        ...inputRow,
+        status: "not_transferred",
+        error: {
+          code: "not_transferred",
+          message: "Not transferred",
+        },
       };
     }
 
-    const o = output.results.find((r) => r.id === row.student.id);
-
-    if (o) {
+    const o = output.results.find((r) => r.id === inputRow.student.id);
+    if (!o) {
       return {
-        transferrable: true,
-        student: row.student,
-        status: o.status,
-        draft: o.draft,
-        message: "Error when attempting to transfer",
+        student: inputRow.student,
+        status: "error",
+        draft: {
+          grade: "",
+          examinationDate: "",
+        },
+        error: {
+          code: "unknown",
+          message: "Unknown problem",
+        },
+      };
+    }
+
+    if (o.status === "error") {
+      return {
+        ...inputRow,
+        status: "error",
         error: o.error,
       };
     }
 
     return {
-      transferrable: true,
-      student: row.student,
-      draft: row.draft,
-      status: "error",
-      error: {
-        message: "Unknown error",
-        code: "unknown",
-      },
+      ...inputRow,
+      status: "success",
     };
   });
 }
