@@ -3,16 +3,3 @@
 .container {
   max-width: 960px;
 }
-
-.btn {
-  font: $font-bold;
-  background: $color-blue-700;
-  display: inline-block;
-  color: #fff;
-  padding: 8px 24px;
-  border-radius: 4px;
-}
-
-.btn:hover {
-  background: $color-blue-900;
-}
