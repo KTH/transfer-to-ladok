@@ -1,5 +1,6 @@
 import React from "react";
 import { RowBefore, RowAfter } from "../utils/getResultsToBeTransferred";
+import { Warning } from "../utils/icons";
 import "./GradesTable.scss";
 
 function Header() {
@@ -30,7 +31,13 @@ function RowBefore({ result, id }: { result: RowBefore; id: string }) {
       <td className="name">{result.student.sortableName}</td>
       <td className="grade">{result.draft?.grade}</td>
       <td className="date">{result.draft?.examinationDate}</td>
-      <td>{result.error?.message ?? result.warning?.message}</td>
+      {result.error && <td className="status">{result.error.message}</td>}
+      {result.warning && (
+        <td className="status">
+          <Warning />
+          <div>{result.warning.message}</div>
+        </td>
+      )}
     </tr>
   );
 }

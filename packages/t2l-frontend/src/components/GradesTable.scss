@@ -42,6 +42,22 @@
     &.date {
       width: 10rem;
     }
+
+    &.status {
+      position: relative;
+      padding: 0.25rem 0rem 0.25rem 1.5rem;
+
+      > svg {
+        position: absolute;
+        left: 0;
+        height: 20px;
+      }
+
+      > div {
+        display: inline-block;
+        vertical-align: top;
+      }
+    }
   }
 
   .show-all {
