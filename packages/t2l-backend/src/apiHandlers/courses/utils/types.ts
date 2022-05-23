@@ -49,9 +49,16 @@ export type KurSection = {
 
 /**
  * Response of endpoint
- * GET /api/courses/:courseId/assignments
+ * GET /api/courses/:courseId/columns
  */
-export type Assignments = {
+export type Columns = {
+  assignments: Assignment[];
+  finalGrades: {
+    hasLetterGrade: boolean;
+  };
+};
+
+export interface Assignment {
   /** Unique identifier in Canvas */
   id: string;
 
@@ -69,7 +76,7 @@ export type Assignments = {
 
   /** Assignment "lock" date in ISO format */
   lockAt: string | null;
-}[];
+}
 
 /**
  * Response of endpoints

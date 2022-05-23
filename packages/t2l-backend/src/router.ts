@@ -1,6 +1,6 @@
 import { Router } from "express";
 import sectionsHandler from "./apiHandlers/courses/sections";
-import assignmentsHandler from "./apiHandlers/courses/assignments";
+import columnsHandler from "./apiHandlers/courses/columns";
 import {
   assignmentGradesHandler,
   courseGradesHandler,
@@ -32,8 +32,8 @@ router.use("/auth", auth);
 router.get("/api/courses/:courseId/sections", (req, res, next) =>
   sectionsHandler(req, res).catch(next)
 );
-router.get("/api/courses/:courseId/assignments", (req, res, next) =>
-  assignmentsHandler(req, res).catch(next)
+router.get("/api/courses/:courseId/columns", (req, res, next) =>
+  columnsHandler(req, res).catch(next)
 );
 router.get("/api/courses/:courseId/total", (req, res, next) =>
   courseGradesHandler(req, res).catch(next)

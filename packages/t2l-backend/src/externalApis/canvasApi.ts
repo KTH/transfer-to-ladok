@@ -9,6 +9,10 @@ import CanvasAPI, {
 import { Request } from "express";
 import { UnauthorizedError } from "../error";
 
+export interface CanvasCourse {
+  grading_standard_id: number | null;
+}
+
 export interface CanvasSection {
   sis_section_id: string;
   integration_id: string;
@@ -73,6 +77,12 @@ export default class CanvasClient {
 
     this.client = new CanvasAPI(process.env.CANVAS_API_URL!, token);
     this.client.errorHandler = minimalErrorHandler;
+  }
+
+  getCourse(courseId: string) {
+    return this.client
+      .get<CanvasCourse>(`courses/${courseId}`)
+      .then((r) => r.body);
   }
 
   getSections(courseId: string) {

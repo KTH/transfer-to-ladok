@@ -35,10 +35,21 @@ function AssignmentSelector({
     return (
       <select value={value} onChange={(e) => onChange(e.target.value)}>
         <option value="">Select an assignment</option>
-        {assignmentsQuery.data.map((a) => (
-          <option value={a.id}>{a.name}</option>
-        ))}
-        <option value="total">Total column</option>
+        <optgroup label="Assignments">
+          {assignmentsQuery.data.assignments.map((a) => (
+            <option value={a.id} disabled={a.gradingType !== "letter_grade"}>
+              {a.name}
+            </option>
+          ))}
+        </optgroup>
+        <optgroup label="Other columns">
+          <option
+            value="total"
+            disabled={!assignmentsQuery.data.finalGrades.hasLetterGrade}
+          >
+            Total column
+          </option>
+        </optgroup>
       </select>
     );
   }

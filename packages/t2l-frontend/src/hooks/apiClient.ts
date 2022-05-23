@@ -1,12 +1,12 @@
 /** Hooks that call the API Client */
 import { useQuery } from "react-query";
 import {
-  Assignments,
+  Columns,
   CanvasGrades,
   GradeableStudents,
   GradesDestination,
   Sections,
-} from "t2l-backend";
+} from "t2l-backend/src/types";
 
 function getCourseId() {
   const courseId = new URLSearchParams(location.search).get("courseId");
@@ -68,8 +68,8 @@ export function useSections() {
 export function useAssignments() {
   const courseId = getCourseId();
 
-  return useQuery<Assignments>(["assignments", courseId], () =>
-    apiFetch(`/transfer-to-ladok/api/courses/${courseId}/assignments`)
+  return useQuery<Columns>(["columns", courseId], () =>
+    apiFetch(`/transfer-to-ladok/api/courses/${courseId}/columns`)
   );
 }
 
