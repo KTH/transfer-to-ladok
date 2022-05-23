@@ -12,8 +12,10 @@ export default function ModuleSelector({
 }) {
   return (
     <div className="ModuleSelector">
-      <h2>Select a module</h2>
-      <p>Select which module in Ladok you want to transfer results to</p>
+      <header>
+        <h2>Select a module</h2>
+        <p>Select which module in Ladok you want to transfer results to</p>
+      </header>
       {sections.aktivitetstillfalle.length > 0 && (
         <section>
           <ul>
@@ -52,8 +54,8 @@ export default function ModuleSelector({
                   }}
                 >
                   {m.code}
+                  <small>{m.name}</small>
                 </a>
-                <small>{m.name}</small>
               </li>
             ))}
             <li>

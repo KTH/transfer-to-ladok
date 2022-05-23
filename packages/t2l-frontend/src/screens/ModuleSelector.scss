@@ -1,6 +1,14 @@
 @import "../utils/variables.scss";
 
 .ModuleSelector {
+  header {
+    margin-bottom: 2rem;
+  }
+
+  section {
+    margin: 2rem 0;
+  }
+
   ul {
     list-style: none;
     margin: 0;
