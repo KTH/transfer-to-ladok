@@ -2,6 +2,7 @@ import React from "react";
 import type { Sections, AktSection } from "t2l-backend";
 import { SendGradesInput, useSendGrades } from "../hooks/useSendGrades";
 import Preview from "./Preview";
+import Done from "./Done";
 
 function AppWithSelector() {
   // TODO: Implement this
@@ -36,8 +37,7 @@ export default function Authenticated({ sections }: { sections: Sections }) {
   }
 
   if (sendGradesMutation.isSuccess) {
-    console.log(sendGradesMutation.data);
-    return <div>DONE!!!!!!!</div>;
+    return <Done results={sendGradesMutation.data} />;
   }
 
   // If there are no aktivitetstillfälle or kurstillfälle, then

@@ -1,15 +1,12 @@
 import React, { useState } from "react";
 import { GradesDestination } from "t2l-backend";
-import GradesTable from "../components/GradesTable";
+import { GradesTable } from "../components/GradesTable";
 import {
   useAssignments,
   useCanvasGrades,
   useGradeableStudents,
 } from "../hooks/apiClient";
-import {
-  getResultsToBeTransferred,
-  PreviewTableRow,
-} from "../utils/getResultsToBeTransferred";
+import { getResultsToBeTransferred } from "../utils/getResultsToBeTransferred";
 import { ArrowRight } from "../utils/icons";
 import { IndeterminateProgressBar } from "../components/ProgressBar";
 import "./Preview.scss";

@@ -140,7 +140,10 @@ export function processApiOutput(
 ): TransferredTableRow[] {
   return input.map((row) => {
     if (!row.transferrable) {
-      return row;
+      return {
+        ...row,
+        message: "Not transferred to Ladok",
+      };
     }
 
     const o = output.results.find((r) => r.id === row.student.id);
@@ -151,6 +154,7 @@ export function processApiOutput(
         student: row.student,
         status: o.status,
         draft: o.draft,
+        message: "Error when attempting to transfer",
         error: o.error,
       };
     }
