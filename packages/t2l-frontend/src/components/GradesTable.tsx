@@ -27,7 +27,7 @@ function isBefore(result: RowBefore | RowAfter): result is RowBefore {
 
 function RowBefore({ result, id }: { result: RowBefore; id: string }) {
   return (
-    <tr className={result.status === "transferable" ? "dimmed" : ""}>
+    <tr className={result.status === "not_transferable" ? "dimmed" : ""}>
       <td className="id">{id}</td>
       <td className="name">{result.student.sortableName}</td>
       <td className="grade">{result.draft?.grade}</td>
