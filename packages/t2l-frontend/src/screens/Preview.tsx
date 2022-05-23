@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { GradesDestination } from "t2l-backend";
+import { GradesDestination } from "t2l-backend/src/types";
 import { GradesTable } from "../components/GradesTable";
 import {
   useAssignments,
@@ -11,11 +11,6 @@ import { ArrowRight } from "../utils/icons";
 import { IndeterminateProgressBar } from "../components/ProgressBar";
 import "./Preview.scss";
 import { SendGradesInput } from "../hooks/useSendGrades";
-
-interface Params {
-  destination: GradesDestination;
-  onSubmit(results: SendGradesInput): void;
-}
 
 function AssignmentSelector({
   value,
@@ -59,7 +54,15 @@ function AssignmentSelector({
   return <select></select>;
 }
 
-export default function Preview({ destination, onSubmit }: Params) {
+export default function Preview({
+  destinationName,
+  destination,
+  onSubmit,
+}: {
+  destinationName: string;
+  destination: GradesDestination;
+  onSubmit(results: SendGradesInput): void;
+}) {
   const [assignmentId, setAssignmentId] = useState<string>("");
 
   const ladokGradesQuery = useGradeableStudents(destination);
@@ -77,7 +80,7 @@ export default function Preview({ destination, onSubmit }: Params) {
         <div className="assignment">
           <AssignmentSelector value={assignmentId} onChange={setAssignmentId} />
           <ArrowRight />
-          <div className="destination">ME1039 TENA: 2021-06-08</div>
+          <div className="destination">{destinationName}</div>
         </div>
         <div className="date-selection">
           <div className="label">Options for examination date</div>
@@ -107,6 +110,7 @@ export default function Preview({ destination, onSubmit }: Params) {
       </main>
       <footer>
         <button
+          className="btn-primary"
           onClick={() => onSubmit({ results: tableContent, destination })}
         >
           Transfer to Ladok

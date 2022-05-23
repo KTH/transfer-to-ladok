@@ -5,6 +5,34 @@ import Preview from "./Preview";
 import Done from "./Done";
 import ModuleSelector from "./ModuleSelector";
 
+function getName(sections: Sections, destination: GradesDestination) {
+  if ("aktivitetstillfalle" in destination) {
+    const akt = sections.aktivitetstillfalle.find(
+      (a) => a.id === destination.aktivitetstillfalle
+    );
+
+    return akt?.name;
+  }
+
+  const ktf = sections.kurstillfalle.find(
+    (k) => k.id === destination.kurstillfalle
+  );
+
+  if (ktf) {
+    if (ktf.utbildningsinstans === destination.utbildningsinstans) {
+      return `${ktf.courseCode} (${ktf.roundCode}) - Final grade`;
+    }
+
+    const mod = ktf.modules.find(
+      (m) => m.utbildningsinstans === destination.utbildningsinstans
+    );
+
+    if (mod) {
+      return `${ktf.courseCode} (${ktf.roundCode}) – ${mod.code}`;
+    }
+  }
+}
+
 function AppWithSelector({
   sections,
   onSubmit,
@@ -18,7 +46,13 @@ function AppWithSelector({
     return <ModuleSelector sections={sections} onSelect={setDestination} />;
   }
 
-  return <Preview destination={destination} onSubmit={onSubmit} />;
+  return (
+    <Preview
+      destination={destination}
+      destinationName={getName(sections, destination) || ""}
+      onSubmit={onSubmit}
+    />
+  );
 }
 
 function AppWithoutSelector({
@@ -31,6 +65,7 @@ function AppWithoutSelector({
   return (
     <Preview
       destination={{ aktivitetstillfalle: akt.id }}
+      destinationName={akt.name}
       onSubmit={onSubmit}
     />
   );

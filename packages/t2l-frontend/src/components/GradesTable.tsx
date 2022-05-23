@@ -83,6 +83,10 @@ export function GradesTable({
 
   const [expanded, setExpanded] = React.useState(sortedResults.length < 7);
 
+  React.useEffect(() => {
+    setExpanded(sortedResults.length < 7);
+  }, [sortedResults.length]);
+
   return (
     <div className={["GradesTable", expanded && "expanded"].join(" ")}>
       <table className="table">
@@ -100,7 +104,7 @@ export function GradesTable({
         </tbody>
       </table>
       <div className="show-all">
-        <button className="secondary" onClick={() => setExpanded(true)}>
+        <button className="btn-secondary" onClick={() => setExpanded(true)}>
           Show all
         </button>
       </div>
