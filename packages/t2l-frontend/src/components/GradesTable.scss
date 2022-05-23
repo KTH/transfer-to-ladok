@@ -22,6 +22,15 @@
   tbody > tr {
     border-top: 1px solid $color-gray-700;
     border-bottom: 1px solid $color-gray-700;
+
+    &.error {
+      background-color: $color-red-200;
+      color: $color-red-700;
+    }
+
+    &.dimmed {
+      color: $color-gray-700;
+    }
   }
 
   td,

@@ -1,6 +1,10 @@
 import React from "react";
-import { RowBefore, RowAfter } from "../utils/getResultsToBeTransferred";
-import { Warning } from "../utils/icons";
+import {
+  RowBefore,
+  RowAfter,
+  getResultsToBeTransferred,
+} from "../utils/getResultsToBeTransferred";
+import { Error, Warning } from "../utils/icons";
 import "./GradesTable.scss";
 
 function Header() {
@@ -23,10 +27,7 @@ function isBefore(result: RowBefore | RowAfter): result is RowBefore {
 
 function RowBefore({ result, id }: { result: RowBefore; id: string }) {
   return (
-    <tr
-      className="row"
-      style={{ opacity: result.status === "transferable" ? 1 : 0.6 }}
-    >
+    <tr className={result.status === "transferable" ? "dimmed" : ""}>
       <td className="id">{id}</td>
       <td className="name">{result.student.sortableName}</td>
       <td className="grade">{result.draft?.grade}</td>
@@ -45,17 +46,27 @@ function RowBefore({ result, id }: { result: RowBefore; id: string }) {
 function RowAfter({ result, id }: { result: RowAfter; id: string }) {
   return (
     <tr
-      className="row"
-      style={{
-        opacity: result.status !== "not_transferred" ? 1 : 0.6,
-        backgroundColor: result.status === "error" ? "#FFF0F0" : "",
-      }}
+      className={
+        result.status === "error"
+          ? "error"
+          : result.status === "not_transferred"
+          ? "dimmed"
+          : ""
+      }
     >
       <td className="id">{id}</td>
       <td className="name">{result.student.sortableName}</td>
       <td className="grade">{result.draft?.grade}</td>
       <td className="date">{result.draft?.examinationDate}</td>
-      <td>{result.error?.message ?? result.warning?.message}</td>
+      {result.status === "error" && result.error && (
+        <td className="status">
+          <Error />
+          <div>Error: {result.error.message}</div>
+        </td>
+      )}
+      {result.status !== "error" && (
+        <td>{result.error?.message ?? result.warning?.message}</td>
+      )}
     </tr>
   );
 }
