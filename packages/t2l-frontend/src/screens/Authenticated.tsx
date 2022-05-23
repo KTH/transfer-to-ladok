@@ -1,10 +1,22 @@
 import React from "react";
-import type { Sections, AktSection } from "t2l-backend";
+import { Sections, AktSection, GradesDestination } from "t2l-backend";
 import { SendGradesInput, useSendGrades } from "../hooks/useSendGrades";
 import Preview from "./Preview";
 import Done from "./Done";
 
-function AppWithSelector({ sections }: { sections: Sections }) {
+function AppWithSelector({
+  sections,
+  onSubmit,
+}: {
+  sections: Sections;
+  onSubmit(results: SendGradesInput): void;
+}) {
+  const [destination, setDestination] = React.useState<GradesDestination>();
+
+  if (destination) {
+    return <Preview destination={destination} onSubmit={onSubmit} />;
+  }
+
   return (
     <div>
       <h2>Select which module in Ladok you want to transfer results to</h2>
@@ -15,10 +27,34 @@ function AppWithSelector({ sections }: { sections: Sections }) {
           <ul>
             {ktf.modules.map((m) => (
               <li>
-                {m.code} {m.name}
+                <a
+                  href=""
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setDestination({
+                      kurstillfalle: ktf.id,
+                      utbildningsinstans: m.utbildningsinstans,
+                    });
+                  }}
+                >
+                  {m.code} {m.name}
+                </a>
               </li>
             ))}
-            <li>Final grade</li>
+            <li>
+              <a
+                href=""
+                onClick={(e) => {
+                  e.preventDefault();
+                  setDestination({
+                    kurstillfalle: ktf.id,
+                    utbildningsinstans: ktf.utbildningsinstans,
+                  });
+                }}
+              >
+                Final grade
+              </a>
+            </li>
           </ul>
         </section>
       ))}
@@ -75,5 +111,7 @@ export default function Authenticated({ sections }: { sections: Sections }) {
   }
 
   // Otherwise the user needs to choose a destination
-  return <AppWithSelector sections={sections} />;
+  return (
+    <AppWithSelector sections={sections} onSubmit={sendGradesMutation.mutate} />
+  );
 }
