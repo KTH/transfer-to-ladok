@@ -1,6 +1,8 @@
 import React from "react";
 import { GradesDestination, Sections } from "t2l-backend/src/types";
 
+import "./ModuleSelector.scss";
+
 export default function ModuleSelector({
   sections,
   onSelect,
@@ -9,9 +11,27 @@ export default function ModuleSelector({
   onSelect(destination: GradesDestination): void;
 }) {
   return (
-    <div>
-      <h2>Select which module in Ladok you want to transfer results to</h2>
-      {sections.aktivitetstillfalle.length > 0 && <h3>Examinations</h3>}
+    <div className="ModuleSelector">
+      <h2>Select a module</h2>
+      {sections.aktivitetstillfalle.length > 0 && (
+        <section>
+          <ul>
+            {sections.aktivitetstillfalle.map((a) => (
+              <a
+                href=""
+                onClick={(e) => {
+                  e.preventDefault();
+                  onSelect({
+                    aktivitetstillfalle: a.id,
+                  });
+                }}
+              >
+                {a.name}
+              </a>
+            ))}
+          </ul>
+        </section>
+      )}
       {sections.kurstillfalle.map((ktf) => (
         <section>
           <h3>{ktf.code}</h3>
@@ -28,8 +48,9 @@ export default function ModuleSelector({
                     });
                   }}
                 >
-                  {m.code} {m.name}
+                  {m.code}
                 </a>
+                <small>{m.name}</small>
               </li>
             ))}
             <li>

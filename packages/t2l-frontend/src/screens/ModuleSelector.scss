@@ -1,0 +1,24 @@
+@import "../utils/variables.scss";
+
+.ModuleSelector {
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  li {
+    margin: 0.5rem 0;
+  }
+
+  a {
+    font: $font-bold;
+    color: $color-blue-700;
+  }
+
+  small {
+    color: $color-gray-700;
+    font: $font-default;
+    margin-left: 0.75rem;
+  }
+}
