@@ -175,6 +175,9 @@ export type GradeableStudents = {
   /** List of grades you can set */
   scale: string[];
 
+  /** True if the teacher has permissions to send grades to this student */
+  hasPermission: boolean;
+
   /** Grade in "utkast" if any */
   draft?: {
     grade: string;

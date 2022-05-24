@@ -165,3 +165,14 @@ export function getExistingDraft(studentResultat: Studieresultat) {
 
   return arbetsunderlag;
 }
+
+export async function hasPermission(
+  email: string,
+  utbildningsinstansUID: string
+) {
+  const rapportorer = await getRapportor(utbildningsinstansUID);
+
+  return rapportorer.Anvandare.some(
+    (rapportor) => rapportor.Anvandarnamn === email
+  );
+}

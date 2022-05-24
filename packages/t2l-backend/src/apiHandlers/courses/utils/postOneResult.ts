@@ -3,12 +3,11 @@ import { HTTPError } from "got";
 import {
   createResult,
   getBetyg,
-  getRapportor,
   Studieresultat,
   updateResult,
 } from "../../../externalApis/ladokApi";
 import { isLadokApiError } from "./asserts";
-import { getExistingDraft } from "./commons";
+import { getExistingDraft, hasPermission } from "./commons";
 import { ResultInput, ResultOutput } from "./types";
 
 /** Errors when posting results that are detected by us */
@@ -56,23 +55,6 @@ function formatInputForLadok(
     Betygsgrad: gradeId,
     Examinationsdatum: input.draft.examinationDate,
   };
-}
-
-/**
- * Checks if a user has permission to send grades to the given utbildningsinstansUID
- * according to Ladok.
- */
-async function checkPermission(email: string, utbildningsinstansUID: string) {
-  const rapportorer = await getRapportor(utbildningsinstansUID);
-  const isRapportor = rapportorer.Anvandare.some(
-    (rapportor) => rapportor.Anvandarnamn === email
-  );
-
-  if (!isRapportor) {
-    throw new PostResultError(
-      `You don't have 'rapportor' permissions in Ladok to set grades.`
-    );
-  }
 }
 
 function handleError(err: unknown): ResultOutput["error"] {
@@ -148,7 +130,11 @@ export default async function postOneResult(
     const utbildningsinstansUID =
       oneStudieResultat.Rapporteringskontext.UtbildningsinstansUID;
 
-    await checkPermission(email, utbildningsinstansUID);
+    if (!(await hasPermission(email, utbildningsinstansUID))) {
+      throw new PostResultError(
+        `You don't have 'rapportor' permissions in Ladok to set grades.`
+      );
+    }
     // Below this line the current user has permissions to change grades in Ladok
     // so it is safe to call Ladok
 

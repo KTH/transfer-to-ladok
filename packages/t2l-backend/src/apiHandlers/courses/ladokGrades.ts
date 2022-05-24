@@ -6,6 +6,7 @@ import {
   getAllStudieresultat,
   splitSections,
   getExistingDraft,
+  hasPermission,
 } from "./utils/commons";
 import type {
   GradesDestination,
@@ -89,33 +90,42 @@ export async function getGradesHandler(
   const courseId = req.params.courseId;
   const canvasClient = new CanvasClient(req);
   const sections = await canvasClient.getSections(courseId);
+  const { email } = await canvasClient.getSelf();
 
   // TODO: send the error type as parameter as in `assertGradesDestination`
   await assertDestinationInSections(req.query, sections);
 
   const allStudieresultat = await getAllStudieresultat(req.query);
-  const response = allStudieresultat.map((oneStudieresultat) => {
-    const result: GradeableStudents[number] = {
-      student: {
-        id: oneStudieresultat.Student.Uid,
-        sortableName: `${oneStudieresultat.Student.Efternamn}, ${oneStudieresultat.Student.Fornamn}`,
-      },
-      scale: getBetyg(oneStudieresultat.Rapporteringskontext.BetygsskalaID).map(
-        (b) => b.Kod
-      ),
-    };
+  const response = await Promise.all(
+    allStudieresultat.map(async (oneStudieresultat) => {
+      const result: GradeableStudents[number] = {
+        student: {
+          id: oneStudieresultat.Student.Uid,
+          sortableName: `${oneStudieresultat.Student.Efternamn}, ${oneStudieresultat.Student.Fornamn}`,
+        },
+        scale: getBetyg(
+          oneStudieresultat.Rapporteringskontext.BetygsskalaID
+        ).map((b) => b.Kod),
+        hasPermission: false,
+      };
 
-    const draft = getExistingDraft(oneStudieresultat);
+      const draft = getExistingDraft(oneStudieresultat);
 
-    if (draft) {
-      const grade = draft.Betygsgradsobjekt.Kod;
-      const examinationDate = draft.Examinationsdatum;
+      result.hasPermission = await hasPermission(
+        email,
+        oneStudieresultat.Rapporteringskontext.UtbildningsinstansUID
+      );
 
-      result.draft = { grade, examinationDate };
-    }
+      if (result.hasPermission && draft) {
+        const grade = draft.Betygsgradsobjekt.Kod;
+        const examinationDate = draft.Examinationsdatum;
 
-    return result;
-  });
+        result.draft = { grade, examinationDate };
+      }
+
+      return result;
+    })
+  );
 
   res.json(response);
 }
