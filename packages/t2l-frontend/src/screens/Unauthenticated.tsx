@@ -19,7 +19,7 @@ export default function Unauthenticated() {
       </p>
       <div>
         <a
-          className="btn"
+          className="btn-primary"
           href={`/transfer-to-ladok/auth?courseId=${courseId}`}
         >
           Launch the application

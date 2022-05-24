@@ -11,6 +11,7 @@ import "./App.scss";
 
 const queryClient = new QueryClient();
 focusManager.setEventListener(() => {
+  console.log("X");
   return () => {};
 });
 
