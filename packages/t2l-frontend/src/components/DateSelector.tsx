@@ -46,7 +46,7 @@ export default function DateSelector({
               onChange({ option: "manual-date", date: manualDateStr });
             }}
           />
-          <label htmlFor="manual">Custom</label>
+          <label htmlFor="manual-date">Custom</label>
           <DatePicker
             disabled={value.option !== "manual-date"}
             selected={manualDate}

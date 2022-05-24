@@ -27,7 +27,7 @@ export default function Preview({
   const canvasGradesQuery = useCanvasGrades(assignmentId);
   const [examinationDateOption, setExaminationDateOption] =
     React.useState<ExaminationDateValues>({
-      option: "fixed-date",
+      option: "submission-date",
     });
 
   const tableContent = getResultsToBeTransferred(
