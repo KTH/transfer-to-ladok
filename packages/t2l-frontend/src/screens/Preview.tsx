@@ -6,7 +6,9 @@ import { getResultsToBeTransferred } from "../utils/getResultsToBeTransferred";
 import { ArrowRight } from "../utils/icons";
 import { IndeterminateProgressBar } from "../components/ProgressBar";
 import AssignmentSelector from "../components/AssignmentSelector";
-import DateSelector from "../components/DateSelector";
+import DateSelector, {
+  Values as ExaminationDateValues,
+} from "../components/DateSelector";
 import "./Preview.scss";
 import { SendGradesInput } from "../hooks/useSendGrades";
 
@@ -23,6 +25,10 @@ export default function Preview({
 
   const ladokGradesQuery = useGradeableStudents(destination);
   const canvasGradesQuery = useCanvasGrades(assignmentId);
+  const [examinationDateOption, setExaminationDateOption] =
+    React.useState<ExaminationDateValues>({
+      option: "fixed-date",
+    });
 
   const tableContent = getResultsToBeTransferred(
     canvasGradesQuery.data ?? [],
@@ -43,7 +49,10 @@ export default function Preview({
           <ArrowRight />
           <div className="destination">{destinationName}</div>
         </div>
-        <DateSelector value={{ option: "default-date" }} onChange={() => {}} />
+        <DateSelector
+          value={examinationDateOption}
+          onChange={setExaminationDateOption}
+        />
       </header>
       <main className="main">
         <IndeterminateProgressBar visible={canvasGradesQuery.isFetching} />
