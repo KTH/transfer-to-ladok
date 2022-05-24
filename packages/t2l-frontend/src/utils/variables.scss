@@ -1,17 +1,20 @@
 @use "sass:list";
 
+// Font sizes.
+// Format: font-size/line-height. We need to use `list.slash` until Sass stop
+// using "/" for division
 $font-size-default: list.slash(16px, 24px);
-$font-size-3xl: list.slash(2.75, 4.125rem);
-$font-size-2xl: list.slash(1.75, 2.75rem);
+$font-size-3xl: list.slash(2.75rem, 4.125rem);
+$font-size-2xl: list.slash(1.75rem, 2.75rem);
 $font-size-s: list.slash(0.875rem, 1.5rem);
 
-$font-default: 400 16px/24px "Open Sans", sans-serif;
-$font-bold: 600 1rem/1.5rem "Open Sans", sans-serif;
-$font-h1: 600 2.75rem/4.125rem "Open Sans", sans-serif;
-$font-h2: 400 1.75rem/2.75rem "Open Sans", sans-serif;
-$font-h3: 600 1rem/1.5rem "Open Sans", sans-serif;
+$font-default: 400 $font-size-default "Open Sans", sans-serif;
+$font-bold: 600 $font-size-default "Open Sans", sans-serif;
+$font-h1: 600 $font-size-3xl "Open Sans", sans-serif;
+$font-h2: 400 $font-size-2xl "Open Sans", sans-serif;
+$font-h3: 600 $font-size-default "Open Sans", sans-serif;
 
-$font-small: 400 0.875rem/1.5rem "Open Sans", sans-serif;
+$font-small: 400 $font-size-s "Open Sans", sans-serif;
 
 $color-blue-200: #ccf1ff;
 $color-blue-700: #007fae;
