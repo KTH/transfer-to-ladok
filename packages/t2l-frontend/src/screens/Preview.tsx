@@ -6,6 +6,7 @@ import { getResultsToBeTransferred } from "../utils/getResultsToBeTransferred";
 import { ArrowRight } from "../utils/icons";
 import { IndeterminateProgressBar } from "../components/ProgressBar";
 import AssignmentSelector from "../components/AssignmentSelector";
+import DateSelector from "../components/DateSelector";
 import "./Preview.scss";
 import { SendGradesInput } from "../hooks/useSendGrades";
 
@@ -42,19 +43,7 @@ export default function Preview({
           <ArrowRight />
           <div className="destination">{destinationName}</div>
         </div>
-        <div className="date-selection">
-          <div className="label">Options for examination date</div>
-          <ul className="options">
-            <li>
-              <input type="radio" id="D" />
-              <label htmlFor="D">Same as submission date in assignment</label>
-            </li>
-            <li>
-              <input type="radio" id="E" />
-              <label htmlFor="E">Manual input</label>
-            </li>
-          </ul>
-        </div>
+        <DateSelector value={{ option: "default-date" }} onChange={() => {}} />
       </header>
       <main className="main">
         <IndeterminateProgressBar visible={canvasGradesQuery.isFetching} />
