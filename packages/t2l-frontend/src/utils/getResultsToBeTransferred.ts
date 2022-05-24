@@ -60,7 +60,7 @@ export function getResultsToBeTransferred(
         },
         error: {
           code: "no_permission",
-          message: "You don't have enough permission to set grades",
+          message: "You don't have permission to set grades in Ladok",
         },
       };
     }
@@ -100,7 +100,7 @@ export function getResultsToBeTransferred(
         student: ladokGrade.student,
         status: "not_transferable",
         draft: {
-          grade: "",
+          grade: canvasGrade.grade,
           examinationDate: "",
         },
         error: {
