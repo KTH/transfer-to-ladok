@@ -1,58 +1,13 @@
 import React, { useState } from "react";
 import { GradesDestination } from "t2l-backend/src/types";
 import { GradesTable } from "../components/GradesTable";
-import {
-  useAssignments,
-  useCanvasGrades,
-  useGradeableStudents,
-} from "../hooks/apiClient";
+import { useCanvasGrades, useGradeableStudents } from "../hooks/apiClient";
 import { getResultsToBeTransferred } from "../utils/getResultsToBeTransferred";
 import { ArrowRight } from "../utils/icons";
 import { IndeterminateProgressBar } from "../components/ProgressBar";
+import AssignmentSelector from "../components/AssignmentSelector";
 import "./Preview.scss";
 import { SendGradesInput } from "../hooks/useSendGrades";
-
-function AssignmentSelector({
-  value,
-  onChange,
-}: {
-  value: string;
-  onChange: (value: string) => void;
-}) {
-  const assignmentsQuery = useAssignments();
-  if (assignmentsQuery.isLoading) {
-    return (
-      <select disabled>
-        <option>Loading assignments...</option>
-      </select>
-    );
-  }
-
-  if (assignmentsQuery.isSuccess) {
-    return (
-      <select value={value} onChange={(e) => onChange(e.target.value)}>
-        <option value="">Select an assignment</option>
-        <optgroup label="Assignments">
-          {assignmentsQuery.data.assignments.map((a) => (
-            <option value={a.id} disabled={a.gradingType !== "letter_grade"}>
-              {a.name}
-            </option>
-          ))}
-        </optgroup>
-        <optgroup label="Other columns">
-          <option
-            value="total"
-            disabled={!assignmentsQuery.data.finalGrades.hasLetterGrade}
-          >
-            Total column
-          </option>
-        </optgroup>
-      </select>
-    );
-  }
-
-  return <select></select>;
-}
 
 export default function Preview({
   destinationName,
