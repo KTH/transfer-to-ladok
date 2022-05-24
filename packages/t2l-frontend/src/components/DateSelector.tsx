@@ -48,6 +48,8 @@ export default function DateSelector({
           />
           <label htmlFor="manual-date">Custom</label>
           <DatePicker
+            dateFormat="yyyy-MM-dd"
+            calendarStartDay={1}
             disabled={value.option !== "manual-date"}
             selected={manualDate}
             onChange={(d) => setManualDate(d)}
