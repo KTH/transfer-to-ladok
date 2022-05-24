@@ -45,7 +45,7 @@ h3 {
   border-radius: 4px;
   border: none;
 
-  &:hover {
+  &:hover:enabled {
     background: $color-blue-900;
   }
 }

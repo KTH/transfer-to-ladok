@@ -1,4 +1,4 @@
-import type { CanvasGrades, GradeableStudents } from "t2l-backend";
+import type { CanvasGrades, GradeableStudents } from "t2l-backend/src/types";
 import {
   GradesDestination,
   PostLadokGradesInput,
@@ -49,6 +49,21 @@ export function getResultsToBeTransferred(
     const canvasGrade = canvasGrades.find(
       (g) => g.student.id === ladokGrade.student.id
     );
+
+    if (!ladokGrade.hasPermission) {
+      return {
+        student: ladokGrade.student,
+        status: "not_transferable",
+        draft: {
+          grade: "",
+          examinationDate: "",
+        },
+        error: {
+          code: "no_permission",
+          message: "You don't have enough permission to set grades",
+        },
+      };
+    }
 
     if (!canvasGrade) {
       return {
