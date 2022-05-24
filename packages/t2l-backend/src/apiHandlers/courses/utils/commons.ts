@@ -129,6 +129,7 @@ export async function getExtraAktInformation(uid: string): Promise<AktSection> {
   return {
     id: uid,
     name,
+    date,
   };
 }
 
