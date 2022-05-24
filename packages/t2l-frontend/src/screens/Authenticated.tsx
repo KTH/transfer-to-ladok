@@ -33,6 +33,16 @@ function getName(sections: Sections, destination: GradesDestination) {
   }
 }
 
+function getDate(sections: Sections, destination: GradesDestination) {
+  if ("aktivitetstillfalle" in destination) {
+    const akt = sections.aktivitetstillfalle.find(
+      (a) => a.id === destination.aktivitetstillfalle
+    );
+
+    return akt?.date;
+  }
+}
+
 function AppWithSelector({
   sections,
   onSubmit,
@@ -50,6 +60,7 @@ function AppWithSelector({
     <Preview
       destination={destination}
       destinationName={getName(sections, destination) || ""}
+      fixedExaminationDate={getDate(sections, destination)}
       onSubmit={onSubmit}
     />
   );
@@ -66,6 +77,7 @@ function AppWithoutSelector({
     <Preview
       destination={{ aktivitetstillfalle: akt.id }}
       destinationName={akt.name}
+      fixedExaminationDate={akt.date}
       onSubmit={onSubmit}
     />
   );

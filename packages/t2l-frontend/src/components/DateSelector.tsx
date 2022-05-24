@@ -24,6 +24,20 @@ export default function DateSelector({
     <div className="DateSelector">
       <div className="label">Examination date</div>
       <ul className="options">
+        {fixedOption && (
+          <li>
+            <input
+              type="radio"
+              id="fixed-date"
+              value="fixed-date"
+              checked={value.option === "fixed-date"}
+              onChange={() => {
+                onChange({ option: "fixed-date" });
+              }}
+            />
+            <label htmlFor="fixed-date">{fixedOption}</label>
+          </li>
+        )}
         <li>
           <input
             type="radio"

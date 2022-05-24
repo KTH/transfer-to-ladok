@@ -13,10 +13,12 @@ import "./Preview.scss";
 import { SendGradesInput } from "../hooks/useSendGrades";
 
 export default function Preview({
+  fixedExaminationDate,
   destinationName,
   destination,
   onSubmit,
 }: {
+  fixedExaminationDate?: string;
   destinationName: string;
   destination: GradesDestination;
   onSubmit(results: SendGradesInput): void;
@@ -26,9 +28,11 @@ export default function Preview({
   const ladokGradesQuery = useGradeableStudents(destination);
   const canvasGradesQuery = useCanvasGrades(assignmentId);
   const [examinationDateOption, setExaminationDateOption] =
-    React.useState<ExaminationDateValues>({
-      option: "submission-date",
-    });
+    React.useState<ExaminationDateValues>(
+      fixedExaminationDate
+        ? { option: "fixed-date" }
+        : { option: "submission-date" }
+    );
 
   const tableContent = getResultsToBeTransferred(
     canvasGradesQuery.data ?? [],
@@ -50,6 +54,7 @@ export default function Preview({
           <div className="destination">{destinationName}</div>
         </div>
         <DateSelector
+          fixedOption={fixedExaminationDate}
           value={examinationDateOption}
           onChange={setExaminationDateOption}
         />
