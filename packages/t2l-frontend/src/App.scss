@@ -75,3 +75,19 @@ a.btn-primary {
   padding: 0 0.75rem;
   height: 1.5rem;
 }
+
+a.with-icon {
+  svg {
+    height: 1.5rem;
+    vertical-align: text-top;
+  }
+
+  .label {
+    vertical-align: text-top;
+    display: inline-block;
+    margin: 0 0.5rem;
+  }
+  &:hover .label {
+    text-decoration: underline;
+  }
+}

@@ -4,6 +4,9 @@ import { SendGradesInput, useSendGrades } from "../hooks/useSendGrades";
 import Preview from "./Preview";
 import Done from "./Done";
 import ModuleSelector from "./ModuleSelector";
+import { ArrowLeft } from "../utils/icons";
+
+import "./Authenticated.scss";
 
 function getName(sections: Sections, destination: GradesDestination) {
   if ("aktivitetstillfalle" in destination) {
@@ -57,12 +60,27 @@ function AppWithSelector({
   }
 
   return (
-    <Preview
-      destination={destination}
-      destinationName={getName(sections, destination) || ""}
-      fixedExaminationDate={getDate(sections, destination)}
-      onSubmit={onSubmit}
-    />
+    <div className="Authenticated">
+      <header className="header">
+        <a
+          href=""
+          className="with-icon"
+          onClick={(e) => {
+            e.preventDefault();
+            setDestination(undefined);
+          }}
+        >
+          <ArrowLeft />
+          <span className="label">Back to module selection</span>
+        </a>
+      </header>
+      <Preview
+        destination={destination}
+        destinationName={getName(sections, destination) || ""}
+        fixedExaminationDate={getDate(sections, destination)}
+        onSubmit={onSubmit}
+      />
+    </div>
   );
 }
 
