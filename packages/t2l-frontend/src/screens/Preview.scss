@@ -67,4 +67,15 @@
       }
     }
   }
+
+  footer {
+    .disclaimer {
+      max-width: 40rem;
+      font: $font-small;
+    }
+
+    &.disabled {
+      opacity: 0.5;
+    }
+  }
 }

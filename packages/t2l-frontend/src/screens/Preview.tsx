@@ -28,6 +28,11 @@ export default function Preview({
     ladokGradesQuery.data ?? []
   );
 
+  const readyToTransfer =
+    !ladokGradesQuery.isFetching &&
+    !canvasGradesQuery.isFetching &&
+    tableContent.filter((r) => r.status === "transferable").length > 0;
+
   return (
     <div className="Preview">
       <header>
@@ -63,10 +68,15 @@ export default function Preview({
           </div>
         )}
       </main>
-      <footer>
+      <footer className={readyToTransfer ? "" : "disabled"}>
+        <p className="disclaimer">
+          By clicking the button you will transfer the grades in the table
+          above. Grades will be submitted as “Draft” (utkast) in Ladok
+        </p>
         <button
           className="btn-primary"
           onClick={() => onSubmit({ results: tableContent, destination })}
+          disabled={!readyToTransfer}
         >
           Transfer to Ladok
         </button>
