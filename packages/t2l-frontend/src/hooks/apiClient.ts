@@ -1,5 +1,5 @@
 /** Hooks that call the API Client */
-import { useQuery } from "react-query";
+import { QueryClient, useQuery } from "react-query";
 import {
   Columns,
   CanvasGrades,
@@ -42,6 +42,17 @@ async function apiFetch(endpoint: string) {
     // No way to parse the error message from the API
     throw err;
   }
+}
+
+export async function prefetchAssignments(queryClient: QueryClient) {
+  try {
+    const courseId = getCourseId();
+    await queryClient.prefetchQuery(["columns", courseId], () =>
+      apiFetch(`/transfer-to-ladok/api/courses/${courseId}/columns`)
+    );
+
+    console.log("prefetch completed");
+  } catch (err) {}
 }
 
 export function useSections() {

@@ -1,7 +1,7 @@
 import * as React from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { QueryClient, QueryClientProvider, focusManager } from "react-query";
-import { ApiError, useSections } from "./hooks/apiClient";
+import { ApiError, prefetchAssignments, useSections } from "./hooks/apiClient";
 
 import FullPageError from "./screens/FullPageError";
 import Unauthenticated from "./screens/Unauthenticated";
@@ -14,6 +14,8 @@ focusManager.setEventListener(() => {
   console.log("X");
   return () => {};
 });
+
+prefetchAssignments(queryClient);
 
 function Home() {
   const sectionsQuery = useSections();
