@@ -1,6 +1,6 @@
 import * as React from "react";
 import { ErrorBoundary } from "react-error-boundary";
-import { QueryClient, QueryClientProvider } from "react-query";
+import { QueryClient, QueryClientProvider, focusManager } from "react-query";
 import { ApiError, useSections } from "./hooks/apiClient";
 
 import FullPageError from "./screens/FullPageError";
@@ -10,6 +10,9 @@ import Authenticated from "./screens/Authenticated";
 import "./App.scss";
 
 const queryClient = new QueryClient();
+focusManager.setEventListener(() => {
+  return () => {};
+});
 
 function Home() {
   const sectionsQuery = useSections();
