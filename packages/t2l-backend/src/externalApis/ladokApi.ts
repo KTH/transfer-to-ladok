@@ -123,13 +123,19 @@ export interface SokResultat {
   Resultat: Array<Studieresultat>;
 }
 
-export interface Rapportor {
-  Anvandare: {
-    Uid: string;
-    Anvandarnamn: string;
-    Efternamn: string;
-    Fornamn: string;
-  }[];
+interface RapporteringsMojlighetInput {
+  UtbildningsinstansAttRapporteraPaUID: string;
+  StudieresultatUID: string;
+}
+
+export interface RapporteringsMojlighetOutput {
+  KontrolleraRapporteringsrattighetlista: [
+    {
+      HarRattighet: boolean;
+      StudieresultatUID: string;
+      UtbildningsinstansAttRapporteraPaUID: string;
+    }
+  ];
 }
 
 export interface Betygsgrad {
@@ -203,12 +209,21 @@ export function searchAktivitetstillfalleStudieresultat(
     .then((r) => r.body);
 }
 
-export function getRapportor(utbildningsinstansUID: string) {
+export function searchRapporteringsMojlighet(
+  Anvandarnamn: string,
+  KontrolleraRapporteringsrattighetlista: RapporteringsMojlighetInput[]
+) {
   return gotClient
-    .get<Rapportor>(
-      `resultat/anvandare/resultatrattighet/rapportor/utbildningsinstans?utbildningsinstansUID=${utbildningsinstansUID}`
+    .put<RapporteringsMojlighetOutput>(
+      `resultat/resultatrattighet/kontrollerarapporteringsmojlighet`,
+      {
+        json: {
+          Anvandarnamn,
+          KontrolleraRapporteringsrattighetlista,
+        },
+      }
     )
-    .then((r) => r.body);
+    .then((response) => response.body);
 }
 
 export function createResult(

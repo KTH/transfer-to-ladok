@@ -5,21 +5,20 @@ import {
   getExtraKurInformation,
   getAllStudieresultat,
   splitSections,
-  getExistingDraft,
-  hasPermission,
+  getAllPermissions,
+  normalizeStudieresultat,
 } from "./utils/commons";
 import type {
   GradesDestination,
   GradeableStudents,
-  ResultOutput,
   PostLadokGradesOutput,
+  ResultOutput,
 } from "./utils/types";
 import { BadRequestError, UnprocessableEntityError } from "../../error";
 import {
   assertGradesDestination,
   assertPostLadokGradesInput,
 } from "./utils/asserts";
-import { getBetyg } from "../../externalApis/ladokApi";
 import postOneResult from "./utils/postOneResult";
 
 /** Checks if the given `utbildningsinstans` belongs to the given `kurstillfalle` */
@@ -90,46 +89,24 @@ export async function getGradesHandler(
   const courseId = req.params.courseId;
   const canvasClient = new CanvasClient(req);
   const sections = await canvasClient.getSections(courseId);
-  const { email } = await canvasClient.getSelf();
+  const { login_id: email } = await canvasClient.getSelf();
 
   // TODO: send the error type as parameter as in `assertGradesDestination`
   await assertDestinationInSections(req.query, sections);
 
   const allStudieresultat = await getAllStudieresultat(req.query);
-  const response = await Promise.all(
-    allStudieresultat.map(async (oneStudieresultat) => {
-      const result: GradeableStudents[number] = {
-        student: {
-          id: oneStudieresultat.Student.Uid,
-          sortableName: `${oneStudieresultat.Student.Efternamn}, ${oneStudieresultat.Student.Fornamn}`,
-        },
-        scale: getBetyg(
-          oneStudieresultat.Rapporteringskontext.BetygsskalaID
-        ).map((b) => b.Kod),
-        hasPermission: false,
-      };
-
-      const draft = getExistingDraft(oneStudieresultat);
-
-      result.hasPermission = await hasPermission(
-        email,
-        oneStudieresultat.Rapporteringskontext.UtbildningsinstansUID
-      );
-
-      if (result.hasPermission && draft) {
-        const grade = draft.Betygsgradsobjekt.Kod;
-        const examinationDate = draft.Examinationsdatum;
-
-        result.draft = { grade, examinationDate };
-      }
-
-      return result;
-    })
-  );
-
-  res.json(response);
+  const allPermissions = await getAllPermissions(allStudieresultat, email);
+  const nr = normalizeStudieresultat(allStudieresultat, allPermissions);
+  res.json(nr);
 }
 
+/**
+ * HTTP request: `POST /courses/:courseId/ladok-grades`
+ * Tries to send grades to Ladok to a given destination. Destination and grades
+ * are passed as body ({@link PostLadokGradesInput} to see its format)
+ *
+ * @see {@link PostLadokGradesOutput} to see how the response looks like
+ */
 export async function postGradesHandler(
   req: Request<{ courseId: string }>,
   res: Response<PostLadokGradesOutput>
@@ -141,15 +118,18 @@ export async function postGradesHandler(
   const sections = await canvasClient.getSections(courseId);
   await assertDestinationInSections(req.body.destination, sections);
 
+  const { login_id: email } = await canvasClient.getSelf();
   const allStudieresultat = await getAllStudieresultat(req.body.destination);
-  const { email } = await canvasClient.getSelf();
+  const allPermissions = await getAllPermissions(allStudieresultat, email);
 
   const output: ResultOutput[] = [];
 
   for (const resultInput of req.body.results) {
-    await postOneResult(resultInput, email, allStudieresultat).then((o) => {
-      output.push(o);
-    });
+    await postOneResult(resultInput, allStudieresultat, allPermissions).then(
+      (o) => {
+        output.push(o);
+      }
+    );
   }
 
   const summary = {

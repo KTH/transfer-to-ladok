@@ -3,13 +3,20 @@ import {
   SokResultat,
   searchAktivitetstillfalleStudieresultat,
   searchUtbildningsinstansStudieresultat,
-  getRapportor,
   getKurstillfalleStructure,
   getSkaFinnasStudenter,
   getAktivitetstillfalle,
   Studieresultat,
+  RapporteringsMojlighetOutput,
+  getBetyg,
+  searchRapporteringsMojlighet,
 } from "../../../externalApis/ladokApi";
-import type { AktSection, GradesDestination, KurSection } from "./types";
+import type {
+  AktSection,
+  GradeableStudents,
+  GradesDestination,
+  KurSection,
+} from "./types";
 
 /**
  * Given a "sok" function and its arguments, go through all pages and returns
@@ -167,13 +174,74 @@ export function getExistingDraft(studentResultat: Studieresultat) {
   return arbetsunderlag;
 }
 
-export async function hasPermission(
-  email: string,
-  utbildningsinstansUID: string
+/**
+ * Given a list of {@link Studieresultat}, get a list of which ones the user
+ * has permissions to send grades to.
+ */
+export async function getAllPermissions(
+  allStudieresultat: Studieresultat[],
+  email: string
 ) {
-  const rapportorer = await getRapportor(utbildningsinstansUID);
+  return searchRapporteringsMojlighet(
+    email,
+    allStudieresultat.map((s) => ({
+      StudieresultatUID: s.Uid,
+      UtbildningsinstansAttRapporteraPaUID:
+        s.Rapporteringskontext.UtbildningsinstansUID,
+    }))
+  );
+}
 
-  return rapportorer.Anvandare.some(
-    (rapportor) => rapportor.Anvandarnamn === email
+/** Checks if the Studieresultat is part of the "RapporteringsMojlighetOutput" list */
+export function containsPermission(
+  studieresultat: Studieresultat,
+  allPermissions: RapporteringsMojlighetOutput
+) {
+  return allPermissions.KontrolleraRapporteringsrattighetlista.some(
+    (r) =>
+      r.StudieresultatUID === studieresultat.Uid &&
+      r.UtbildningsinstansAttRapporteraPaUID ===
+        studieresultat.Rapporteringskontext.UtbildningsinstansUID &&
+      r.HarRattighet
+  );
+}
+
+/**
+ * Merges a list of {@link Studieresultat} and the object {@link RapporteringsMojlighetOutput}
+ * into a single human-readable list
+ */
+export function normalizeStudieresultat(
+  allStudieresultat: Studieresultat[],
+  allPermissions: RapporteringsMojlighetOutput
+): GradeableStudents {
+  return allStudieresultat.map(
+    (oneStudieresultat): GradeableStudents[number] => {
+      const scale = getBetyg(
+        oneStudieresultat.Rapporteringskontext.BetygsskalaID
+      ).map((b) => b.Kod);
+
+      const hasPermission = containsPermission(
+        oneStudieresultat,
+        allPermissions
+      );
+
+      const draft = getExistingDraft(oneStudieresultat);
+
+      return {
+        student: {
+          id: oneStudieresultat.Student.Uid,
+          sortableName: `${oneStudieresultat.Student.Efternamn}, ${oneStudieresultat.Student.Fornamn}`,
+        },
+        scale,
+        hasPermission,
+        draft:
+          draft && hasPermission
+            ? {
+                grade: draft.Betygsgradsobjekt.Kod,
+                examinationDate: draft.Examinationsdatum,
+              }
+            : undefined,
+      };
+    }
   );
 }

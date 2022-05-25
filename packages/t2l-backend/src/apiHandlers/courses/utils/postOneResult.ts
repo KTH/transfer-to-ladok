@@ -3,11 +3,12 @@ import { HTTPError } from "got";
 import {
   createResult,
   getBetyg,
+  RapporteringsMojlighetOutput,
   Studieresultat,
   updateResult,
 } from "../../../externalApis/ladokApi";
 import { isLadokApiError } from "./asserts";
-import { getExistingDraft, hasPermission } from "./commons";
+import { containsPermission, getExistingDraft } from "./commons";
 import { ResultInput, ResultOutput } from "./types";
 
 /** Errors when posting results that are detected by us */
@@ -55,6 +56,19 @@ function formatInputForLadok(
     Betygsgrad: gradeId,
     Examinationsdatum: input.draft.examinationDate,
   };
+}
+
+function assertPermission(
+  studieresultat: Studieresultat,
+  allPermissions: RapporteringsMojlighetOutput
+) {
+  const hasPermission = containsPermission(studieresultat, allPermissions);
+
+  if (!hasPermission) {
+    throw new PostResultError(
+      "You don't have permissions to send results to this student"
+    );
+  }
 }
 
 function handleError(err: unknown): ResultOutput["error"] {
@@ -109,61 +123,38 @@ function handleError(err: unknown): ResultOutput["error"] {
   };
 }
 
-/**
- * Sends one result to Ladok. It returns the result of the operation
- *
- * @param input Object containing the grade to be sent
- * @param email Sender e-mail. We use this to check if the sender has permissions
- * @param allStudieresultat A collection of "Studieresultat" from Ladok.
- */
 export default async function postOneResult(
-  input: ResultInput,
-  email: string,
-  allStudieresultat: Studieresultat[]
+  resultInput: ResultInput,
+  allStudieresultat: Studieresultat[],
+  allPermissions: RapporteringsMojlighetOutput
 ): Promise<ResultOutput> {
   try {
-    const oneStudieResultat = getStudentsStudieresultat(
-      input.id,
+    const studieresultat = getStudentsStudieresultat(
+      resultInput.id,
       allStudieresultat
     );
-    const ladokInput = formatInputForLadok(input, oneStudieResultat);
-    const utbildningsinstansUID =
-      oneStudieResultat.Rapporteringskontext.UtbildningsinstansUID;
+    const ladokInput = formatInputForLadok(resultInput, studieresultat);
+    assertPermission(studieresultat, allPermissions);
 
-    if (!(await hasPermission(email, utbildningsinstansUID))) {
-      throw new PostResultError(
-        `You don't have 'rapportor' permissions in Ladok to set grades.`
-      );
-    }
-    // Below this line the current user has permissions to change grades in Ladok
-    // so it is safe to call Ladok
+    const draft = getExistingDraft(studieresultat);
 
-    const draft = getExistingDraft(oneStudieResultat);
     if (draft) {
       await updateResult(draft.Uid, ladokInput, draft.SenasteResultatandring);
-
-      return {
-        id: input.id,
-        draft: input.draft,
-        status: "success",
-      };
     } else {
       await createResult(
-        oneStudieResultat.Uid,
-        utbildningsinstansUID,
+        studieresultat.Uid,
+        studieresultat.Rapporteringskontext.UtbildningsinstansUID,
         ladokInput
       );
-
-      return {
-        id: input.id,
-        draft: input.draft,
-        status: "success",
-      };
     }
+
+    return {
+      ...resultInput,
+      status: "success",
+    };
   } catch (err) {
     return {
-      id: input.id,
-      draft: input.draft,
+      ...resultInput,
       status: "error",
       error: handleError(err),
     };

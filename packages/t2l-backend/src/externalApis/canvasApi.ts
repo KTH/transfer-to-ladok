@@ -118,6 +118,8 @@ export default class CanvasClient {
   }
 
   getSelf() {
-    return this.client.get<{ email: string }>("users/self").then((r) => r.body);
+    return this.client
+      .get<{ login_id: string }>("users/self")
+      .then((r) => r.body);
   }
 }
