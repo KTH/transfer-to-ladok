@@ -119,7 +119,7 @@ export interface Studieresultat {
 }
 
 export interface SokResultat {
-  TotalAntalPoster: number;
+  TotaltAntalPoster: number;
   Resultat: Array<Studieresultat>;
 }
 

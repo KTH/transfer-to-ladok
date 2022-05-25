@@ -32,7 +32,7 @@ async function searchAll(
   const result = await sokFn(arg1, arg2, page);
   allResults.push(...result.Resultat);
 
-  while (result.TotalAntalPoster > allResults.length) {
+  while (result.TotaltAntalPoster > allResults.length) {
     page++;
     const result = await sokFn(arg1, arg2, page);
     allResults.push(...result.Resultat);

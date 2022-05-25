@@ -84,7 +84,8 @@ export async function getGradesHandler(
   req: Request<{ courseId: string }>,
   res: Response<GradeableStudents>
 ) {
-  assertGradesDestination(req.query, BadRequestError);
+  const destination = req.query;
+  assertGradesDestination(destination, BadRequestError);
 
   const courseId = req.params.courseId;
   const canvasClient = new CanvasClient(req);
@@ -92,12 +93,11 @@ export async function getGradesHandler(
   const { login_id: email } = await canvasClient.getSelf();
 
   // TODO: send the error type as parameter as in `assertGradesDestination`
-  await assertDestinationInSections(req.query, sections);
+  await assertDestinationInSections(destination, sections);
 
-  const allStudieresultat = await getAllStudieresultat(req.query);
+  const allStudieresultat = await getAllStudieresultat(destination);
   const allPermissions = await getAllPermissions(allStudieresultat, email);
-  const nr = normalizeStudieresultat(allStudieresultat, allPermissions);
-  res.json(nr);
+  res.json(normalizeStudieresultat(allStudieresultat, allPermissions));
 }
 
 /**
