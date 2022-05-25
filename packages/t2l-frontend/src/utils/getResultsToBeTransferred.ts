@@ -40,7 +40,8 @@ export interface RowAfter extends Row {
  */
 export function getResultsToBeTransferred(
   canvasGrades: CanvasGrades,
-  ladokGradeableStudents: GradeableStudents
+  ladokGradeableStudents: GradeableStudents,
+  getExaminationDate: (grade: CanvasGrades[number]) => string
 ): RowBefore[] {
   if (canvasGrades.length === 0) {
     return [];
@@ -138,7 +139,7 @@ export function getResultsToBeTransferred(
       status: "transferable",
       draft: {
         grade: canvasGrade.grade,
-        examinationDate: "2022-01-01",
+        examinationDate: getExaminationDate(canvasGrade),
       },
       warning,
     };

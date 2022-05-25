@@ -36,7 +36,19 @@ export default function Preview({
 
   const tableContent = getResultsToBeTransferred(
     canvasGradesQuery.data ?? [],
-    ladokGradesQuery.data ?? []
+    ladokGradesQuery.data ?? [],
+    (grade) => {
+      const fallback = new Date().toISOString().split("T")[0];
+
+      switch (examinationDateOption.option) {
+        case "fixed-date":
+          return fixedExaminationDate ?? fallback;
+        case "manual-date":
+          return examinationDateOption.date;
+        case "submission-date":
+          return grade.submittedAt?.split("T")[0] ?? fallback;
+      }
+    }
   );
 
   const readyToTransfer =
