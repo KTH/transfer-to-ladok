@@ -4,17 +4,17 @@ import {
   RowAfter,
   getResultsToBeTransferred,
 } from "../utils/getResultsToBeTransferred";
-import { Error, Warning } from "../utils/icons";
+import { Check, Error, Warning } from "../utils/icons";
 import "./GradesTable.scss";
 
 function Header() {
   return (
     <tr className="row">
-      <th className="id">#</th>
+      <th className="transferable"></th>
       <th className="name">Student</th>
       <th className="grade">Grade</th>
       <th className="date">Examination date</th>
-      <th></th>
+      <th className="status">Notes</th>
     </tr>
   );
 }
@@ -28,14 +28,15 @@ function isBefore(result: RowBefore | RowAfter): result is RowBefore {
 function RowBefore({ result, id }: { result: RowBefore; id: string }) {
   return (
     <tr className={result.status === "not_transferable" ? "dimmed" : ""}>
-      <td className="id">{id}</td>
+      <td className="transferable">
+        {result.status === "transferable" && <Check />}
+      </td>
       <td className="name">{result.student.sortableName}</td>
-      <td className="grade">{result.draft?.grade}</td>
+      <td className="grade">{result.draft?.grade || "-"}</td>
       <td className="date">{result.draft?.examinationDate}</td>
       {result.error && <td className="status">{result.error.message}</td>}
       {result.warning && (
         <td className="status">
-          <Warning />
           <div>{result.warning.message}</div>
         </td>
       )}

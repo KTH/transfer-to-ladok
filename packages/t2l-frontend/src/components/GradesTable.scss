@@ -35,9 +35,9 @@
 
   td,
   th {
-    &.id {
+    &.transferable {
       width: 4rem;
-      padding: 0.5rem 1rem;
+      padding: 0 1rem;
     }
 
     &.name {
@@ -46,10 +46,12 @@
 
     &.grade {
       width: 6rem;
+      padding: 0.5rem 1rem;
     }
 
     &.date {
       width: 10rem;
+      padding: 0.5rem 1rem;
     }
 
     &.status {

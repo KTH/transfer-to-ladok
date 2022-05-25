@@ -1,4 +1,4 @@
-import React from "react";
+import React, { SVGAttributes } from "react";
 
 export function ArrowRight() {
   return (
@@ -55,6 +55,22 @@ export function ArrowLeft(props: React.SVGAttributes<SVGSVGElement>) {
     >
       <path d="M0 0h24v24H0V0z" fill="none" />
       <path d="M19 11H7.83l4.88-4.88c.39-.39.39-1.03 0-1.42-.39-.39-1.02-.39-1.41 0l-6.59 6.59c-.39.39-.39 1.02 0 1.41l6.59 6.59c.39.39 1.02.39 1.41 0 .39-.39.39-1.02 0-1.41L7.83 13H19c.55 0 1-.45 1-1s-.45-1-1-1z" />
+    </svg>
+  );
+}
+
+export function Check(props: React.SVGAttributes<SVGSVGElement>) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      height="18px"
+      viewBox="0 0 24 24"
+      width="18px"
+      fill="currentColor"
+      {...props}
+    >
+      <path d="M0 0h24v24H0V0z" fill="none" />
+      <path d="M9 16.17L5.53 12.7c-.39-.39-1.02-.39-1.41 0-.39.39-.39 1.02 0 1.41l4.18 4.18c.39.39 1.02.39 1.41 0L20.29 7.71c.39-.39.39-1.02 0-1.41-.39-.39-1.02-.39-1.41 0L9 16.17z" />
     </svg>
   );
 }
