@@ -183,6 +183,7 @@ export function searchUtbildningsinstansStudieresultat(
         json: {
           Filtrering: ["OBEHANDLADE", "UTKAST"],
           KurstillfallenUID,
+          OrderBy: ["PERSONNUMMER_ASC"],
           Page: page,
         },
       }
@@ -202,6 +203,7 @@ export function searchAktivitetstillfalleStudieresultat(
         json: {
           Filtrering: ["OBEHANDLADE", "UTKAST"],
           KurstillfallenUID,
+          OrderBy: ["PERSONNUMMER_ASC"],
           Page: page,
         },
       }
