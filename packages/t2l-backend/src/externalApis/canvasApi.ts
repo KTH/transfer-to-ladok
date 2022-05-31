@@ -14,8 +14,8 @@ export interface CanvasCourse {
 }
 
 export interface CanvasSection {
-  sis_section_id: string;
-  integration_id: string;
+  sis_section_id: string | null;
+  integration_id: string | null;
   name: string;
 }
 

@@ -88,12 +88,13 @@ export function splitSections(sections: CanvasSection[]) {
   const KURSTILLFALLE_REGEX = /^\w{6,7}(HT|VT)\d{3}$/;
 
   const aktIds = sections
-    .map((s) => AKTIVITETSTILLFALLE_REGEX.exec(s.sis_section_id)?.[1])
+    .map((s) => AKTIVITETSTILLFALLE_REGEX.exec(s.sis_section_id ?? "")?.[1])
     .filter((id): id is string => id !== undefined);
 
   const kurIds = sections
-    .filter((s) => KURSTILLFALLE_REGEX.test(s.sis_section_id))
-    .map((s) => s.integration_id);
+    .filter((s) => KURSTILLFALLE_REGEX.test(s.sis_section_id ?? ""))
+    .map((s) => s.integration_id)
+    .filter((id): id is string => typeof id === "string");
 
   // This function should return each ID once.
   // Examrooms have multiple sections including same ID but with different
