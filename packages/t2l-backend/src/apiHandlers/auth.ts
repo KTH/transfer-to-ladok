@@ -23,8 +23,10 @@ declare module "express-session" {
 
 // Assuming that this router is going to be in
 // https://localdev.kth.se:4443/transfer-to-ladok/auth
-const oauthRedirectUrl =
-  "https://localdev.kth.se:4443/transfer-to-ladok/auth/callback";
+const oauthRedirectUrl = new URL(
+  "/transfer-to-ladok/auth/callback",
+  process.env.PROXY_HOST
+).toString();
 
 const issuer = new Issuer({
   issuer: "se.kth",
