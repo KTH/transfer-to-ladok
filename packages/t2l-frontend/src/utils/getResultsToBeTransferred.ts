@@ -121,13 +121,27 @@ export function getResultsToBeTransferred(
         },
         error: {
           code: "non_valid_grade",
-          message: `Will not be transferred. "${canvasGrade.grade}" is not valid`,
+          message: `Invalid grade. Valid grades are: ${ladokGrade.scale.join(
+            ", "
+          )}`,
+        },
+      };
+    }
+
+    if (ladokGrade.draft?.grade === canvasGrade.grade) {
+      return {
+        student: ladokGrade.student,
+        status: "not_transferable",
+        draft: ladokGrade.draft,
+        warning: {
+          code: "Already sent",
+          message: "Already transferred",
         },
       };
     }
 
     const warning =
-      ladokGrade.draft?.grade !== canvasGrade.grade
+      ladokGrade.draft && ladokGrade.draft.grade !== canvasGrade.grade
         ? {
             code: "overwritten",
             message: "Draft in Ladok will be overwritten",
