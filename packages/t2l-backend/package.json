@@ -8,7 +8,7 @@
     "start": "ts-node --transpile-only src/index.ts",
     "test": "npm run test:tsc && npm run test:lint",
     "test:tsc": "tsc --noEmit",
-    "test:lint": "prettier --check .",
+    "test:lint": "prettier --check . && eslint src/",
     "format": "prettier --write ."
   },
   "keywords": [],
@@ -28,6 +28,9 @@
   },
   "devDependencies": {
     "@types/express": "^4.17.13",
+    "@typescript-eslint/eslint-plugin": "^5.28.0",
+    "@typescript-eslint/parser": "^5.28.0",
+    "eslint": "^8.17.0",
     "pino-pretty": "^7.6.1",
     "prettier": "^2.7.1",
     "ts-node-dev": "^1.1.8",

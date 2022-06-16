@@ -2,10 +2,8 @@
  * This module contains functions to call Canvas API.
  * Functions do not contain any logic
  */
-import CanvasAPI, {
-  CanvasApiError,
-  minimalErrorHandler,
-} from "@kth/canvas-api";
+import assert from "assert";
+import CanvasAPI, { minimalErrorHandler } from "@kth/canvas-api";
 import { Request } from "express";
 import { UnauthorizedError } from "../error";
 
@@ -58,7 +56,7 @@ export interface Enrollment {
   };
 }
 
-function getToken(token: string = "") {
+function getToken(token = "") {
   if (token.startsWith("Bearer ")) {
     return token.substring(7);
   }
@@ -72,10 +70,15 @@ export default class CanvasClient {
   client: CanvasAPI;
 
   constructor(req: Request<unknown>) {
+    const canvasApiUrl = process.env.CANVAS_API_URL;
+    assert(
+      typeof canvasApiUrl === "string",
+      "Missing environmental variable [CANVAS_API_URL]"
+    );
     const token =
       req.session.accessToken || getToken(req.headers.authorization);
 
-    this.client = new CanvasAPI(process.env.CANVAS_API_URL!, token);
+    this.client = new CanvasAPI(canvasApiUrl, token);
     this.client.errorHandler = minimalErrorHandler;
   }
 

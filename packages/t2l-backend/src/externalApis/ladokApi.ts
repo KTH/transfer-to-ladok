@@ -174,7 +174,7 @@ export function getKurstillfalleStructure(kurstillfalleUID: string) {
 export function searchUtbildningsinstansStudieresultat(
   utbildningsinstansUID: string,
   KurstillfallenUID: string[],
-  page: number = 1
+  page = 1
 ) {
   return gotClient
     .put<SokResultat>(
@@ -194,7 +194,7 @@ export function searchUtbildningsinstansStudieresultat(
 export function searchAktivitetstillfalleStudieresultat(
   aktivitetstillfalleUID: string,
   KurstillfallenUID: string[],
-  page: number = 1
+  page = 1
 ) {
   return gotClient
     .put<SokResultat>(
@@ -234,7 +234,7 @@ export function createResult(
   resultat: Resultat
 ) {
   return gotClient
-    .post<any>(
+    .post<unknown>(
       `resultat/studieresultat/${studieresultatUID}/utbildning/${utbildningsinstansUID}/resultat`,
       {
         json: resultat,
@@ -248,7 +248,7 @@ export function updateResult(
   newValue: Resultat,
   SenasteResultatandring: string
 ) {
-  return gotClient.put<any>(
+  return gotClient.put<unknown>(
     `resultat/studieresultat/resultat/${resultatUID}/`,
     {
       json: {

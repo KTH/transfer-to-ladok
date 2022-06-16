@@ -27,7 +27,8 @@ export function errorHandler(
     code: string;
     message: string;
   }>,
-  next: NextFunction
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  _next: NextFunction
 ) {
   if (err instanceof CanvasApiError) {
     if (err.code === 401) {

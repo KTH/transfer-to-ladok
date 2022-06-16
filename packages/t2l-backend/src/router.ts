@@ -16,7 +16,7 @@ const router = Router();
 // This endpoint is where the user lands after clicking "Transfer to Ladok"
 // from the left-side menu
 router.post("/", (req, res) => {
-  const domain = req.body.custom_domain;
+  // const domain = req.body.custom_domain;
   const courseId = req.body.custom_courseid;
 
   //
