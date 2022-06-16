@@ -98,8 +98,9 @@ export interface Studieresultat {
     BetygsskalaID: number;
   };
 
-  /** Present if there is a grade in form of utkast */
+  /** All "utkast" or "klarmarkerade" grades for the student and the latest "attesterade" result */
   ResultatPaUtbildningar?: Array<{
+    /** This object is present if there is a grade as "utkast" or "klarmarkerade" */
     Arbetsunderlag?: {
       Betygsgradsobjekt: {
         ID: number;
@@ -109,11 +110,25 @@ export interface Studieresultat {
       SenasteResultatandring: string;
 
       Examinationsdatum: string;
+
+      /** Value 1 if the status if "utkast"; 2 if "klarmarkerade" */
+      ProcessStatus: 1 | 2;
+
       /**
        * This is the "ResultatUID" that you need to send to Ladok in order to
        * update or delete a result
        */
       Uid: string;
+    };
+
+    /** Latest "atesterade" resultat if any */
+    SenastAttesteradeResultat?: {
+      Betygsgradsobjekt: {
+        ID: number;
+        Kod: string;
+      };
+      Examinationsdatum: string;
+      UtbildningsinstansUID: string;
     };
   }>;
 }
@@ -201,7 +216,7 @@ export function searchAktivitetstillfalleStudieresultat(
       `resultat/studieresultat/rapportera/aktivitetstillfalle/${aktivitetstillfalleUID}/sok`,
       {
         json: {
-          Filtrering: ["OBEHANDLADE", "UTKAST"],
+          Filtrering: ["OBEHANDLADE", "UTKAST", "KLARMARKERADE"],
           KurstillfallenUID,
           OrderBy: ["PERSONNUMMER_ASC"],
           Page: page,

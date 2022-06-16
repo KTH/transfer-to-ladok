@@ -175,10 +175,33 @@ export async function getAllStudieresultat(
 /** Get an existing draft in a "Studieresultat" */
 export function getExistingDraft(studentResultat: Studieresultat) {
   const arbetsunderlag = studentResultat.ResultatPaUtbildningar?.find(
-    (rpu) => rpu.Arbetsunderlag
+    (rpu) => rpu.Arbetsunderlag?.ProcessStatus === 1
   )?.Arbetsunderlag;
 
   return arbetsunderlag;
+}
+
+/** Get an existing "klarmarkerade" result in a Studieresultat */
+export function getExistingReady(studentResultat: Studieresultat) {
+  const arbetsunderlagReady = studentResultat.ResultatPaUtbildningar?.find(
+    (rpu) => rpu.Arbetsunderlag?.ProcessStatus === 2
+  )?.Arbetsunderlag;
+
+  return arbetsunderlagReady;
+}
+
+/** Get an existing "senaste attesterade" result if any */
+export function getLatestCertified(studentResultat: Studieresultat) {
+  const arbetsunderlagCertified = studentResultat.ResultatPaUtbildningar?.find(
+    (rpu) =>
+      // For some strange reason, the API returns results from other completely
+      // unrelated modules (¯\_(ツ)_/¯)
+      // We need to filter out things to prevent bugs
+      rpu.SenastAttesteradeResultat?.UtbildningsinstansUID ===
+      studentResultat.Rapporteringskontext.UtbildningsinstansUID
+  )?.SenastAttesteradeResultat;
+
+  return arbetsunderlagCertified;
 }
 
 /**
@@ -233,6 +256,8 @@ export function normalizeStudieresultat(
       );
 
       const draft = getExistingDraft(oneStudieresultat);
+      const certified = getLatestCertified(oneStudieresultat);
+      const ready = getExistingReady(oneStudieresultat);
 
       return {
         student: {
@@ -246,6 +271,20 @@ export function normalizeStudieresultat(
             ? {
                 grade: draft.Betygsgradsobjekt.Kod,
                 examinationDate: draft.Examinationsdatum,
+              }
+            : undefined,
+        markedAsReady:
+          ready && hasPermission
+            ? {
+                grade: ready.Betygsgradsobjekt.Kod,
+                examinationDate: ready.Examinationsdatum,
+              }
+            : undefined,
+        certified:
+          certified && hasPermission
+            ? {
+                grade: certified.Betygsgradsobjekt.Kod,
+                examinationDate: certified.Examinationsdatum,
               }
             : undefined,
       };

@@ -186,6 +186,18 @@ export type GradeableStudents = {
     grade: string;
     examinationDate: string;
   };
+
+  /** Grade in "klarmarkerade" if any */
+  markedAsReady?: {
+    grade: string;
+    examinationDate: string;
+  };
+
+  /** Latest grade as "attesterade" if any  */
+  certified?: {
+    grade: string;
+    examinationDate: string;
+  };
 }[];
 
 /**
