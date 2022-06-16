@@ -1,3 +1,8 @@
+/**
+ * Collection of functions that check if an object is a given type
+ *
+ * Note: they don't check if the object is semantically valid
+ */
 import assert from "node:assert/strict";
 import { LadokApiError } from "../../../externalApis/ladokApi";
 import type {
@@ -6,17 +11,6 @@ import type {
   PostLadokGradesInput,
 } from "./types";
 
-/**
- * Collection of functions that check if an object is a given type
- *
- * Note: they don't check if the object is semantically valid
- */
-
-/**
- * Throws a `TypeError` if `obj` is not `GradesDestination` type. When used
- * with TypeScript, it guarantees that `obj` has the correct type after calling
- * this function.
- */
 export function assertGradesDestination(
   obj: any,
   ErrorClass: new (message: string) => Error = TypeError
@@ -79,17 +73,21 @@ export function assertGradeResult(
 }
 
 export function assertPostLadokGradesInput(
-  obj: any
+  obj: any,
+  ErrorClass: new (message: string) => Error = TypeError
 ): asserts obj is PostLadokGradesInput {
   assert(
     "destination" in obj,
-    new TypeError("Missing required field [destination]")
+    new ErrorClass("Missing required field [destination]")
   );
-  assert("results" in obj, new TypeError("Missing required field [results]"));
+  assert("results" in obj, new ErrorClass("Missing required field [results]"));
   assertGradesDestination(obj.destination);
-  assert(Array.isArray(obj.results), new TypeError("results must be an array"));
+  assert(
+    Array.isArray(obj.results),
+    new ErrorClass("results must be an array")
+  );
 
-  obj.results.forEach((result: any) => assertGradeResult(result, TypeError));
+  obj.results.forEach((result: any) => assertGradeResult(result, ErrorClass));
 }
 
 export function isLadokApiError(obj: any): obj is LadokApiError {
