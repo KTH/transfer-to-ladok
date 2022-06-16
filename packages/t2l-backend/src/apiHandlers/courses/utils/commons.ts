@@ -85,7 +85,8 @@ function searchAllUtbildningsinstansStudieresultat(
  */
 export function splitSections(sections: CanvasSection[]) {
   const AKTIVITETSTILLFALLE_REGEX = /^AKT\.([a-z0-9-]+)(\.\w+)?$/;
-  const KURSTILLFALLE_REGEX = /^\w{6,7}(HT|VT)\d{3}$/;
+  const KURSTILLFALLE_REGEX = /^\w{8}-\w{4}-\w{4}-\w{4}-\w{12}$/;
+  const OLD_KURSTILLFALLE_REGEX = /^\w{6,7}(HT|VT)\d{3}$/;
 
   const aktIds = sections
     .map((s) => AKTIVITETSTILLFALLE_REGEX.exec(s.sis_section_id ?? "")?.[1])
@@ -93,6 +94,11 @@ export function splitSections(sections: CanvasSection[]) {
 
   const kurIds = sections
     .filter((s) => KURSTILLFALLE_REGEX.test(s.sis_section_id ?? ""))
+    .map((s) => s.sis_section_id)
+    .filter((id): id is string => typeof id === "string");
+
+  const OLD__kurIds = sections
+    .filter((s) => OLD_KURSTILLFALLE_REGEX.test(s.sis_section_id ?? ""))
     .map((s) => s.integration_id)
     .filter((id): id is string => typeof id === "string");
 
@@ -101,7 +107,7 @@ export function splitSections(sections: CanvasSection[]) {
   // suffixes.
   return {
     aktivitetstillfalleIds: Array.from(new Set(aktIds)),
-    kurstillfalleIds: Array.from(new Set(kurIds)),
+    kurstillfalleIds: Array.from(new Set([...kurIds, ...OLD__kurIds])),
   };
 }
 
