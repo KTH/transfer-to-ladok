@@ -24,7 +24,7 @@
     "got": "^11.8.3",
     "openid-client": "^5.1.5",
     "skog": "^3.0.2",
-    "ts-node": "^10.7.0"
+    "ts-node": "^10.8.1"
   },
   "devDependencies": {
     "@types/express": "^4.17.13",
@@ -33,7 +33,7 @@
     "eslint": "^8.17.0",
     "pino-pretty": "^7.6.1",
     "prettier": "^2.7.1",
-    "ts-node-dev": "^1.1.8",
+    "ts-node-dev": "^2.0.0",
     "typescript": "^4.7.3"
   }
 }
