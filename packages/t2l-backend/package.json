@@ -7,7 +7,10 @@
     "dev": "ts-node-dev --respawn src/index.ts | pino-pretty -e options,response -o '{msg}' --ignore options,pid,hostname --singleLine --translateTime 'HH:MM:ss.l'",
     "start": "ts-node --transpile-only src/index.ts",
     "build:types": "tsc --emitDeclarationOnly",
-    "test": "tsc --noEmit src/**/*.ts"
+    "test": "npm run test:tsc && npm run test:lint",
+    "test:tsc": "tsc --noEmit src/**/*.ts",
+    "test:lint": "prettier --check .",
+    "format": "prettier --write ."
   },
   "keywords": [],
   "author": "",
@@ -27,6 +30,7 @@
   "devDependencies": {
     "@types/express": "^4.17.13",
     "pino-pretty": "^7.6.1",
+    "prettier": "^2.7.1",
     "ts-node-dev": "^1.1.8",
     "typescript": "^4.7.3"
   }
