@@ -6,9 +6,8 @@
   "scripts": {
     "dev": "ts-node-dev --respawn src/index.ts | pino-pretty -e options,response -o '{msg}' --ignore options,pid,hostname --singleLine --translateTime 'HH:MM:ss.l'",
     "start": "ts-node --transpile-only src/index.ts",
-    "build:types": "tsc --emitDeclarationOnly",
     "test": "npm run test:tsc && npm run test:lint",
-    "test:tsc": "tsc --noEmit src/**/*.ts",
+    "test:tsc": "tsc --noEmit",
     "test:lint": "prettier --check .",
     "format": "prettier --write ."
   },
