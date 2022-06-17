@@ -4,6 +4,7 @@ import {
   createResult,
   getBetyg,
   RapporteringsMojlighetOutput,
+  Resultat,
   Studieresultat,
   updateResult,
 } from "../../../externalApis/ladokApi";
@@ -40,7 +41,7 @@ function getStudentsStudieresultat(
 function formatInputForLadok(
   input: ResultInput,
   studieresultat: Studieresultat
-) {
+): Resultat {
   const letterGrade = input.draft.grade;
   const scaleId = studieresultat.Rapporteringskontext.BetygsskalaID;
   const gradeId = getBetyg(scaleId).find((b) => b.Kod === letterGrade)?.ID;
@@ -55,6 +56,14 @@ function formatInputForLadok(
     BetygsskalaID: scaleId,
     Betygsgrad: gradeId,
     Examinationsdatum: input.draft.examinationDate,
+    Projekttitel:
+      studieresultat.Rapporteringskontext.KravPaProjekttitel &&
+      input.draft.projectTitle
+        ? {
+            Titel: input.draft.projectTitle.title,
+            AlternativTitel: input.draft.projectTitle.alternativeTitle,
+          }
+        : undefined,
   };
 }
 

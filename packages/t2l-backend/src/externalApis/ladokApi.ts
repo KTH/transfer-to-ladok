@@ -31,10 +31,17 @@ export interface Aktivitetstillfalle {
   };
 }
 
+/**
+ * Represents the format required by Ladok when creating or updating a result
+ */
 export interface Resultat {
   Betygsgrad: number;
   BetygsskalaID: number;
   Examinationsdatum: string;
+  Projekttitel?: {
+    Titel: string;
+    AlternativTitel: string;
+  };
 }
 
 export interface Kurstillfalle {
@@ -96,6 +103,8 @@ export interface Studieresultat {
     UtbildningsinstansUID: string;
 
     BetygsskalaID: number;
+
+    KravPaProjekttitel: boolean;
   };
 
   /** All "utkast" or "klarmarkerade" grades for the student and the latest "attesterade" result */
@@ -105,6 +114,11 @@ export interface Studieresultat {
       Betygsgradsobjekt: {
         ID: number;
         Kod: string;
+      };
+
+      Projekttitel: {
+        Titel: string;
+        AlternativTitel: string;
       };
 
       SenasteResultatandring: string;

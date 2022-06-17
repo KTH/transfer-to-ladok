@@ -266,11 +266,17 @@ export function normalizeStudieresultat(
         },
         scale,
         hasPermission,
+        requiresTitle:
+          oneStudieresultat.Rapporteringskontext.KravPaProjekttitel,
         draft:
           draft && hasPermission
             ? {
                 grade: draft.Betygsgradsobjekt.Kod,
                 examinationDate: draft.Examinationsdatum,
+                projectTitle: draft.Projekttitel && {
+                  title: draft.Projekttitel.Titel,
+                  alternativeTitle: draft.Projekttitel.AlternativTitel,
+                },
               }
             : undefined,
         markedAsReady:
