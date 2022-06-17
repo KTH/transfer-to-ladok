@@ -1,15 +1,14 @@
 import { Request, Response } from "express";
-import CanvasClient from "../externalApis/canvasApi";
+import CanvasClient from "../../externalApis/canvasApi";
 import {
   getExtraAktInformation,
   getExtraKurInformation,
   splitSections,
-} from "./utils/commons";
-import type { Sections } from "./utils/types";
+} from "../utils/commons";
+import type { Sections } from "../utils/types";
 
 /**
- * HTTP request: `GET /courses/:courseId/sections`
- * Get the sections in a given Canvas `:courseId`
+ * Get the sections in a given Canvas `courseId`
  *
  * Return information about the sections, separated by type (are they linked
  * with an aktivitetstillfälle or a kurstillfälle?).
