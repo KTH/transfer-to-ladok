@@ -134,6 +134,11 @@ export interface ResultInput {
 
     /** Examination date */
     examinationDate: string;
+
+    projectTitle?: {
+      title: string;
+      alternativeTitle: string;
+    };
   };
 }
 
@@ -181,10 +186,16 @@ export type GradeableStudents = {
   /** True if the teacher has permissions to send grades to this student */
   hasPermission: boolean;
 
+  requiresTitle: boolean;
+
   /** Grade in "utkast" if any */
   draft?: {
     grade: string;
     examinationDate: string;
+    projectTitle?: {
+      title: string;
+      alternativeTitle: string;
+    };
   };
 }[];
 
