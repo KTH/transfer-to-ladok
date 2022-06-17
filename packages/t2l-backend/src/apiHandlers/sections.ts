@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import CanvasClient from "../../externalApis/canvasApi";
+import CanvasClient from "../externalApis/canvasApi";
 import {
   getExtraAktInformation,
   getExtraKurInformation,

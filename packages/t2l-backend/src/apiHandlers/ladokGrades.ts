@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import assert from "node:assert/strict";
-import CanvasClient, { CanvasSection } from "../../externalApis/canvasApi";
+import CanvasClient, { CanvasSection } from "../externalApis/canvasApi";
 import {
   getExtraKurInformation,
   getAllStudieresultat,
@@ -14,7 +14,10 @@ import type {
   PostLadokGradesOutput,
   ResultOutput,
 } from "./utils/types";
-import { BadRequestError, UnprocessableEntityError } from "../../error";
+import {
+  BadRequestError,
+  UnprocessableEntityError,
+} from "../otherHandlers/error";
 import {
   assertGradesDestination,
   assertPostLadokGradesInput,

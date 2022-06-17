@@ -1,4 +1,4 @@
-import { CanvasSection } from "../../../externalApis/canvasApi";
+import { CanvasSection } from "../../externalApis/canvasApi";
 import {
   SokResultat,
   searchAktivitetstillfalleStudieresultat,
@@ -10,7 +10,7 @@ import {
   RapporteringsMojlighetOutput,
   getBetyg,
   searchRapporteringsMojlighet,
-} from "../../../externalApis/ladokApi";
+} from "../../externalApis/ladokApi";
 import type {
   AktSection,
   GradeableStudents,

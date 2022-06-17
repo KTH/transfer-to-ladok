@@ -6,7 +6,7 @@
  * Note: they don't check if the object is semantically valid
  */
 import assert from "node:assert/strict";
-import { LadokApiError } from "../../../externalApis/ladokApi";
+import { LadokApiError } from "../../externalApis/ladokApi";
 import type {
   ResultInput,
   GradesDestination,

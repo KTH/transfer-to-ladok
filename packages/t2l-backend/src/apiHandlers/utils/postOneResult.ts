@@ -7,7 +7,7 @@ import {
   Resultat,
   Studieresultat,
   updateResult,
-} from "../../../externalApis/ladokApi";
+} from "../../externalApis/ladokApi";
 import { isLadokApiError } from "./asserts";
 import { containsPermission, getExistingDraft } from "./commons";
 import { ResultInput, ResultOutput } from "./types";

@@ -1,16 +1,13 @@
 import { Router } from "express";
-import sectionsHandler from "./apiHandlers/courses/sections";
-import columnsHandler from "./apiHandlers/courses/columns";
+import sectionsHandler from "./apiHandlers/sections";
+import columnsHandler from "./apiHandlers/columns";
 import {
   assignmentGradesHandler,
   courseGradesHandler,
-} from "./apiHandlers/courses/canvasGrades";
-import {
-  getGradesHandler,
-  postGradesHandler,
-} from "./apiHandlers/courses/ladokGrades";
-import auth from "./apiHandlers/auth";
-import { errorHandler } from "./error";
+} from "./apiHandlers/canvasGrades";
+import { getGradesHandler, postGradesHandler } from "./apiHandlers/ladokGrades";
+import auth from "./otherHandlers/auth";
+import { errorHandler } from "./otherHandlers/error";
 const router = Router();
 
 // This endpoint is where the user lands after clicking "Transfer to Ladok"

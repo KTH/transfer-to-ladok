@@ -1,1 +1,1 @@
-export * from "./apiHandlers/courses/utils/types";
+export * from "./apiHandlers/utils/types";
