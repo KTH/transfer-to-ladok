@@ -2,27 +2,35 @@
   "name": "t2l-frontend",
   "version": "1.0.0",
   "description": "",
+  "source": [
+    "src/index.html",
+    "src/docs.html"
+  ],
   "scripts": {
-    "dev": "parcel src/index.html --https --port 4443 --public-url /transfer-to-ladok",
-    "build": "parcel build src/index.html --public-url /transfer-to-ladok",
+    "dev": "parcel --https --port 4443 --public-url /transfer-to-ladok",
+    "build": "parcel build --public-url /transfer-to-ladok",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@parcel/transformer-sass": "^2.4.1",
-    "@types/react": "^18.0.9",
+    "@mdx-js/react": "^1.6.22",
+    "@parcel/transformer-css": "^2.6.1",
+    "@parcel/transformer-mdx": "^2.6.1",
+    "@parcel/transformer-sass": "^2.6.1",
+    "@types/mdx": "^2.0.2",
+    "@types/react": "^17.0.47",
     "@types/react-datepicker": "^4.4.1",
-    "@types/react-dom": "^18.0.4",
+    "@types/react-dom": "^17.0.17",
     "http-proxy-middleware": "^2.0.6",
-    "parcel": "^2.4.1",
+    "parcel": "^2.6.1",
     "process": "^0.11.10"
   },
   "dependencies": {
-    "react": "^18.1.0",
+    "react": "^17.0.2",
     "react-datepicker": "^4.8.0",
-    "react-dom": "^18.1.0",
+    "react-dom": "^17.0.2",
     "react-error-boundary": "^3.1.4",
     "react-query": "^3.38.0",
     "t2l-backend": "file:../t2l-backend"
