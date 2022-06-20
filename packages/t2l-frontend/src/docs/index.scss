@@ -1,0 +1,20 @@
+@use "../utils/variables.scss";
+@use "../utils/prose.scss";
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background: variables.$color-white;
+  font-size: 16px;
+}
+
+.container {
+  max-width: 720px;
+  padding: 1rem;
+}
+
+.prose {
+  @include prose.prose;
+}

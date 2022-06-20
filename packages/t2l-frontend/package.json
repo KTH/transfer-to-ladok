@@ -4,7 +4,7 @@
   "description": "",
   "source": [
     "src/index.html",
-    "src/docs.html"
+    "src/docs/index.html"
   ],
   "scripts": {
     "dev": "parcel --https --port 4443 --public-url /transfer-to-ladok",

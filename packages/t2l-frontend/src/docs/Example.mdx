@@ -6,7 +6,9 @@ Transfer to Ladok API is a REST-ful API maintained by e-lärande team at KTH tha
 
 Please contact it-support@kth.se if you have questions on how to use the API or if you want to notify some errors in this documentation.
 
-# Try the Transfer to Ladok API
+---
+
+## Try the Transfer to Ladok API
 
 In this document we will guide you through Transfer to Ladok in **stage**. It means that we will use test environments of Ladok and Canvas:
 
@@ -15,16 +17,18 @@ In this document we will guide you through Transfer to Ladok in **stage**. It me
 
 The root URL for Transfer to Ladok API is `https://app-r.referens.sys.kth.se`.
 
-## A quick note on terminology
+### A quick note on terminology
 
 In this documentation we will use the word _course_ to refer us to a Canvas course. At KTH we call them "course room" or "examination room"
 
-## Pre-requirements
+### Pre-requirements
 
 - You must be teacher or examiner in a Canvas course.
 - You must have permissions to write grades (_rättighet-rapportor_) in Ladok.
 
 > **Note**. It is recommended that you have some degree familiarity with REST APIs in general and with Canvas API in particular.
+
+---
 
 ## Step 1. Get the Canvas Token and test your configuration
 
@@ -72,6 +76,8 @@ If you get a status 200, you will get as response a JSON object with two attribu
 | Other types of courses (e.g. sandbox) | empty                       | empty                 |
 
 The elements in the `aktivitetstillfalle` and `kurstillfalle` arrays are possible destinations for your grades, i.e., places in Ladok where you can send grades. Let's choose one of them!
+
+---
 
 ## Step 2. Choose a destination
 
@@ -151,6 +157,8 @@ Examples:
 
 Once you got the **destination**, you can continue with the following steps
 
+---
+
 ## Step 3. Get a list of gradeable students in a Destination
 
 Request (remember you need either one `aktivitetstillfalle` or a combination of one `kurstillfalle` and one `utbildningsinstans`)
@@ -193,7 +201,9 @@ Response:
 
 Each object represents one student. You need their ID to be able to send results.
 
-## 3. Send a result
+---
+
+## 4. Send a result
 
 Request:
 
@@ -207,148 +217,6 @@ Request body:
 {
   "destination": {
     "aktivitetstillfalle": "<< The ID from the first step >>"
-  },
-  "results": [
-    {
-      "id": "<< Student ID >>",
-      "draft": {
-        "grade": "<< Grade for the student. Example: 'F' >",
-        "examinationDate": "<< Examination date in YYYY-MM-DD format >>"
-      }
-    },
-    {
-      "id": "<< Another student ID >>",
-      "draft": {
-        "grade": "<< Grade for the second student >>",
-        "examinationDate": "<< Examination date >>"
-      }
-    }
-  ]
-}
-```
-
-Response (if success)
-
-```json
-{
-  "summary": {
-    "success": 2,
-    "error": 0
-  },
-  "results": [
-    {
-      "id": "df0d839b-b432-11e9-8bbd-25378c5a4e4c",
-      "draft": {
-        "grade": "B",
-        "examinationDate": "2022-05-05"
-      },
-      "status": "success"
-    },
-    {
-      "id": "13bf0c2a-b433-11e9-8bbd-25378c5a4e4c",
-      "draft": {
-        "grade": "F",
-        "examinationDate": "2023-05-05"
-      },
-      "status": "success"
-    }
-  ]
-}
-```
-
-# Send results to Ladok from a Canvas course room
-
-## 1. Get all course rounds and module in a Canvas course room
-
-Request:
-
-```
-GET /transfer-to-ladok/api/courses/:courseId/sections
-```
-
-Response:
-
-```json
-{
-  "kurstillfalle": [
-    {
-      "id": "<< course round ID >>",
-      "utbildningsinstans": "<< ID if you want to chose final grade >>",
-      "courseCode": "SF1624",
-      "roundCode": "50584",
-      "modules": [
-        {
-          "utbildningsinstans": "<< ID if you want to chose module TEN1 >>",
-          "code": "TEN1",
-          "name": "Tentamen"
-        }
-      ]
-    }
-  ]
-}
-```
-
-- Chose one of the course rounds (`kurstillfalle`) in the list. Keep its ID
-- In the selected course round, choose one of the modules. Keep the `utbildningsinstans` value in that module.
-
-  If you don't want to transfer results to a module but to the final grades of the course, chose the `utbildningsinstans` attribute in the `kurstillfalle` object.
-
-## 2. Get a list of students in the selected `kurstillfalle+utbildningsinstans`
-
-Request:
-
-```
-GET /transfer-to-ladok/api/courses/:courseId/ladok-grades?kurstillfalle=<< course round ID >>&utbildningsinstans=<< id for final grade or module >>
-```
-
-Response:
-
-```json
-[
-  {
-    "student": {
-      "id": "04bad14a-b5a6-11e7-96e6-896ca17746d1",
-      "sortableName": "XXXX, YYYY"
-    },
-    "scale": ["A", "B", "C", "D", "E", "FX", "F"],
-    "hasPermission": true
-  },
-  {
-    "student": {
-      "id": "a8ffa877-423f-11e8-8857-bcf89de54ff6",
-      "sortableName": "XXXX, YYYY"
-    },
-    "scale": ["A", "B", "C", "D", "E", "FX", "F"],
-    "hasPermission": true
-  },
-  {
-    "student": {
-      "id": "f3537b5a-9629-11e8-bf01-45625eef45e2",
-      "sortableName": "XXXX, YYYY"
-    },
-    "scale": ["A", "B", "C", "D", "E", "FX", "F"],
-    "hasPermission": true
-  }
-]
-```
-
-Each object represents one student. You need their ID to be able to send results.
-
-## 3. Send a result
-
-Request:
-
-```
-POST /transfer-to-ladok/api/courses/:courseId/ladok-grades
-```
-
-Request body:
-
-```json
-{
-  "destination": {
-    "kurstillfalle": "<< course round ID from step 1 >>",
-    "utbildningsinstans": "<< ID for module or final grade from step 1 >>"
   },
   "results": [
     {

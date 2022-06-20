@@ -5,20 +5,34 @@
 // using "/" for division
 $font-size-default: list.slash(16px, 24px);
 $font-size-3xl: list.slash(2.75rem, 4.125rem);
-$font-size-2xl: list.slash(1.75rem, 2.75rem);
-$font-size-s: list.slash(0.875rem, 1.5rem);
+$font-size-2xl: list.slash(1.75rem, 2.5rem);
+$font-size-xl: list.slash(1.25rem, 2rem);
+$font-size-l: list.slash(1.125rem, 1.75rem);
+$font-size-m: list.slash(1rem, 1.5rem);
+$font-size-s: list.slash(0.8rem, 1.25rem);
+$font-size-xs: list.slash(0.8rem, 1.25rem);
+
+// Families
+$font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+  "Liberation Mono", "Courier New", monospace;
 
 $font-default: 400 $font-size-default "Open Sans", sans-serif;
 $font-bold: 600 $font-size-default "Open Sans", sans-serif;
 $font-h1: 600 $font-size-3xl "Open Sans", sans-serif;
 $font-h2: 400 $font-size-2xl "Open Sans", sans-serif;
-$font-h3: 600 $font-size-default "Open Sans", sans-serif;
+$font-h3: 600 $font-size-xl "Open Sans", sans-serif;
+$font-h4: 600 $font-size-m "Open Sans", sans-serif;
 
 $font-small: 400 $font-size-s "Open Sans", sans-serif;
 
+$color-white: #ffffff;
+$color-black: #010101;
+
+$color-blue-50: #ebf5f9;
 $color-blue-200: #ccf1ff;
 $color-blue-700: #007fae;
 $color-blue-900: #006388;
+$color-blue-950: #0e232a;
 
 $color-gray-200: #e4e6e6;
 $color-gray-700: #627a82;
