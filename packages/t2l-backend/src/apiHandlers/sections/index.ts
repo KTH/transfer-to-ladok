@@ -1,11 +1,55 @@
 import { Request, Response } from "express";
 import CanvasClient from "../../externalApis/canvasApi";
+import { splitSections } from "../utils/commons";
+import type {
+  AktivitetstillfalleSection,
+  KurstillfalleSection,
+  Sections,
+} from "../utils/types";
 import {
-  getExtraAktInformation,
-  getExtraKurInformation,
-  splitSections,
-} from "../utils/commons";
-import type { Sections } from "../utils/types";
+  Aktivitetstillfalle,
+  getAktivitetstillfalle,
+  getKurstillfalleStructure,
+  Kurstillfalle,
+} from "../../externalApis/ladokApi";
+
+export function formatAktivitetstillfalle(
+  uid: string,
+  ladokAkt: Aktivitetstillfalle
+): AktivitetstillfalleSection {
+  const codes = ladokAkt.Aktiviteter.map(
+    (a) =>
+      `${a.Kursinstans.Utbildningskod} ${a.Utbildningsinstans.Utbildningskod}`
+  );
+  const date = ladokAkt.Datumperiod.Startdatum;
+  const name = codes.join(" & ") + " - " + date;
+
+  return {
+    id: uid,
+    name,
+    date,
+  };
+}
+
+/**
+ * Given an Kurstillfälle UID, returns information about the kurstillfälle in Ladok
+ */
+export function formatKurstillfalle(
+  uid: string,
+  ladokKur: Kurstillfalle
+): KurstillfalleSection {
+  return {
+    id: uid,
+    utbildningsinstans: ladokKur.UtbildningsinstansUID,
+    courseCode: ladokKur.Utbildningskod,
+    roundCode: ladokKur.Kurstillfalleskod,
+    modules: ladokKur.IngaendeMoment.map((m) => ({
+      utbildningsinstans: m.UtbildningsinstansUID,
+      code: m.Utbildningskod,
+      name: m.Benamning.sv,
+    })),
+  };
+}
 
 /**
  * Get the sections in a given Canvas `courseId`
@@ -29,11 +73,19 @@ export default async function sectionsHandler(
     splitSections(allSections);
 
   const aktivitetstillfalle = await Promise.all(
-    aktivitetstillfalleIds.map(getExtraAktInformation)
+    aktivitetstillfalleIds.map(async (id) => {
+      const akt = await getAktivitetstillfalle(id);
+
+      return formatAktivitetstillfalle(id, akt);
+    })
   );
 
   const kurstillfalle = await Promise.all(
-    kurstillfalleIds.map(getExtraKurInformation)
+    kurstillfalleIds.map(async (id) => {
+      const k = await getKurstillfalleStructure(id);
+
+      return formatKurstillfalle(id, k);
+    })
   );
 
   res.json({

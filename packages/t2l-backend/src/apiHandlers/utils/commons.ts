@@ -1,22 +1,15 @@
-import { CanvasSection } from "../../externalApis/canvasApi";
 import {
   SokResultat,
   searchAktivitetstillfalleStudieresultat,
   searchUtbildningsinstansStudieresultat,
-  getKurstillfalleStructure,
   getSkaFinnasStudenter,
-  getAktivitetstillfalle,
   Studieresultat,
   RapporteringsMojlighetOutput,
   getBetyg,
   searchRapporteringsMojlighet,
 } from "../../externalApis/ladokApi";
-import type {
-  AktSection,
-  GradeableStudents,
-  GradesDestination,
-  KurSection,
-} from "./types";
+import type { GradeableStudents, GradesDestination } from "./types";
+import { CanvasSection } from "../../externalApis/canvasApi";
 
 /**
  * Given a "sok" function and its arguments, go through all pages and returns
@@ -108,42 +101,6 @@ export function splitSections(sections: CanvasSection[]) {
   return {
     aktivitetstillfalleIds: Array.from(new Set(aktIds)),
     kurstillfalleIds: Array.from(new Set([...kurIds, ...OLD__kurIds])),
-  };
-}
-
-/**
- * Given an Kurstillfälle UID, returns information about the kurstillfälle in Ladok
- */
-export async function getExtraKurInformation(uid: string): Promise<KurSection> {
-  const ladokKur = await getKurstillfalleStructure(uid);
-
-  return {
-    id: uid,
-    utbildningsinstans: ladokKur.UtbildningsinstansUID,
-    courseCode: ladokKur.Utbildningskod,
-    roundCode: ladokKur.Kurstillfalleskod,
-    modules: ladokKur.IngaendeMoment.map((m) => ({
-      utbildningsinstans: m.UtbildningsinstansUID,
-      code: m.Utbildningskod,
-      name: m.Benamning.sv,
-    })),
-  };
-}
-
-/** Given an Aktivitetstillfälle UID, returns Ladok information about it */
-export async function getExtraAktInformation(uid: string): Promise<AktSection> {
-  const ladokAkt = await getAktivitetstillfalle(uid);
-  const codes = ladokAkt.Aktiviteter.map(
-    (a) =>
-      `${a.Kursinstans.Utbildningskod} ${a.Utbildningsinstans.Utbildningskod}`
-  );
-  const date = ladokAkt.Datumperiod.Startdatum;
-  const name = codes.join(" & ") + " - " + date;
-
-  return {
-    id: uid,
-    name,
-    date,
   };
 }
 

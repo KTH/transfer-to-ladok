@@ -8,14 +8,14 @@
  */
 export interface Sections {
   /** Sections that are linked with a aktivitetstillfälle in Ladok */
-  aktivitetstillfalle: AktSection[];
+  aktivitetstillfalle: AktivitetstillfalleSection[];
 
   /** Sections that are linked with a kurstillfälle in Ladok */
-  kurstillfalle: KurSection[];
+  kurstillfalle: KurstillfalleSection[];
 }
 
 /** A Canvas Section linked with a Ladok aktivitetstillfälle */
-export interface AktSection {
+export interface AktivitetstillfalleSection {
   /** Ladok identifier for the Aktivitetstillfälle */
   id: string;
 
@@ -27,7 +27,7 @@ export interface AktSection {
 }
 
 /** A Canvas Section linked with a Ladok kurstillfalle  */
-export type KurSection = {
+export type KurstillfalleSection = {
   /** Ladok identifier for the Kurstillfälle */
   id: string;
 
