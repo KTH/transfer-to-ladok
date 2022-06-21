@@ -1,17 +1,17 @@
 import { Request, Response } from "express";
-import CanvasClient from "../../externalApis/canvasApi";
-import { splitSections } from "../utils/commons";
+import CanvasClient from "../externalApis/canvasApi";
+import { splitSections } from "./utils/commons";
 import type {
   AktivitetstillfalleSection,
   KurstillfalleSection,
   Sections,
-} from "../utils/types";
+} from "./utils/types";
 import {
   Aktivitetstillfalle,
   getAktivitetstillfalle,
   getKurstillfalleStructure,
   Kurstillfalle,
-} from "../../externalApis/ladokApi";
+} from "../externalApis/ladokApi";
 
 export function formatAktivitetstillfalle(
   uid: string,
