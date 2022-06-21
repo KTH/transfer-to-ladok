@@ -2,7 +2,6 @@ import { Request, Response } from "express";
 import assert from "node:assert/strict";
 import CanvasClient, { CanvasSection } from "../externalApis/canvasApi";
 import {
-  getExtraKurInformation,
   getAllStudieresultat,
   splitSections,
   getAllPermissions,
@@ -23,18 +22,19 @@ import {
   assertPostLadokGradesInput,
 } from "./utils/asserts";
 import postOneResult from "./utils/postOneResult";
+import { getKurstillfalleStructure } from "../externalApis/ladokApi";
 
 /** Checks if the given `utbildningsinstans` belongs to the given `kurstillfalle` */
 async function checkUtbildningsinstansInKurstillfalle(
   utbildningsinstansUID: string,
   kurstillfalleUID: string
 ) {
-  const ladokKurstillfalle = await getExtraKurInformation(kurstillfalleUID);
+  const ladokKurstillfalle = await getKurstillfalleStructure(kurstillfalleUID);
 
   const isFinalGrade =
-    ladokKurstillfalle.utbildningsinstans === utbildningsinstansUID;
-  const isModule = ladokKurstillfalle.modules.some(
-    (m) => m.utbildningsinstans === utbildningsinstansUID
+    ladokKurstillfalle.UtbildningsinstansUID === utbildningsinstansUID;
+  const isModule = ladokKurstillfalle.IngaendeMoment.some(
+    (m) => m.UtbildningsinstansUID === utbildningsinstansUID
   );
 
   assert(
