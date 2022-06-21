@@ -4,7 +4,7 @@
 // Format: font-size/line-height. We need to use `list.slash` until Sass stop
 // using "/" for division
 $font-size-default: list.slash(16px, 24px);
-$font-size-3xl: list.slash(2.75rem, 4.125rem);
+$font-size-3xl: list.slash(2.75rem, 3.75rem);
 $font-size-2xl: list.slash(1.75rem, 2.5rem);
 $font-size-xl: list.slash(1.25rem, 2rem);
 $font-size-l: list.slash(1.125rem, 1.75rem);

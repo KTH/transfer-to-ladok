@@ -140,6 +140,9 @@
     margin: 2rem 0;
     border-collapse: collapse;
     font: variables.$font-small;
+
+    display: block;
+    overflow-x: auto;
   }
 
   thead {
