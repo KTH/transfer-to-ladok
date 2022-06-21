@@ -1,6 +1,7 @@
 node_modules
 .parcel-cache
 .env
+.DS_Store
 
 # Package-specific options
 
