@@ -271,7 +271,7 @@ export function normalizeStudieresultat(
         draft:
           draft && hasPermission
             ? {
-                grade: draft.Betygsgradsobjekt.Kod,
+                grade: draft.Betygsgradsobjekt?.Kod,
                 examinationDate: draft.Examinationsdatum,
                 projectTitle: draft.Projekttitel && {
                   title: draft.Projekttitel.Titel,
