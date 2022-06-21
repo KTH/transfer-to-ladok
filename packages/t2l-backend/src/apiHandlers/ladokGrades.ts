@@ -93,11 +93,9 @@ export async function getGradesHandler(
   const courseId = req.params.courseId;
   const canvasClient = new CanvasClient(req);
   const sections = await canvasClient.getSections(courseId);
-  const { login_id: email } = await canvasClient.getSelf();
-
-  // TODO: send the error type as parameter as in `assertGradesDestination`
   await assertDestinationInSections(destination, sections);
 
+  const { login_id: email } = await canvasClient.getSelf();
   const allStudieresultat = await getAllStudieresultat(destination);
   const allPermissions = await getAllPermissions(allStudieresultat, email);
   res.json(normalizeStudieresultat(allStudieresultat, allPermissions));
