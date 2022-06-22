@@ -53,7 +53,7 @@ export default function Preview({
         case "manual-date":
           return examinationDateOption.date;
         case "submission-date":
-          return grade.submittedAt?.split("T")[0] ?? fallback;
+          return grade.submittedAt?.split("T")[0] ?? "";
       }
     }
   );
