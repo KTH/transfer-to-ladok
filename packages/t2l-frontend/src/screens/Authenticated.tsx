@@ -12,6 +12,7 @@ import { ArrowLeft } from "../utils/icons";
 
 import "./Authenticated.scss";
 import { InvalidCourseError } from "../utils/errors";
+import Loading from "../components/Loading";
 
 function getName(sections: Sections, destination: GradesDestination) {
   if ("aktivitetstillfalle" in destination) {
@@ -111,7 +112,7 @@ export default function Authenticated({ sections }: { sections: Sections }) {
   const sendGradesMutation = useSendGrades();
 
   if (sendGradesMutation.isLoading) {
-    return <div>We are sending things to Ladok now!</div>;
+    return <Loading>Transferring results to Ladok...</Loading>;
   }
 
   if (sendGradesMutation.isError) {

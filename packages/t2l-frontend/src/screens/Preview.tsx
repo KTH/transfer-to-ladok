@@ -78,7 +78,7 @@ export default function Preview({
   if (!ladokGradesQuery.data || !assignmentsQuery.data) {
     return (
       <div>
-        <Loading />
+        <Loading>Loading...</Loading>
       </div>
     );
   }
