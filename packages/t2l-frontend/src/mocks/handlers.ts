@@ -1,9 +1,11 @@
 import { rest } from "msw";
 import {
+  CanvasGrades,
   Columns,
   GradeableStudents,
   Sections,
 } from "t2l-backend/src/apiHandlers/utils/types";
+import { canvasGrades, ladokGrades } from "./mockData1";
 
 export const handlers = [
   rest.get(
@@ -52,6 +54,11 @@ export const handlers = [
 
   rest.get(
     "/transfer-to-ladok/api/courses/mock-1/ladok-grades",
-    (req, res, ctx) => res(ctx.status(200), ctx.json<GradeableStudents>([]))
+    (req, res, ctx) =>
+      res(ctx.status(200), ctx.json<GradeableStudents>(ladokGrades))
+  ),
+
+  rest.get("/transfer-to-ladok/api/courses/mock-1/total", (req, res, ctx) =>
+    res(ctx.status(200), ctx.json<CanvasGrades>(canvasGrades))
   ),
 ];
