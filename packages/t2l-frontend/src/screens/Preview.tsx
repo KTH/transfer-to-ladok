@@ -1,7 +1,11 @@
 import React, { useState } from "react";
 import { GradesDestination } from "t2l-backend/src/types";
 import { GradesTable } from "../components/GradesTable";
-import { useCanvasGrades, useGradeableStudents } from "../hooks/apiClient";
+import {
+  useAssignments,
+  useCanvasGrades,
+  useGradeableStudents,
+} from "../hooks/apiClient";
 import { getResultsToBeTransferred } from "../utils/getResultsToBeTransferred";
 import { ArrowRight } from "../utils/icons";
 import { IndeterminateProgressBar } from "../components/ProgressBar";
@@ -27,6 +31,8 @@ export default function Preview({
 
   const ladokGradesQuery = useGradeableStudents(destination);
   const canvasGradesQuery = useCanvasGrades(assignmentId);
+  const assignmentsQuery = useAssignments();
+
   const [examinationDateOption, setExaminationDateOption] =
     React.useState<ExaminationDateValues>(
       fixedExaminationDate
@@ -56,12 +62,16 @@ export default function Preview({
     !canvasGradesQuery.isFetching &&
     tableContent.filter((r) => r.status === "transferable").length > 0;
 
-  if (ladokGradesQuery.isLoading) {
-    return <div></div>;
-  }
-
   if (ladokGradesQuery.isError) {
     throw ladokGradesQuery.error;
+  }
+
+  if (assignmentsQuery.isError) {
+    throw assignmentsQuery.error;
+  }
+
+  if (!ladokGradesQuery.data || !assignmentsQuery.data) {
+    return <div></div>;
   }
 
   return (
@@ -69,7 +79,11 @@ export default function Preview({
       <header>
         <div>Select a Canvas assignment to transfer to the Ladok module</div>
         <div className="assignment">
-          <AssignmentSelector value={assignmentId} onChange={setAssignmentId} />
+          <AssignmentSelector
+            columns={assignmentsQuery.data}
+            value={assignmentId}
+            onChange={setAssignmentId}
+          />
           <ArrowRight />
           <div className="destination">{destinationName}</div>
         </div>
