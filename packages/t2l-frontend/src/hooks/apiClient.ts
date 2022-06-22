@@ -22,18 +22,15 @@ function getCourseId() {
 async function apiFetch(endpoint: string) {
   const response = await fetch(endpoint);
 
-  try {
-    const body = await response.json();
-
-    if (response.status === 200) {
-      return body;
-    }
-
-    throw new ApiError(endpoint, response, body);
-  } catch (err) {
-    // No way to parse the error message from the API
+  const body = await response.json().catch(() => {
     throw new ApiError(endpoint, response);
+  });
+
+  if (response.status === 200) {
+    return body;
   }
+
+  throw new ApiError(endpoint, response, body);
 }
 
 export async function prefetchAssignments(queryClient: QueryClient) {

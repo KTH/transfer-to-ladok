@@ -55,7 +55,9 @@ function RowAfter({ result, id }: { result: RowAfter; id: string }) {
           : ""
       }
     >
-      <td className="id">{id}</td>
+      <td className="transferable">
+        {result.status === "success" && <Check />}
+      </td>
       <td className="name">{result.student.sortableName}</td>
       <td className="grade">{result.draft?.grade}</td>
       <td className="date">{result.draft?.examinationDate}</td>
@@ -65,8 +67,11 @@ function RowAfter({ result, id }: { result: RowAfter; id: string }) {
           <div>Error: {result.error.message}</div>
         </td>
       )}
-      {result.status !== "error" && (
-        <td>{result.error?.message ?? result.warning?.message}</td>
+      {result.error && <td className="status">{result.error.message}</td>}
+      {result.warning && (
+        <td className="status">
+          <div>{result.warning.message}</div>
+        </td>
       )}
     </tr>
   );

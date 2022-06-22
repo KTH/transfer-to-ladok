@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Sections,
   AktivitetstillfalleSection,
@@ -13,6 +13,7 @@ import { ArrowLeft } from "../utils/icons";
 import "./Authenticated.scss";
 import { InvalidCourseError } from "../utils/errors";
 import Loading from "../components/Loading";
+import getLadokUrl from "../utils/ladokUrl";
 
 function getName(sections: Sections, destination: GradesDestination) {
   if ("aktivitetstillfalle" in destination) {
@@ -110,6 +111,12 @@ function AppWithoutSelector({
 export default function Authenticated({ sections }: { sections: Sections }) {
   const { aktivitetstillfalle, kurstillfalle } = sections;
   const sendGradesMutation = useSendGrades();
+  const [ladokUrl, setLadokUrl] = useState("");
+
+  function koooor(input: SendGradesInput) {
+    setLadokUrl(getLadokUrl(sections, input.destination));
+    sendGradesMutation.mutate(input);
+  }
 
   if (sendGradesMutation.isLoading) {
     return <Loading>Transferring results to Ladok...</Loading>;
@@ -120,7 +127,7 @@ export default function Authenticated({ sections }: { sections: Sections }) {
   }
 
   if (sendGradesMutation.isSuccess) {
-    return <Done results={sendGradesMutation.data} />;
+    return <Done ladokUrl={ladokUrl} results={sendGradesMutation.data} />;
   }
 
   // If there are no aktivitetstillfälle or kurstillfälle, then
@@ -133,15 +140,10 @@ export default function Authenticated({ sections }: { sections: Sections }) {
   // we don't show any selector
   if (aktivitetstillfalle.length === 1 && kurstillfalle.length === 0) {
     return (
-      <AppWithoutSelector
-        akt={aktivitetstillfalle[0]}
-        onSubmit={sendGradesMutation.mutate}
-      />
+      <AppWithoutSelector akt={aktivitetstillfalle[0]} onSubmit={koooor} />
     );
   }
 
   // Otherwise the user needs to choose a destination
-  return (
-    <AppWithSelector sections={sections} onSubmit={sendGradesMutation.mutate} />
-  );
+  return <AppWithSelector sections={sections} onSubmit={koooor} />;
 }
