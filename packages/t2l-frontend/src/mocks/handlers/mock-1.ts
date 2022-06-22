@@ -1,0 +1,84 @@
+import { rest } from "msw";
+import { faker } from "@faker-js/faker";
+import {
+  CanvasGrades,
+  Columns,
+  GradeableStudents,
+  Sections,
+} from "t2l-backend/src/apiHandlers/utils/types";
+
+const letters = ["A", "B", "C", "D", "E", "F", "FX"];
+
+const students = Array.from({ length: 10 }).map(() => ({
+  id: faker.datatype.uuid(),
+  sortableName: `${faker.name.lastName()}, ${faker.name.firstName()}`,
+}));
+
+const canvasGrades: CanvasGrades = students.map((s) => ({
+  student: s,
+  grade: faker.helpers.arrayElement(letters),
+  gradedAt: null,
+  submittedAt: null,
+}));
+
+const ladokGrades: GradeableStudents = students.map((s) => ({
+  student: s,
+  scale: letters,
+  hasPermission: true,
+  requiresTitle: false,
+}));
+
+const prefix = "/transfer-to-ladok/api/courses/mock-1";
+
+const handlers = [
+  rest.get(
+    "/transfer-to-ladok/api/courses/mock-0/sections",
+    (req, res, ctx) => {
+      return res(
+        ctx.status(200),
+        ctx.json<Sections>({
+          aktivitetstillfalle: [],
+          kurstillfalle: [],
+        })
+      );
+    }
+  ),
+
+  rest.get(`${prefix}/sections`, (req, res, ctx) => {
+    return res(
+      ctx.status(200),
+      ctx.json<Sections>({
+        aktivitetstillfalle: [
+          {
+            id: "0000-000-000",
+            date: "2022-01-01",
+            name: "AKT 01",
+          },
+        ],
+        kurstillfalle: [],
+      })
+    );
+  }),
+
+  rest.get(`${prefix}/columns`, (req, res, ctx) =>
+    res(
+      ctx.status(200),
+      ctx.json<Columns>({
+        assignments: [],
+        finalGrades: {
+          hasLetterGrade: true,
+        },
+      })
+    )
+  ),
+
+  rest.get(`${prefix}/ladok-grades`, (req, res, ctx) =>
+    res(ctx.status(200), ctx.json<GradeableStudents>(ladokGrades))
+  ),
+
+  rest.get("/transfer-to-ladok/api/courses/mock-1/total", (req, res, ctx) =>
+    res(ctx.status(200), ctx.json<CanvasGrades>(canvasGrades))
+  ),
+];
+
+export default handlers;
