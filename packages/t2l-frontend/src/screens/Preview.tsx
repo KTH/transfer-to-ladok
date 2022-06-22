@@ -70,6 +70,10 @@ export default function Preview({
     throw assignmentsQuery.error;
   }
 
+  if (canvasGradesQuery.isError) {
+    throw canvasGradesQuery.error;
+  }
+
   if (!ladokGradesQuery.data || !assignmentsQuery.data) {
     return <div></div>;
   }
