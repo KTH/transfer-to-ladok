@@ -1,7 +1,8 @@
 import * as React from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { QueryClient, QueryClientProvider, focusManager } from "react-query";
-import { ApiError, prefetchAssignments, useSections } from "./hooks/apiClient";
+import { prefetchAssignments, useSections } from "./hooks/apiClient";
+import { ApiError } from "./utils/errors";
 
 import FullPageError from "./screens/FullPageError";
 import Unauthenticated from "./screens/Unauthenticated";

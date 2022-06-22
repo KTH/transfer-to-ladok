@@ -7,6 +7,7 @@ import {
   GradesDestination,
   Sections,
 } from "t2l-backend/src/types";
+import { ApiError } from "../utils/errors";
 
 function getCourseId() {
   const courseId = new URLSearchParams(location.search).get("courseId");
@@ -16,15 +17,6 @@ function getCourseId() {
   }
 
   return courseId;
-}
-
-export class ApiError extends Error {
-  code: string;
-
-  constructor(message: string, code: string) {
-    super(message);
-    this.code = code;
-  }
 }
 
 async function apiFetch(endpoint: string) {
@@ -37,10 +29,10 @@ async function apiFetch(endpoint: string) {
       return body;
     }
 
-    throw new ApiError(body.message, body.code);
+    throw new ApiError(endpoint, response, body);
   } catch (err) {
     // No way to parse the error message from the API
-    throw err;
+    throw new ApiError(endpoint, response);
   }
 }
 
