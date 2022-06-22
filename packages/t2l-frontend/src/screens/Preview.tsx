@@ -56,6 +56,14 @@ export default function Preview({
     !canvasGradesQuery.isFetching &&
     tableContent.filter((r) => r.status === "transferable").length > 0;
 
+  if (ladokGradesQuery.isLoading) {
+    return <div></div>;
+  }
+
+  if (ladokGradesQuery.isError) {
+    throw ladokGradesQuery.error;
+  }
+
   return (
     <div className="Preview">
       <header>
