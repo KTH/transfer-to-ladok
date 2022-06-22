@@ -6,26 +6,26 @@
   font: $font-small;
 
   .options {
-    margin: 0;
+    margin: 0.25rem 0 0 0;
     padding: 0;
     list-style: none;
     display: inline-flex;
 
     li {
-      margin: 0 1rem 0 0;
+      margin: 0 1.25rem 0 0;
       padding: 0;
 
       input[type="radio"] {
-        height: 1.5rem;
+        height: 1.25rem;
         margin: 0;
-        padding: 0 0.25rem 0 0;
+        padding: 0 0.5rem 0 0;
         vertical-align: text-top;
       }
 
       label {
         display: inline-block;
         vertical-align: text-top;
-        padding-left: 0.25rem;
+        padding-left: 0.5rem;
       }
     }
 
