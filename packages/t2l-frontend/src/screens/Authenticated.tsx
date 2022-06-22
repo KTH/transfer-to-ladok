@@ -115,7 +115,7 @@ export default function Authenticated({ sections }: { sections: Sections }) {
   }
 
   if (sendGradesMutation.isError) {
-    return <div>ERRORRRRRRRR</div>;
+    throw sendGradesMutation.error;
   }
 
   if (sendGradesMutation.isSuccess) {

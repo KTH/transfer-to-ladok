@@ -4,25 +4,17 @@ import {
   PostLadokGradesInput,
   PostLadokGradesOutput,
 } from "t2l-backend/src/types";
+import { ApiError } from "../utils/errors";
 import {
   convertToApiInput,
-  PreviewTableRow,
+  RowBefore,
   processApiOutput,
-  TransferredTableRow,
+  RowAfter,
 } from "../utils/getResultsToBeTransferred";
 
 export interface SendGradesInput {
-  results: PreviewTableRow[];
+  results: RowBefore[];
   destination: GradesDestination;
-}
-
-export class ApiError extends Error {
-  code: string;
-
-  constructor(message: string, code: string) {
-    super(message);
-    this.code = code;
-  }
 }
 
 function getCourseId() {
@@ -37,17 +29,15 @@ function getCourseId() {
 
 async function apiSendResults(input: PostLadokGradesInput) {
   const courseId = getCourseId();
+  const endpoint = `/transfer-to-ladok/api/courses/${courseId}/ladok-grades`;
 
-  const response = await fetch(
-    `/transfer-to-ladok/api/courses/${courseId}/ladok-grades`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(input),
-    }
-  );
+  const response = await fetch(endpoint, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(input),
+  });
 
   try {
     const body = await response.json();
@@ -56,15 +46,15 @@ async function apiSendResults(input: PostLadokGradesInput) {
       return body as PostLadokGradesOutput;
     }
 
-    throw new ApiError(body.message, body.code);
+    throw new ApiError(`POST ${endpoint}`, response, body);
   } catch (err) {
     // No way to parse the error message from the API
-    throw err;
+    throw new ApiError(`POST ${endpoint}`, response);
   }
 }
 
 export function useSendGrades() {
-  return useMutation<TransferredTableRow[], unknown, SendGradesInput>(
+  return useMutation<RowAfter[], unknown, SendGradesInput>(
     async ({ destination, results }) => {
       const output = await apiSendResults(
         convertToApiInput(destination, results)
