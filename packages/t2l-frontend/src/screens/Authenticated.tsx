@@ -1,5 +1,9 @@
 import React from "react";
-import { Sections, AktSection, GradesDestination } from "t2l-backend/src/types";
+import {
+  Sections,
+  AktivitetstillfalleSection,
+  GradesDestination,
+} from "t2l-backend/src/types";
 import { SendGradesInput, useSendGrades } from "../hooks/useSendGrades";
 import Preview from "./Preview";
 import Done from "./Done";
@@ -7,6 +11,7 @@ import ModuleSelector from "./ModuleSelector";
 import { ArrowLeft } from "../utils/icons";
 
 import "./Authenticated.scss";
+import { InvalidCourseError } from "../utils/errors";
 
 function getName(sections: Sections, destination: GradesDestination) {
   if ("aktivitetstillfalle" in destination) {
@@ -88,7 +93,7 @@ function AppWithoutSelector({
   akt,
   onSubmit,
 }: {
-  akt: AktSection;
+  akt: AktivitetstillfalleSection;
   onSubmit(results: SendGradesInput): void;
 }) {
   return (
@@ -120,7 +125,7 @@ export default function Authenticated({ sections }: { sections: Sections }) {
   // If there are no aktivitetstillfälle or kurstillfälle, then
   // this course cannot be used with Transfer to Ladok
   if (aktivitetstillfalle.length === 0 && kurstillfalle.length === 0) {
-    throw new Error("Cannot use here!");
+    throw new InvalidCourseError();
   }
 
   // If there is only one section and it is a aktivitetstillfälle,

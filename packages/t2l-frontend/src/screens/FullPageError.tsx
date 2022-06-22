@@ -1,20 +1,33 @@
-import React, { ErrorInfo } from "react";
+import React from "react";
 import { FallbackProps } from "react-error-boundary";
-// import { ApiError } from "../hooks/apiClient";
+import { InvalidCourseError } from "../utils/errors";
 import "./FullPageError.scss";
 
 export default function FullPageError({ error }: FallbackProps) {
+  if (error instanceof InvalidCourseError) {
+    return (
+      <div className="FullPageError">
+        <header>
+          <h1>{error.message}</h1>
+        </header>
+        <main>
+          <p>{error.details}</p>
+          <p className="small">
+            Contact IT-support if you need more help:{" "}
+            <a href="mailto:it-support@kth.se">it-support@kth.se</a>
+          </p>
+        </main>
+      </div>
+    );
+  }
+
   return (
     <div className="FullPageError">
       <header>
-        <h1>Invalid course</h1>
-        {/* <div>You cannot use Transfer to Ladok in this course</div> */}
+        <h1>Unknown error: {error.name}</h1>
       </header>
       <main>
-        <p>
-          You can only use KTH Transfer to Ladok in official courses or
-          examinations. You cannot use it in intern nor sandbox courses.
-        </p>
+        <p>{error.message}</p>
         <p className="small">
           Contact IT-support if you need more help:{" "}
           <a href="mailto:it-support@kth.se">it-support@kth.se</a>
