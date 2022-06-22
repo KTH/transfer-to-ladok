@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import DatePicker from "react-datepicker";
 import "./DateSelector.scss";
 import "react-datepicker/dist/react-datepicker.css";
@@ -17,8 +17,27 @@ export default function DateSelector({
   value: Values;
   onChange(value: Values): void;
 }) {
+  // Inside this component, values for "option" and "date" are controlled
+  // by two separate components. Therefore we use two states internally
+  const [selectedOption, setSelectedOption] = React.useState<Values["option"]>(
+    value.option
+  );
   const [manualDate, setManualDate] = React.useState<Date | null>(new Date());
   const manualDateStr = manualDate?.toISOString().split("T")[0] ?? "";
+
+  // We use this hook to merge the two states into a single value
+  useEffect(() => {
+    if (selectedOption === "manual-date") {
+      onChange({
+        option: "manual-date",
+        date: manualDateStr,
+      });
+    } else {
+      onChange({
+        option: selectedOption,
+      });
+    }
+  }, [manualDate, selectedOption]);
 
   return (
     <div className="DateSelector">
@@ -30,9 +49,9 @@ export default function DateSelector({
               type="radio"
               id="fixed-date"
               value="fixed-date"
-              checked={value.option === "fixed-date"}
+              checked={selectedOption === "fixed-date"}
               onChange={() => {
-                onChange({ option: "fixed-date" });
+                setSelectedOption("fixed-date");
               }}
             />
             <label htmlFor="fixed-date">{fixedOption}</label>
@@ -43,9 +62,9 @@ export default function DateSelector({
             type="radio"
             id="submission-date"
             value="submission-date"
-            checked={value.option === "submission-date"}
+            checked={selectedOption === "submission-date"}
             onChange={() => {
-              onChange({ option: "submission-date" });
+              setSelectedOption("submission-date");
             }}
           />
           <label htmlFor="submission-date">Submission date in assignment</label>
@@ -55,9 +74,9 @@ export default function DateSelector({
             type="radio"
             id="manual-date"
             value="manual-date"
-            checked={value.option === "manual-date"}
+            checked={selectedOption === "manual-date"}
             onChange={() => {
-              onChange({ option: "manual-date", date: manualDateStr });
+              setSelectedOption("manual-date");
             }}
           />
           <label htmlFor="manual-date">Custom</label>
