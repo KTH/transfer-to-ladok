@@ -16,7 +16,7 @@ app.use(
     name: "transfer-to-ladok.sid",
     proxy: true,
     cookie: {
-      domain: process.env.PROXY_HOST,
+      domain: new URL(process.env.PROXY_HOST || "").hostname,
       maxAge: 3600 * 1000,
       httpOnly: true,
       secure: "auto",

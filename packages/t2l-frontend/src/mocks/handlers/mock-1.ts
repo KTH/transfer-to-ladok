@@ -52,9 +52,9 @@ const handlers = [
       ctx.json<Sections>({
         aktivitetstillfalle: [
           {
-            id: "0000-000-000",
+            id: "09e14f93-5f2d-11eb-a0ce-c629d09c4bde",
             date: "2022-01-01",
-            name: "AKT 01",
+            name: "AA0001 TENX 2022-01-01",
           },
         ],
         kurstillfalle: [],

@@ -25,7 +25,7 @@ declare module "express-session" {
 // https://localdev.kth.se:4443/transfer-to-ladok/auth
 const oauthRedirectUrl = new URL(
   "/transfer-to-ladok/auth/callback",
-  `https://${process.env.PROXY_HOST}`
+  process.env.PROXY_HOST
 ).toString();
 
 const issuer = new Issuer({
