@@ -74,3 +74,23 @@ export function Check(props: React.SVGAttributes<SVGSVGElement>) {
     </svg>
   );
 }
+
+export function Spinner(props: React.SVGAttributes<SVGSVGElement>) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      height="24px"
+      viewBox="0 0 24 24"
+      width="24px"
+      fill="none"
+      {...props}
+    >
+      <circle cx="12" cy="12" r="10" stroke="#E4E6E6" stroke-width="2" />
+      <path
+        d="M3.95077 17.9338C2.68566 16.2177 2.00215 14.1421 2.00001 12.0101C1.99786 9.87801 2.67719 7.80108 3.93885 6.0824C5.20052 4.36373 6.97846 3.09328 9.01318 2.45647C11.0479 1.81967 13.2329 1.84985 15.2493 2.54261"
+        stroke="currentColor"
+        stroke-width="2"
+      />
+    </svg>
+  );
+}

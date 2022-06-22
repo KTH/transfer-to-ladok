@@ -7,6 +7,7 @@ import {
   useGradeableStudents,
 } from "../hooks/apiClient";
 import { getResultsToBeTransferred } from "../utils/getResultsToBeTransferred";
+import Loading from "../components/Loading";
 import { ArrowRight } from "../utils/icons";
 import { IndeterminateProgressBar } from "../components/ProgressBar";
 import AssignmentSelector from "../components/AssignmentSelector";
@@ -75,7 +76,11 @@ export default function Preview({
   }
 
   if (!ladokGradesQuery.data || !assignmentsQuery.data) {
-    return <div></div>;
+    return (
+      <div>
+        <Loading />
+      </div>
+    );
   }
 
   return (
