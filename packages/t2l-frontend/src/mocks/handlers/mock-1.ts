@@ -4,6 +4,8 @@ import {
   CanvasGrades,
   Columns,
   GradeableStudents,
+  PostLadokGradesInput,
+  PostLadokGradesOutput,
   Sections,
 } from "t2l-backend/src/apiHandlers/utils/types";
 
@@ -79,6 +81,25 @@ const handlers = [
   rest.get("/transfer-to-ladok/api/courses/mock-1/total", (req, res, ctx) =>
     res(ctx.status(200), ctx.json<CanvasGrades>(canvasGrades))
   ),
+
+  rest.post<PostLadokGradesInput>(`${prefix}/ladok-grades`, (req, res, ctx) => {
+    const input = req.body.results;
+
+    return res(
+      ctx.status(200),
+      ctx.json<PostLadokGradesOutput>({
+        results: input.map((r) => ({
+          id: r.id,
+          draft: r.draft,
+          status: "success",
+        })),
+        summary: {
+          error: 0,
+          success: input.length,
+        },
+      })
+    );
+  }),
 ];
 
 export default handlers;
