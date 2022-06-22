@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 import log, { initializeLogger, setFields } from "skog";
 require("dotenv").config();
 initializeLogger();
