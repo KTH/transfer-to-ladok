@@ -93,7 +93,13 @@ export function searchAktivitetstillfalleStudieresultat(
 export function searchRapporteringsMojlighet(
   Anvandarnamn: string,
   KontrolleraRapporteringsrattighetlista: RapporteringsMojlighetInput[]
-) {
+): Promise<RapporteringsMojlighetOutput> {
+  if (KontrolleraRapporteringsrattighetlista.length === 0) {
+    return Promise.resolve({
+      KontrolleraRapporteringsrattighetlista: [],
+    });
+  }
+
   return gotClient
     .put<RapporteringsMojlighetOutput>(
       `resultat/resultatrattighet/kontrollerarapporteringsmojlighet`,
