@@ -1,4 +1,6 @@
 /package-lock.json
 /packages/t2l-backend/package-lock.json
+/packages/t2l-backend/config/info.ts
+
 /packages/t2l-frontend/package-lock.json
 /packages/t2l-scripts/package-lock.json

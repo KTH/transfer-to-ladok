@@ -8,7 +8,23 @@ import {
 import { getGradesHandler, postGradesHandler } from "./apiHandlers/ladokGrades";
 import auth from "./otherHandlers/auth";
 import { errorHandler } from "./otherHandlers/error";
+import { buildInfo } from "./config/info";
 const router = Router();
+
+router.get("/_about", (req, res) => {
+  res.set("Content-type", "text/plain");
+  res.send(`
+Transfer to Ladok
+-----------------
+- Build date: ${buildInfo.buildDate}
+
+- Docker image:   ${buildInfo.dockerImage}
+- Docker version: ${buildInfo.dockerVersion}
+
+- Git branch: ${buildInfo.gitBranch}
+- Git commit: ${buildInfo.gitCommit}
+`);
+});
 
 // This endpoint is where the user lands after clicking "Transfer to Ladok"
 // from the left-side menu

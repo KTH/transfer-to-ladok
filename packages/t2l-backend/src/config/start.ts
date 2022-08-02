@@ -1,3 +1,13 @@
+/**
+ * This file initializes settings (environmental variables, skog, among other)
+ *
+ * It must be `import`-ed like this in the beginning of the app:
+ *
+ * ```
+ * import "./config/start";
+ * ```
+ */
+
 /* eslint-disable @typescript-eslint/no-var-requires */
 import log, { initializeLogger, setFields } from "skog";
 require("dotenv").config();
