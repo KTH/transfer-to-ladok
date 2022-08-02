@@ -139,13 +139,11 @@ export interface RapporteringsMojlighetInput {
 }
 
 export interface RapporteringsMojlighetOutput {
-  KontrolleraRapporteringsrattighetlista: [
-    {
-      HarRattighet: boolean;
-      StudieresultatUID: string;
-      UtbildningsinstansAttRapporteraPaUID: string;
-    }
-  ];
+  KontrolleraRapporteringsrattighetlista: {
+    HarRattighet: boolean;
+    StudieresultatUID: string;
+    UtbildningsinstansAttRapporteraPaUID: string;
+  }[];
 }
 
 export interface Betygsgrad {
