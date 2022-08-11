@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import assert from "node:assert/strict";
 import CanvasClient, { CanvasSection } from "../externalApis/canvasApi";
+import CanvasAdminClient from "../externalApis/canvasAdminApi";
 import {
   getAllStudieresultat,
   splitSections,
@@ -91,11 +92,14 @@ export async function getGradesHandler(
   assertGradesDestination(destination, BadRequestError);
 
   const courseId = req.params.courseId;
+  const canvasAdminClient = new CanvasAdminClient();
   const canvasClient = new CanvasClient(req);
   const sections = await canvasClient.getSections(courseId);
   await assertDestinationInSections(destination, sections);
 
-  const { login_id: email } = await canvasClient.getSelf();
+  const { id: userId } = await canvasClient.getSelf();
+  const email = await canvasAdminClient.getUserLoginId(userId);
+
   const allStudieresultat = await getAllStudieresultat(destination);
   const allPermissions = await getAllPermissions(allStudieresultat, email);
   res.json(normalizeStudieresultat(allStudieresultat, allPermissions));
@@ -116,10 +120,12 @@ export async function postGradesHandler(
 
   const courseId = req.params.courseId;
   const canvasClient = new CanvasClient(req);
+  const canvasAdminClient = new CanvasAdminClient();
   const sections = await canvasClient.getSections(courseId);
   await assertDestinationInSections(req.body.destination, sections);
 
-  const { login_id: email } = await canvasClient.getSelf();
+  const { id: userId } = await canvasClient.getSelf();
+  const email = await canvasAdminClient.getUserLoginId(userId);
   const allStudieresultat = await getAllStudieresultat(req.body.destination);
   const allPermissions = await getAllPermissions(allStudieresultat, email);
 
