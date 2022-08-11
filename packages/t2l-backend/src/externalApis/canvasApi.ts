@@ -122,7 +122,7 @@ export default class CanvasClient {
 
   getSelf() {
     return this.client
-      .get<{ login_id: string }>("users/self")
+      .get<{ id: number; login_id?: string }>("users/self")
       .then((r) => r.body);
   }
 }
