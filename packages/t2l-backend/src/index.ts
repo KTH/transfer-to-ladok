@@ -17,6 +17,8 @@ const store = new MongoDbStore({
   // Azure Cosmos MongoDB requires an index called "_ts".
   // Read more: https://github.com/mongodb-js/connect-mongodb-session#azure-cosmos-mongodb-support
   expiresKey: "_ts",
+
+  expiresAfterSeconds: 14 * 24 * 3600,
 });
 const port = 3000;
 
