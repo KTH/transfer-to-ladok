@@ -23,6 +23,7 @@
     "express": "^4.17.3",
     "express-session": "^1.17.2",
     "got": "^11.8.3",
+    "mongodb": "^4.8.1",
     "openid-client": "^5.1.5",
     "skog": "^3.0.2",
     "ts-node": "^10.8.1"

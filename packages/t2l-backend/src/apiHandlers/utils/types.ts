@@ -227,3 +227,27 @@ export interface PostLadokGradesOutput {
   };
   results: ResultOutput[];
 }
+
+/**
+ * Information meant to be stored about one transfer operation made by a user.
+ * It contains information about the parameters given by the user and the
+ * outcome of that operation
+ *
+ * (Note: it is named "Transference" instead of "Transfer" to avoid confusions
+ * with the verb)
+ */
+export interface Transference {
+  parameters: {
+    courseId: string;
+    destination: GradesDestination;
+  };
+  user: {
+    canvasId: number;
+    email: string;
+  };
+  results: ResultOutput[];
+  summary: {
+    success: number;
+    error: number;
+  };
+}

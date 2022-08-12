@@ -11,8 +11,11 @@ import {
 import type {
   GradesDestination,
   GradeableStudents,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  PostLadokGradesInput,
   PostLadokGradesOutput,
   ResultOutput,
+  Transference,
 } from "./utils/types";
 import {
   BadRequestError,
@@ -24,6 +27,7 @@ import {
 } from "./utils/asserts";
 import postOneResult from "./utils/postOneResult";
 import { getKurstillfalleStructure } from "../externalApis/ladokApi";
+import { insertTransference } from "../externalApis/mongo";
 
 /** Checks if the given `utbildningsinstans` belongs to the given `kurstillfalle` */
 async function checkUtbildningsinstansInKurstillfalle(
@@ -130,10 +134,26 @@ export async function postGradesHandler(
   const allPermissions = await getAllPermissions(allStudieresultat, email);
 
   const output: ResultOutput[] = [];
+  const transference: Transference = {
+    parameters: {
+      courseId,
+      destination: req.body.destination,
+    },
+    user: {
+      canvasId: userId,
+      email,
+    },
+    results: [],
+    summary: {
+      success: 0,
+      error: 0,
+    },
+  };
 
   for (const resultInput of req.body.results) {
     await postOneResult(resultInput, allStudieresultat, allPermissions).then(
       (o) => {
+        transference.results.push(o);
         output.push(o);
       }
     );
@@ -143,6 +163,9 @@ export async function postGradesHandler(
     success: output.filter((r) => r.status === "success").length,
     error: output.filter((r) => r.status === "error").length,
   };
+
+  transference.summary = summary;
+  await insertTransference(transference);
 
   res.send({
     summary,
