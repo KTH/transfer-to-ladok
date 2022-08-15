@@ -108,7 +108,7 @@ export default function Preview({
         {assignmentId === "" && (
           <div className="empty-state">
             <div>
-              Choose an assignment to see a preview of what is going to be
+              Select an assignment to see a preview of what is going to be
               transferred
             </div>
           </div>
