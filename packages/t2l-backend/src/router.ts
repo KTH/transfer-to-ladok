@@ -1,4 +1,5 @@
 import { Router } from "express";
+import appInsights from "applicationinsights";
 import sectionsHandler from "./apiHandlers/sections";
 import columnsHandler from "./apiHandlers/columns";
 import {
@@ -41,6 +42,11 @@ router.post("/", (req, res) => {
 router.use("/auth", auth);
 
 // From here, everything are api endpoints:
+
+// Middleware to add "courseId" to all app-insights
+router.use("/api/courses/:courseId", (req, res, next) => {
+  //
+});
 
 router.get("/api/courses/:courseId/sections", (req, res, next) =>
   sectionsHandler(req, res).catch(next)

@@ -14,5 +14,8 @@
   "devDependencies": {
     "lerna": "^5.4.0",
     "prettier": "^2.5.1"
+  },
+  "dependencies": {
+    "applicationinsights": "^2.3.4"
   }
 }

@@ -10,6 +10,7 @@
 
 /* eslint-disable @typescript-eslint/no-var-requires */
 import log, { initializeLogger, setFields } from "skog";
+import appInsights from "applicationinsights";
 require("dotenv").config();
 initializeLogger();
 setFields({
@@ -33,3 +34,4 @@ process.on("unhandledRejection", (reason) => {
 });
 
 require("@kth/reqvars").check();
+appInsights.start();
