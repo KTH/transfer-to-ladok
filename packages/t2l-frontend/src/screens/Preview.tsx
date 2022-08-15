@@ -9,7 +9,6 @@ import {
 import { getResultsToBeTransferred } from "../utils/getResultsToBeTransferred";
 import Loading from "../components/Loading";
 import { ArrowRight } from "../utils/icons";
-import { IndeterminateProgressBar } from "../components/ProgressBar";
 import AssignmentSelector from "../components/AssignmentSelector";
 import DateSelector, {
   Values as ExaminationDateValues,
@@ -103,9 +102,15 @@ export default function Preview({
         />
       </header>
       <main className="main">
-        <IndeterminateProgressBar visible={canvasGradesQuery.isFetching} />
-        {assignmentId !== "" && <GradesTable results={tableContent} />}
-        {assignmentId === "" && (
+        {canvasGradesQuery.isFetching && (
+          <div className="loading-state">
+            <Loading>Loading results from Canvas...</Loading>
+          </div>
+        )}
+        {!canvasGradesQuery.isFetching && assignmentId !== "" && (
+          <GradesTable results={tableContent} />
+        )}
+        {!canvasGradesQuery.isFetching && assignmentId === "" && (
           <div className="empty-state">
             <div>
               Select an assignment to see a preview of what is going to be
