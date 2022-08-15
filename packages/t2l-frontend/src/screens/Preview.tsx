@@ -104,7 +104,7 @@ export default function Preview({
       </header>
       <main className="main">
         <IndeterminateProgressBar visible={canvasGradesQuery.isFetching} />
-        <GradesTable results={tableContent} />
+        {assignmentId !== "" && <GradesTable results={tableContent} />}
         {assignmentId === "" && (
           <div className="empty-state">
             <div>
