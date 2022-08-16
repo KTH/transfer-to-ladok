@@ -62,6 +62,9 @@ export function searchUtbildningsinstansStudieresultat(
         json: {
           Filtrering: ["OBEHANDLADE", "UTKAST"],
           KurstillfallenUID,
+          // NOTE: OrderBy MUST be included always.
+          // Otherwise the pagination will be broken because Ladok does not sort
+          // things consistently by default
           OrderBy: ["PERSONNUMMER_ASC"],
           Page: page,
         },
@@ -82,6 +85,9 @@ export function searchAktivitetstillfalleStudieresultat(
         json: {
           Filtrering: ["OBEHANDLADE", "UTKAST", "KLARMARKERADE"],
           KurstillfallenUID,
+          // NOTE: OrderBy MUST be included always.
+          // Otherwise the pagination will be broken because Ladok does not sort
+          // things consistently by default
           OrderBy: ["PERSONNUMMER_ASC"],
           Page: page,
         },
