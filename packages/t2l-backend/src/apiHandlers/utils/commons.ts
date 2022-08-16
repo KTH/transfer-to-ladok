@@ -77,9 +77,9 @@ function searchAllUtbildningsinstansStudieresultat(
  * that the returned list are actual Ladok IDs
  */
 export function splitSections(sections: CanvasSection[]) {
-  const AKTIVITETSTILLFALLE_REGEX = /^AKT\.([a-z0-9-]+)(\.\w+)?$/;
+  const AKTIVITETSTILLFALLE_REGEX =
+    /^AKT\.(\w{8}-\w{4}-\w{4}-\w{4}-\w{12})(\.\w+)?$/;
   const KURSTILLFALLE_REGEX = /^\w{8}-\w{4}-\w{4}-\w{4}-\w{12}$/;
-  const OLD_KURSTILLFALLE_REGEX = /^\w{6,7}(HT|VT)\d{3}$/;
 
   const aktIds = sections
     .map((s) => AKTIVITETSTILLFALLE_REGEX.exec(s.sis_section_id ?? "")?.[1])
@@ -90,17 +90,12 @@ export function splitSections(sections: CanvasSection[]) {
     .map((s) => s.sis_section_id)
     .filter((id): id is string => typeof id === "string");
 
-  const OLD__kurIds = sections
-    .filter((s) => OLD_KURSTILLFALLE_REGEX.test(s.sis_section_id ?? ""))
-    .map((s) => s.integration_id)
-    .filter((id): id is string => typeof id === "string");
-
   // This function should return each ID once.
   // Examrooms have multiple sections including same ID but with different
   // suffixes.
   return {
     aktivitetstillfalleIds: Array.from(new Set(aktIds)),
-    kurstillfalleIds: Array.from(new Set([...kurIds, ...OLD__kurIds])),
+    kurstillfalleIds: Array.from(new Set(kurIds)),
   };
 }
 
