@@ -49,10 +49,14 @@ app.use(
 );
 app.use(skogMiddleware);
 app.use("/transfer-to-ladok", router);
+
+/* Un-comment this section when Transfer to Ladok Frontend is ready for
+   production
 app.use(
   "/transfer-to-ladok",
   express.static(path.join(__dirname, "../../t2l-frontend/dist"))
 );
+*/
 app.listen(port, () => {
   log.info(`Listening to port ${port}`);
 });
