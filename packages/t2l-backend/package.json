@@ -17,7 +17,6 @@
   "dependencies": {
     "@kth/canvas-api": "^4.2.2",
     "@kth/reqvars": "^2.0.1",
-    "@types/express-session": "^1.17.4",
     "connect-mongodb-session": "^3.1.1",
     "dotenv": "^16.0.0",
     "express": "^4.17.3",
@@ -31,6 +30,7 @@
   "devDependencies": {
     "@types/connect-mongodb-session": "^2.4.4",
     "@types/express": "^4.17.13",
+    "@types/express-session": "^1.17.5",
     "@typescript-eslint/eslint-plugin": "^5.28.0",
     "@typescript-eslint/parser": "^5.28.0",
     "eslint": "^8.17.0",
