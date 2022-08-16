@@ -51,7 +51,7 @@ async function checkUtbildningsinstansInKurstillfalle(
 }
 
 /** Checks if the destination exists in a given list of sections */
-async function assertDestinationInSections(
+async function checkDestinationInSections(
   destination: GradesDestination,
   sections: CanvasSection[]
 ) {
@@ -99,7 +99,7 @@ export async function getGradesHandler(
   const canvasAdminClient = new CanvasAdminClient();
   const canvasClient = new CanvasClient(req);
   const sections = await canvasClient.getSections(courseId);
-  await assertDestinationInSections(destination, sections);
+  await checkDestinationInSections(destination, sections);
 
   const { id: userId } = await canvasClient.getSelf();
   const email = await canvasAdminClient.getUserLoginId(userId);
@@ -126,7 +126,7 @@ export async function postGradesHandler(
   const canvasClient = new CanvasClient(req);
   const canvasAdminClient = new CanvasAdminClient();
   const sections = await canvasClient.getSections(courseId);
-  await assertDestinationInSections(req.body.destination, sections);
+  await checkDestinationInSections(req.body.destination, sections);
 
   const { id: userId } = await canvasClient.getSelf();
   const email = await canvasAdminClient.getUserLoginId(userId);
