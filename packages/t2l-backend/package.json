@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "ts-node-dev --respawn src/index.ts | pino-pretty -e options,response -o '{msg}' --ignore options,pid,hostname --singleLine --translateTime 'HH:MM:ss.l'",
     "start": "ts-node --transpile-only src/index.ts",
-    "test": "npm run test:tsc && npm run test:lint",
+    "test": "npm run test:tsc && npm run test:lint && npm run test:unit",
     "test:tsc": "tsc --noEmit",
     "test:lint": "prettier --check . && eslint src/",
     "test:unit": "jest",
