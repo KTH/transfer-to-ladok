@@ -1,14 +1,12 @@
 import {
   createResult,
   getBetyg,
-  RapporteringsMojlighetOutput,
   Resultat,
-  Studieresultat,
   updateResult,
 } from "../../externalApis/ladokApi";
-import { containsPermission, getExistingDraft } from "./commons";
 import { ResultInput, ResultOutput } from "./types";
 import { handleError } from "./postOneResultError";
+import GradingInformation from "./GradingInformation";
 
 /** Errors when posting results that are detected by us */
 class PostResultError extends Error {
@@ -21,11 +19,11 @@ class PostResultError extends Error {
 }
 
 /** Given a list of `studieResultat`, get the one that belongs to a given `student` */
-function getStudentsStudieresultat(
+function getStudentsGradingInformation(
   studentId: string,
-  sokResultat: Studieresultat[]
+  allGradingInformation: GradingInformation[]
 ) {
-  const r = sokResultat.find((r) => r.Student.Uid === studentId);
+  const r = allGradingInformation.find((r) => r.belongsTo(studentId));
 
   if (!r) {
     throw new PostResultError(
@@ -38,10 +36,10 @@ function getStudentsStudieresultat(
 
 function formatInputForLadok(
   input: ResultInput,
-  studieresultat: Studieresultat
+  gradingInformation: GradingInformation
 ): Resultat {
   const letterGrade = input.draft.grade;
-  const scaleId = studieresultat.Rapporteringskontext.BetygsskalaID;
+  const scaleId = gradingInformation._obj.Rapporteringskontext.BetygsskalaID;
   const gradeId = getBetyg(scaleId).find((b) => b.Kod === letterGrade)?.ID;
 
   if (!gradeId) {
@@ -55,7 +53,7 @@ function formatInputForLadok(
     Betygsgrad: gradeId,
     Examinationsdatum: input.draft.examinationDate,
     Projekttitel:
-      studieresultat.Rapporteringskontext.KravPaProjekttitel &&
+      gradingInformation._obj.Rapporteringskontext.KravPaProjekttitel &&
       input.draft.projectTitle
         ? {
             Titel: input.draft.projectTitle.title,
@@ -65,40 +63,37 @@ function formatInputForLadok(
   };
 }
 
-function assertPermission(
-  studieresultat: Studieresultat,
-  allPermissions: RapporteringsMojlighetOutput
-) {
-  const hasPermission = containsPermission(studieresultat, allPermissions);
-
-  if (!hasPermission) {
-    throw new PostResultError(
-      "You don't have permissions to send results to this student"
-    );
-  }
+export function getExistingDraft(gradingInformation: GradingInformation) {
+  return gradingInformation._obj.ResultatPaUtbildningar?.find(
+    (rpu) => rpu.Arbetsunderlag?.ProcessStatus === 1
+  )?.Arbetsunderlag;
 }
 
 export default async function postOneResult(
   resultInput: ResultInput,
-  allStudieresultat: Studieresultat[],
-  allPermissions: RapporteringsMojlighetOutput
+  allGradingInformation: GradingInformation[]
 ): Promise<ResultOutput> {
   try {
-    const studieresultat = getStudentsStudieresultat(
+    const gradingInformation = getStudentsGradingInformation(
       resultInput.id,
-      allStudieresultat
+      allGradingInformation
     );
-    const ladokInput = formatInputForLadok(resultInput, studieresultat);
-    assertPermission(studieresultat, allPermissions);
+    const ladokInput = formatInputForLadok(resultInput, gradingInformation);
 
-    const draft = getExistingDraft(studieresultat);
+    if (!gradingInformation.hasPermission) {
+      throw new PostResultError(
+        "You don't have permissions to send results to this student"
+      );
+    }
+
+    const draft = getExistingDraft(gradingInformation);
 
     if (draft) {
       await updateResult(draft.Uid, ladokInput, draft.SenasteResultatandring);
     } else {
       await createResult(
-        studieresultat.Uid,
-        studieresultat.Rapporteringskontext.UtbildningsinstansUID,
+        gradingInformation._obj.Uid,
+        gradingInformation._obj.Rapporteringskontext.UtbildningsinstansUID,
         ladokInput
       );
     }

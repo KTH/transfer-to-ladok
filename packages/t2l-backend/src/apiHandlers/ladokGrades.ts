@@ -2,12 +2,7 @@ import { Request, Response } from "express";
 import assert from "node:assert/strict";
 import CanvasClient, { CanvasSection } from "../externalApis/canvasApi";
 import CanvasAdminClient from "../externalApis/canvasAdminApi";
-import {
-  getAllStudieresultat,
-  splitSections,
-  getAllPermissions,
-  normalizeStudieresultat,
-} from "./utils/commons";
+import { splitSections } from "./utils/commons";
 import type {
   GradesDestination,
   GradeableStudents,
@@ -28,6 +23,7 @@ import {
 import postOneResult from "./utils/postOneResult";
 import { getKurstillfalleStructure } from "../externalApis/ladokApi";
 import { insertTransference } from "../externalApis/mongo";
+import { getGradingInformation } from "./utils/GradingInformation";
 
 /** Checks if the given `utbildningsinstans` belongs to the given `kurstillfalle` */
 async function checkUtbildningsinstansInKurstillfalle(
@@ -104,9 +100,8 @@ export async function getGradesHandler(
   const { id: userId } = await canvasClient.getSelf();
   const email = await canvasAdminClient.getUserLoginId(userId);
 
-  const allStudieresultat = await getAllStudieresultat(destination);
-  const allPermissions = await getAllPermissions(allStudieresultat, email);
-  res.json(normalizeStudieresultat(allStudieresultat, allPermissions));
+  const gradingInformation = await getGradingInformation(destination, email);
+  res.json(gradingInformation.map((g) => g.toObject()));
 }
 
 /**
@@ -130,8 +125,11 @@ export async function postGradesHandler(
 
   const { id: userId } = await canvasClient.getSelf();
   const email = await canvasAdminClient.getUserLoginId(userId);
-  const allStudieresultat = await getAllStudieresultat(req.body.destination);
-  const allPermissions = await getAllPermissions(allStudieresultat, email);
+
+  const gradingInformation = await getGradingInformation(
+    req.body.destination,
+    email
+  );
 
   const output: ResultOutput[] = [];
   const transference: Transference = {
@@ -151,12 +149,10 @@ export async function postGradesHandler(
   };
 
   for (const resultInput of req.body.results) {
-    await postOneResult(resultInput, allStudieresultat, allPermissions).then(
-      (o) => {
-        transference.results.push(o);
-        output.push(o);
-      }
-    );
+    await postOneResult(resultInput, gradingInformation).then((o) => {
+      transference.results.push(o);
+      output.push(o);
+    });
   }
 
   const summary = {
