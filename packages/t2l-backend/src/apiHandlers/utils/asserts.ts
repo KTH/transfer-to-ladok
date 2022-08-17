@@ -6,7 +6,6 @@
  * Note: they don't check if the object is semantically valid
  */
 import assert from "node:assert/strict";
-import { LadokApiError } from "../../externalApis/ladokApi";
 import type {
   ResultInput,
   GradesDestination,
@@ -90,12 +89,4 @@ export function assertPostLadokGradesInput(
   );
 
   obj.results.forEach((result: any) => assertGradeResult(result, ErrorClass));
-}
-
-export function isLadokApiError(obj: any): obj is LadokApiError {
-  return (
-    typeof obj?.Detaljkod === "string" &&
-    typeof obj?.FelUID === "string" &&
-    typeof obj?.Meddelande === "string"
-  );
 }

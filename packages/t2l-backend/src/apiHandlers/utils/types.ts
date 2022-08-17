@@ -251,3 +251,8 @@ export interface Transference {
     error: number;
   };
 }
+
+export interface ApiError<Codes = string> {
+  code: Codes;
+  message: string;
+}

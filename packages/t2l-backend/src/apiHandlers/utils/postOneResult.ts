@@ -1,5 +1,3 @@
-import log from "skog";
-import { HTTPError } from "got";
 import {
   createResult,
   getBetyg,
@@ -8,9 +6,9 @@ import {
   Studieresultat,
   updateResult,
 } from "../../externalApis/ladokApi";
-import { isLadokApiError } from "./asserts";
 import { containsPermission, getExistingDraft } from "./commons";
 import { ResultInput, ResultOutput } from "./types";
+import { handleError } from "./postOneResultError";
 
 /** Errors when posting results that are detected by us */
 class PostResultError extends Error {
@@ -78,58 +76,6 @@ function assertPermission(
       "You don't have permissions to send results to this student"
     );
   }
-}
-
-function handleError(err: unknown): ResultOutput["error"] {
-  if (err instanceof PostResultError) {
-    return {
-      code: "input_error",
-      message: err.message,
-    };
-  }
-
-  if (err instanceof HTTPError) {
-    const body = err.response.body;
-
-    if (isLadokApiError(body)) {
-      return {
-        code: "unprocessed_ladok_error",
-        message: body.Meddelande,
-      };
-    }
-
-    if (typeof err.response.body === "string") {
-      log.error(err);
-      return {
-        code: "unknown_ladok_error",
-        message: `Unknown problem in Ladok (please contact IT-support): ${err.response.body}`,
-      };
-    }
-
-    log.error(err);
-
-    return {
-      code: "unknown_ladok_error",
-      message: `Unknown Ladok error (please, contact IT-support): ${err.message}`,
-    };
-  }
-
-  if (err instanceof Error) {
-    log.error(err, "Unknown Error from Ladok API");
-    return {
-      code: "unknown_error",
-      message: `Unknown Error: ${err.message}. Please contact IT-support`,
-    };
-  }
-
-  log.error(
-    "Unknown problem in Ladok. Even worse: `err` is not an instance of Error"
-  );
-
-  return {
-    code: "unknown_error",
-    message: "Unknown problem. No error object is thrown",
-  };
 }
 
 export default async function postOneResult(
