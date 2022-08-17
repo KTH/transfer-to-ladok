@@ -1,69 +1,36 @@
 import {
-  SokResultat,
-  searchAktivitetstillfalleStudieresultat,
-  searchUtbildningsinstansStudieresultat,
   getSkaFinnasStudenter,
   Studieresultat,
   RapporteringsMojlighetOutput,
   getBetyg,
   searchRapporteringsMojlighet,
+  searchStudieresultat,
 } from "../../externalApis/ladokApi";
 import type { GradeableStudents, GradesDestination } from "./types";
 import { CanvasSection } from "../../externalApis/canvasApi";
 
-/**
- * Given a "sok" function and its arguments, go through all pages and returns
- * a list of StudieResultat
- */
-async function searchAll(
-  sokFn: (arg1: string, arg2: string[], page: number) => Promise<SokResultat>,
-  arg1: string,
-  arg2: string[]
-): Promise<Studieresultat[]> {
+async function searchAllStudieresultat(
+  type: "utbildningsinstans" | "aktivitetstillfalle",
+  UID: string,
+  KurstillfallenUID: string[]
+) {
   let page = 1;
   const allResults: Studieresultat[] = [];
-  const result = await sokFn(arg1, arg2, page);
+  const result = await searchStudieresultat(type, UID, KurstillfallenUID, page);
   allResults.push(...result.Resultat);
 
   while (result.TotaltAntalPoster > allResults.length) {
     page++;
-    const result = await sokFn(arg1, arg2, page);
+    const result = await searchStudieresultat(
+      type,
+      UID,
+      KurstillfallenUID,
+      page
+    );
     allResults.push(...result.Resultat);
   }
 
   return allResults;
-}
-
-/**
- * @private Get all {@link Studieresultat} in an Aktivitetstillfälle.
- *
- * This function is used internally by {@link getAllStudieresultat}
- */
-function searchAllAktivitetstillfalleStudieresultat(
-  aktivitetstillfalleUID: string,
-  kurstillfallenUID: string[]
-) {
-  return searchAll(
-    searchAktivitetstillfalleStudieresultat,
-    aktivitetstillfalleUID,
-    kurstillfallenUID
-  );
-}
-
-/**
- * @private Get all {@link Studieresultat} in an Utbildningsinstans.
- *
- * This function is used internally by {@link getAllStudieresultat}
- */
-function searchAllUtbildningsinstansStudieresultat(
-  utbildningsinstansUID: string,
-  kurstillfallenUID: string[]
-) {
-  return searchAll(
-    searchUtbildningsinstansStudieresultat,
-    utbildningsinstansUID,
-    kurstillfallenUID
-  );
 }
 
 /**
@@ -112,12 +79,14 @@ export async function getAllStudieresultat(
       destination.aktivitetstillfalle
     ).then((s) => s.Utbildningstillfalle.map((u) => u.Uid));
 
-    return searchAllAktivitetstillfalleStudieresultat(
+    return searchAllStudieresultat(
+      "aktivitetstillfalle",
       destination.aktivitetstillfalle,
       kurstillfalleUID
     );
   } else {
-    return searchAllUtbildningsinstansStudieresultat(
+    return searchAllStudieresultat(
+      "utbildningsinstans",
       destination.utbildningsinstans,
       [destination.kurstillfalle]
     );

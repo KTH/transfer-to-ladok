@@ -50,49 +50,24 @@ export function getKurstillfalleStructure(kurstillfalleUID: string) {
     .then((response) => response.body);
 }
 
-export function searchUtbildningsinstansStudieresultat(
-  utbildningsinstansUID: string,
+export function searchStudieresultat(
+  type: "utbildningsinstans" | "aktivitetstillfalle",
+  UID: string,
   KurstillfallenUID: string[],
   page = 1
 ) {
   return gotClient
-    .put<SokResultat>(
-      `resultat/studieresultat/rapportera/utbildningsinstans/${utbildningsinstansUID}/sok`,
-      {
-        json: {
-          Filtrering: ["OBEHANDLADE", "UTKAST"],
-          KurstillfallenUID,
-          // NOTE: OrderBy MUST be included always.
-          // Otherwise the pagination will be broken because Ladok does not sort
-          // things consistently by default
-          OrderBy: ["PERSONNUMMER_ASC"],
-          Page: page,
-        },
-      }
-    )
-    .then((r) => r.body);
-}
-
-export function searchAktivitetstillfalleStudieresultat(
-  aktivitetstillfalleUID: string,
-  KurstillfallenUID: string[],
-  page = 1
-) {
-  return gotClient
-    .put<SokResultat>(
-      `resultat/studieresultat/rapportera/aktivitetstillfalle/${aktivitetstillfalleUID}/sok`,
-      {
-        json: {
-          Filtrering: ["OBEHANDLADE", "UTKAST", "KLARMARKERADE"],
-          KurstillfallenUID,
-          // NOTE: OrderBy MUST be included always.
-          // Otherwise the pagination will be broken because Ladok does not sort
-          // things consistently by default
-          OrderBy: ["PERSONNUMMER_ASC"],
-          Page: page,
-        },
-      }
-    )
+    .put<SokResultat>(`resultat/studieresultat/rapportera/${type}/${UID}/sok`, {
+      json: {
+        Filtrering: ["OBEHANDLADE", "UTKAST", "KLARMARKERADE"],
+        KurstillfallenUID,
+        // NOTE: OrderBy MUST be included always.
+        // Otherwise the pagination will be broken because Ladok does not sort
+        // things consistently by default
+        OrderBy: ["PERSONNUMMER_ASC"],
+        Page: page,
+      },
+    })
     .then((r) => r.body);
 }
 
