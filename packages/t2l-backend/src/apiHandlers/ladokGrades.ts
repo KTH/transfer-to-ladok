@@ -12,10 +12,7 @@ import type {
   ResultOutput,
   Transference,
 } from "./utils/types";
-import {
-  BadRequestError,
-  UnprocessableEntityError,
-} from "../otherHandlers/error";
+import { BadRequestError, UnprocessableEntityError } from "./error";
 import {
   assertGradesDestination,
   assertPostLadokGradesInput,

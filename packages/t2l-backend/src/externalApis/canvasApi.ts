@@ -5,7 +5,7 @@
 import assert from "assert";
 import CanvasAPI, { minimalErrorHandler } from "@kth/canvas-api";
 import { Request } from "express";
-import { UnauthorizedError } from "../otherHandlers/error";
+import { UnauthorizedError } from "../apiHandlers/error";
 
 export interface CanvasCourse {
   grading_standard_id: number | null;

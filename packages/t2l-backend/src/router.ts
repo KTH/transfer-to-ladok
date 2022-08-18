@@ -7,7 +7,7 @@ import {
 } from "./apiHandlers/canvasGrades";
 import { getGradesHandler, postGradesHandler } from "./apiHandlers/ladokGrades";
 import auth from "./otherHandlers/auth";
-import { errorHandler } from "./otherHandlers/error";
+import { errorHandler } from "./apiHandlers/error";
 import { buildInfo } from "./config/info";
 const router = Router();
 
