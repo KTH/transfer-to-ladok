@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import CanvasClient from "../externalApis/canvasApi";
 import { splitSections } from "./utils/commons";
+import log from "skog";
 import type {
   AktivitetstillfalleSection,
   KurstillfalleSection,
@@ -12,6 +13,7 @@ import {
   getKurstillfalleStructure,
   Kurstillfalle,
 } from "../externalApis/ladokApi";
+import { defaultClient, TelemetryClient } from "applicationinsights";
 
 export function formatAktivitetstillfalle(
   uid: string,
@@ -51,6 +53,17 @@ export function formatKurstillfalle(
   };
 }
 
+async function trackatracka(userId: number) {
+  const tc = new TelemetryClient();
+  log.info(`------- User ID: ${userId}`);
+  tc.trackEvent({
+    name: "Example",
+    tagOverrides: {
+      [defaultClient.context.keys.userAuthUserId]: "rick",
+    },
+  });
+}
+
 /**
  * Get the sections in a given Canvas `courseId`
  *
@@ -67,6 +80,10 @@ export default async function sectionsHandler(
   res: Response<Sections>
 ) {
   const canvasApi = new CanvasClient(req);
+  // Enable these lines to use Application Insights!
+  // const { id: userId } = await canvasApi.getSelf();
+  // await trackatracka(userId);
+
   const courseId = req.params.courseId;
   const allSections = await canvasApi.getSections(courseId);
   const { aktivitetstillfalleIds, kurstillfalleIds } =

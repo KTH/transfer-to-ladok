@@ -19,6 +19,7 @@
   "dependencies": {
     "@kth/canvas-api": "^4.2.2",
     "@kth/reqvars": "^2.0.1",
+    "applicationinsights": "^2.3.4",
     "connect-mongodb-session": "^3.1.1",
     "dotenv": "^16.0.0",
     "express": "^4.17.3",
