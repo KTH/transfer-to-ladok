@@ -6,7 +6,7 @@ import * as appInsights from "applicationinsights";
 
 const port = 3000;
 
-// mockedServices.listen();
+// mockedServices.listen({ onUnhandledRequest: "bypass" });
 appInsights.setup();
 app.listen(port, () => {
   log.info(`Listening to port ${port}`);
