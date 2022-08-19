@@ -137,6 +137,11 @@ export const handlers = [
         })
       )
   ),
+
+  rest.post(
+    "https://api.integrationstest.ladok.se/resultat/studieresultat/:any/utbildning/:any/resultat",
+    (req, res, ctx) => res(ctx.status(200), ctx.json({}))
+  ),
 ];
 
 export const mockedServices = setupServer(...handlers);
