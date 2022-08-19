@@ -9,6 +9,7 @@ import { getGradesHandler, postGradesHandler } from "./apiHandlers/ladokGrades";
 import auth from "./otherHandlers/auth";
 import { errorHandler } from "./apiHandlers/error";
 import { buildInfo } from "./config/info";
+import { insightsMiddleware } from "./apiHandlers/utils/applicationInsights";
 const router = Router();
 
 router.get("/_about", (req, res) => {
@@ -43,6 +44,7 @@ router.use("/auth", auth);
 
 // From here, everything are api endpoints:
 
+router.use("/api", (req, res, next) => insightsMiddleware(req, res, next));
 router.get("/api/courses/:courseId/sections", (req, res, next) =>
   sectionsHandler(req, res).catch(next)
 );
