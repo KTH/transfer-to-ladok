@@ -16,7 +16,7 @@ type LadokApiErrorCodes =
   | "unknown_error";
 
 /** Errors detected by us */
-class PostResultError extends Error {
+export class PostResultError extends Error {
   message: string;
 
   constructor(message: string) {

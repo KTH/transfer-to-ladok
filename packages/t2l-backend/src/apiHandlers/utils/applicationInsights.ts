@@ -2,6 +2,7 @@ import { AsyncLocalStorage } from "node:async_hooks";
 import { TelemetryClient } from "applicationinsights";
 import CanvasClient from "../../externalApis/canvasApi";
 import { NextFunction, Request, Response } from "express";
+import { nanoid } from "nanoid";
 
 const context = new AsyncLocalStorage<{
   userId: number;
@@ -24,6 +25,9 @@ export async function insightsMiddleware(
   telemetryClient.context.tags[telemetryClient.context.keys.userAuthUserId] =
     userId.toString();
 
+  telemetryClient.context.tags[telemetryClient.context.keys.operationId] =
+    nanoid();
+
   telemetryClient.trackNodeHttpRequest({
     request: req,
     response: res,
@@ -36,20 +40,13 @@ export function getUserId() {
   return context.getStore()?.userId;
 }
 
-export function trackEvent(eventName: string) {
+export function trackEvent(eventName: string, properties?: object) {
   const telemetryClient = context.getStore()?.telemetryClient;
 
   if (telemetryClient) {
     telemetryClient.trackEvent({
       name: eventName,
+      properties,
     });
-  }
-}
-
-export function trackMetric(name: string, value: number) {
-  const telemetryClient = context.getStore()?.telemetryClient;
-
-  if (telemetryClient) {
-    telemetryClient.trackMetric({ name, value });
   }
 }

@@ -5,18 +5,9 @@ import {
   updateResult,
 } from "../../externalApis/ladokApi";
 import { ResultInput, ResultOutput } from "./types";
-import { handleError } from "./postOneResultError";
+import { PostResultError, handleError } from "./postOneResultError";
 import GradingInformation from "./GradingInformation";
-
-/** Errors when posting results that are detected by us */
-class PostResultError extends Error {
-  message: string;
-
-  constructor(message: string) {
-    super(message);
-    this.message = message;
-  }
-}
+import { trackEvent } from "./applicationInsights";
 
 /** Given a list of `studieResultat`, get the one that belongs to a given `student` */
 function getStudentsGradingInformation(
@@ -90,12 +81,14 @@ export default async function postOneResult(
 
     if (draft) {
       await updateResult(draft.Uid, ladokInput, draft.SenasteResultatandring);
+      trackEvent("Update result");
     } else {
       await createResult(
         gradingInformation._obj.Uid,
         gradingInformation._obj.Rapporteringskontext.UtbildningsinstansUID,
         ladokInput
       );
+      trackEvent("Create result");
     }
 
     return {
@@ -103,10 +96,13 @@ export default async function postOneResult(
       status: "success",
     };
   } catch (err) {
+    const error = handleError(err);
+    trackEvent("Error sending result", error);
+
     return {
       ...resultInput,
+      error,
       status: "error",
-      error: handleError(err),
     };
   }
 }
