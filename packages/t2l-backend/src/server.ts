@@ -4,6 +4,7 @@ import sessionMiddleware from "express-session";
 import connectMongoDbSession from "connect-mongodb-session";
 import { skogMiddleware } from "skog";
 import { insightsMiddleware } from "./apiHandlers/utils/applicationInsights";
+import { errorHandler } from "./apiHandlers/error";
 
 const MongoDbStore = connectMongoDbSession(sessionMiddleware);
 
@@ -48,6 +49,7 @@ app.use(
 app.use(skogMiddleware);
 app.use(insightsMiddleware);
 app.use("/transfer-to-ladok", router);
+app.use("/transfer-to-ladok/api", errorHandler);
 
 /* Un-comment this section when Transfer to Ladok Frontend is ready for
    production

@@ -7,7 +7,6 @@ import {
 } from "./apiHandlers/canvasGrades";
 import { getGradesHandler, postGradesHandler } from "./apiHandlers/ladokGrades";
 import auth from "./otherHandlers/auth";
-import { errorHandler } from "./apiHandlers/error";
 import { buildInfo } from "./config/info";
 
 const router = Router();
@@ -64,7 +63,5 @@ router.get("/api/courses/:courseId/ladok-grades", (req, res, next) =>
 router.post("/api/courses/:courseId/ladok-grades", (req, res, next) =>
   postGradesHandler(req, res).catch(next)
 );
-
-router.use("/api", errorHandler);
 
 export default router;
