@@ -18,22 +18,26 @@ export async function insightsMiddleware(
   res: Response,
   next: NextFunction
 ) {
-  const canvasApi = new CanvasClient(req);
-  const telemetryClient = new TelemetryClient();
-  const userId = await canvasApi.getSelf().then((u) => u.id);
+  try {
+    const canvasApi = new CanvasClient(req);
+    const telemetryClient = new TelemetryClient();
+    const userId = await canvasApi.getSelf().then((u) => u.id);
 
-  telemetryClient.context.tags[telemetryClient.context.keys.userAuthUserId] =
-    userId.toString();
+    telemetryClient.context.tags[telemetryClient.context.keys.userAuthUserId] =
+      userId.toString();
 
-  telemetryClient.context.tags[telemetryClient.context.keys.operationId] =
-    nanoid();
+    telemetryClient.context.tags[telemetryClient.context.keys.operationId] =
+      nanoid();
 
-  telemetryClient.trackNodeHttpRequest({
-    request: req,
-    response: res,
-  });
+    telemetryClient.trackNodeHttpRequest({
+      request: req,
+      response: res,
+    });
 
-  context.run({ telemetryClient, userId }, () => next());
+    context.run({ telemetryClient, userId }, () => next());
+  } catch (err) {
+    next(err);
+  }
 }
 
 export function getUserId() {
