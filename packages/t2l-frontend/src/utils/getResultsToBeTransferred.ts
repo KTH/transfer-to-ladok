@@ -96,7 +96,7 @@ export function getResultsToBeTransferred(
       };
     }
 
-    if (canvasGrade.grade === "F") {
+    if (canvasGrade.grade === "F" && ladokGrade.certified?.grade === "F") {
       return {
         student: ladokGrade.student,
         status: "not_transferable",
@@ -136,6 +136,23 @@ export function getResultsToBeTransferred(
         warning: {
           code: "Already sent",
           message: "Already transferred",
+        },
+      };
+    }
+
+    const examinationDate = getExaminationDate(canvasGrade);
+
+    if (!examinationDate) {
+      return {
+        student: ladokGrade.student,
+        status: "not_transferable",
+        draft: {
+          grade: canvasGrade.grade,
+          examinationDate: "",
+        },
+        error: {
+          code: "missing_examination_date",
+          message: "Missing examination date",
         },
       };
     }
