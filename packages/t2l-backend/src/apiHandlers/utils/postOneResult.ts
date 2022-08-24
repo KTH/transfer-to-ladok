@@ -81,14 +81,14 @@ export default async function postOneResult(
 
     if (draft) {
       await updateResult(draft.Uid, ladokInput, draft.SenasteResultatandring);
-      trackEvent("Update result");
+      trackEvent({ name: "Update result" });
     } else {
       await createResult(
         gradingInformation._obj.Uid,
         gradingInformation._obj.Rapporteringskontext.UtbildningsinstansUID,
         ladokInput
       );
-      trackEvent("Create result");
+      trackEvent({ name: "Create result" });
     }
 
     return {
@@ -97,7 +97,7 @@ export default async function postOneResult(
     };
   } catch (err) {
     const error = handleError(err);
-    trackEvent("Error sending result", error);
+    trackEvent({ name: "Error sending result", properties: error });
 
     return {
       ...resultInput,

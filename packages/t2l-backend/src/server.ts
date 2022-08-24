@@ -3,8 +3,12 @@ import router from "./router";
 import sessionMiddleware from "express-session";
 import connectMongoDbSession from "connect-mongodb-session";
 import { skogMiddleware } from "skog";
-import { insightsMiddleware } from "./apiHandlers/utils/applicationInsights";
+import {
+  insightsMiddleware,
+  setInsightsField,
+} from "./apiHandlers/utils/applicationInsights";
 import { errorHandler } from "./apiHandlers/error";
+import CanvasClient from "./externalApis/canvasApi";
 
 const MongoDbStore = connectMongoDbSession(sessionMiddleware);
 
@@ -47,7 +51,17 @@ app.use(
   })
 );
 app.use(skogMiddleware);
-app.use(insightsMiddleware);
+app.use(insightsMiddleware, async (req, res, next) => {
+  try {
+    const canvas = new CanvasClient(req);
+    const userId = await canvas.getSelf().then((r) => r.id.toString(10));
+    setInsightsField("userAuthUserId", userId);
+    next();
+  } catch (err) {
+    // If the user is not authenticated, ignore it
+    next();
+  }
+});
 app.use("/transfer-to-ladok", router);
 app.use("/transfer-to-ladok/api", errorHandler);
 
