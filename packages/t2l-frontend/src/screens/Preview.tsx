@@ -20,11 +20,13 @@ export default function Preview({
   fixedExaminationDate,
   destinationName,
   destination,
+  ladokUrl,
   onSubmit,
 }: {
   fixedExaminationDate?: string;
   destinationName: string;
   destination: GradesDestination;
+  ladokUrl: string;
   onSubmit(results: SendGradesInput): void;
 }) {
   const [assignmentId, setAssignmentId] = useState<string>("");
@@ -78,6 +80,22 @@ export default function Preview({
     return (
       <div>
         <Loading>Loading...</Loading>
+      </div>
+    );
+  }
+
+  if (ladokGradesQuery.data.length === 0) {
+    return (
+      <div>
+        <h2>All results have been already transferred</h2>
+        <p>
+          <a href={ladokUrl} target="_blank">
+            Go to Ladok to see the results.
+          </a>{" "}
+          From there you can continue the process: mark grades as ready (
+          <em>klarmarkera</em>), certify (<em>attestera</em>) and make any other
+          adjustments
+        </p>
       </div>
     );
   }
