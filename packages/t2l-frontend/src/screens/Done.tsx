@@ -11,6 +11,13 @@ export default function Done({
   ladokUrl: string;
   results: RowAfter[];
 }) {
+  const successCount = results.filter((r) => r.status === "success").length;
+  const errorCount = results.filter((r) => r.status === "error").length;
+  const notAttemptedCount = results.filter(
+    (r) => r.status === "not_transferred"
+  ).length;
+  const notTransferredCount = errorCount + notAttemptedCount;
+
   return (
     <div className="Done">
       <header>
@@ -18,8 +25,12 @@ export default function Done({
       </header>
       <main className="main">
         <header className="summary">
-          3 results were successfully transferred. 7 results were not
-          transferred (4 of them with errors)
+          Summary:{" "}
+          {successCount > 0 &&
+            `${successCount} results were successfully transferered. `}
+          {notTransferredCount > 0 &&
+            `${notTransferredCount} results were not transferred `}
+          {errorCount > 0 && `(${errorCount} of them with errors)`}
         </header>
         <GradesTable results={results} />
       </main>
