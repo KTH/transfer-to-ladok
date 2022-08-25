@@ -26,9 +26,6 @@ Transfer to Ladok
 `);
 });
 
-/* Un-comment this section when Transfer to Ladok (frontend) is ready for
-   production
-
 // This endpoint is where the user lands after clicking "Transfer to Ladok"
 // from the left-side menu
 router.post("/", (req, res) => {
@@ -39,8 +36,9 @@ router.post("/", (req, res) => {
 
 // Authentication is handled via its own router under "/auth" endpoints
 router.use("/auth", auth);
-*/
 
+//
+//
 // From here, everything are api endpoints:
 
 router.get("/api/courses/:courseId/sections", (req, res, next) =>

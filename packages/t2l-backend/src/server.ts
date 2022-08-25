@@ -1,4 +1,5 @@
 import express from "express";
+import path from "node:path";
 import router from "./router";
 import sessionMiddleware from "express-session";
 import connectMongoDbSession from "connect-mongodb-session";
@@ -65,12 +66,9 @@ app.use(insightsMiddleware, async (req, res, next) => {
 app.use("/transfer-to-ladok", router);
 app.use("/transfer-to-ladok/api", errorHandler);
 
-/* Un-comment this section when Transfer to Ladok Frontend is ready for
-   production
 app.use(
   "/transfer-to-ladok",
   express.static(path.join(__dirname, "../../t2l-frontend/dist"))
 );
-*/
 
 export default app;
