@@ -1,0 +1,88 @@
+@import "../utils/variables.scss";
+
+.GradesTable {
+  max-height: 20rem;
+  overflow: auto;
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font: $font-small;
+  }
+
+  thead th {
+    font-weight: 600;
+    text-align: left;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: $color-white;
+    padding: 0;
+
+    div {
+      border-bottom: 2px solid $color-gray-700;
+    }
+  }
+
+  tbody > tr {
+    border-top: 1px solid $color-gray-700;
+    border-bottom: 1px solid $color-gray-700;
+
+    &.error {
+      background-color: $color-red-200;
+      color: $color-red-700;
+    }
+
+    &.dimmed {
+      color: $color-gray-700;
+    }
+  }
+
+  td.transferable {
+    min-width: 3rem;
+    padding: 0 0.5rem;
+    text-align: left;
+  }
+
+  th.transferable div {
+    min-width: 3rem;
+    padding: 0.5rem 1rem;
+  }
+
+  td.name,
+  th.name div {
+    min-width: 20rem;
+    padding: 0.5rem 0;
+  }
+
+  td.grade,
+  th.grade div {
+    min-width: 6rem;
+    padding: 0.5rem 1rem;
+  }
+
+  td.date,
+  th.date div {
+    min-width: 10rem;
+    padding: 0.5rem 1rem;
+  }
+
+  th.status div {
+    padding: 0.5rem 0rem 0.5rem 1.5rem;
+  }
+
+  td.status {
+    padding: 0.25rem 0rem 0.25rem 1.5rem;
+
+    > svg {
+      position: absolute;
+      left: 0;
+      height: 20px;
+    }
+
+    > div {
+      display: inline-block;
+      vertical-align: top;
+    }
+  }
+}

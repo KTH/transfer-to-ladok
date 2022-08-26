@@ -1,75 +1,22 @@
-import { CanvasApiError } from "@kth/canvas-api";
 import { Request, Response } from "express";
-import { EndpointError } from "../error";
+import CanvasClient from "../externalApis/canvasApi";
+import { splitSections } from "./utils/commons";
+import type {
+  AktivitetstillfalleSection,
+  KurstillfalleSection,
+  Sections,
+} from "./utils/types";
 import {
-  getCanvasSections,
-  Section as CanvasSection,
-} from "../externalApis/canvasApi";
-import {
+  Aktivitetstillfalle,
   getAktivitetstillfalle,
   getKurstillfalleStructure,
+  Kurstillfalle,
 } from "../externalApis/ladokApi";
 
-/** Path parameters required by this handler */
-interface PathParameters {
-  courseId: string;
-}
-
-/** Object returned by the API */
-export interface T2LSections {
-  aktivitetstillfalle: {
-    id: string;
-    name: string;
-  }[];
-  kurstillfalle: {
-    id: string;
-    utbildningsinstansUID: string;
-    name: string;
-    modules: {
-      utbildningsinstansUID: string;
-      examCode: string;
-      name: string;
-    }[];
-  }[];
-}
-
-/**
- * Given a list of CanvasSection, return a list of unique UIDs when the
- * section refers to a aktivitetstillfalle.
- */
-function getUniqueAktivitetstillfalleIds(sections: CanvasSection[]): string[] {
-  // Regex: AKT.<<UID>>.<optional suffix>
-  const AKTIVITETSTILLFALLE_REGEX = /^AKT\.([a-z0-9-]+)(\.\w+)?$/;
-
-  const ids = sections
-    .map((s) => AKTIVITETSTILLFALLE_REGEX.exec(s.sis_section_id)?.[1])
-    .filter((id): id is string => id !== undefined);
-
-  return Array.from(new Set(ids));
-}
-
-/**
- * Given a list of CanvasSection, returns a list of unique UIDs when the
- * section refers to a kurstillfalle
- */
-function getUniqueKurstillfalleIds(sections: CanvasSection[]): string[] {
-  // Regex: AA0000VT211
-  const KURSTILLFALLE_REGEX = /^\w{6,7}(HT|VT)\d{3}$/;
-
-  const ids = sections
-    .filter((s) => KURSTILLFALLE_REGEX.test(s.sis_section_id))
-    .map((s) => s.integration_id);
-
-  return Array.from(new Set(ids));
-}
-
-/** Given an Aktivitetstillfalle UID, get extra information from Ladok */
-async function completeAktivitetstillfalleInformation(uid: string) {
-  const ladokAkt = await getAktivitetstillfalle(uid);
-
-  // Name format: cours+exam codes - exam date
-  // Example: HF0025 TEN1 & ML0025 TEN1 - 2022-01-01
-
+export function formatAktivitetstillfalle(
+  uid: string,
+  ladokAkt: Aktivitetstillfalle
+): AktivitetstillfalleSection {
   const codes = ladokAkt.Aktiviteter.map(
     (a) =>
       `${a.Kursinstans.Utbildningskod} ${a.Utbildningsinstans.Utbildningskod}`
@@ -80,46 +27,65 @@ async function completeAktivitetstillfalleInformation(uid: string) {
   return {
     id: uid,
     name,
+    date,
   };
 }
 
-/** Given an Kurstillfälle UID, get extra information from Ladok */
-async function completeKurstillfalleInformation(uid: string) {
-  const ladokKur = await getKurstillfalleStructure(uid);
-
+/**
+ * Given an Kurstillfälle UID, returns information about the kurstillfälle in Ladok
+ */
+export function formatKurstillfalle(
+  uid: string,
+  ladokKur: Kurstillfalle
+): KurstillfalleSection {
   return {
     id: uid,
-    utbildningsinstansUID: ladokKur.UtbildningsinstansUID,
-    name: ladokKur.Kurstillfalleskod,
+    utbildningsinstans: ladokKur.UtbildningsinstansUID,
+    courseCode: ladokKur.Utbildningskod,
+    roundCode: ladokKur.Kurstillfalleskod,
     modules: ladokKur.IngaendeMoment.map((m) => ({
-      utbildningsinstansUID: m.UtbildningsinstansUID,
-      examCode: m.Utbildningskod,
+      utbildningsinstans: m.UtbildningsinstansUID,
+      code: m.Utbildningskod,
       name: m.Benamning.sv,
     })),
   };
 }
 
+/**
+ * Get the sections in a given Canvas `courseId`
+ *
+ * Return information about the sections, separated by type (are they linked
+ * with an aktivitetstillfälle or a kurstillfälle?).
+ *
+ * Sections not linked with any aktivitetstillfälle or kurstillfälle will not
+ * be included in the response.
+ *
+ * @see {@link Sections} to see how the response looks like
+ */
 export default async function sectionsHandler(
-  req: Request<PathParameters>,
-  res: Response<T2LSections>
+  req: Request<{ courseId: string }>,
+  res: Response<Sections>
 ) {
+  const canvasApi = new CanvasClient(req);
   const courseId = req.params.courseId;
-  const allSections = await getCanvasSections(courseId).catch((err) => {
-    if (err instanceof CanvasApiError && err.code === 401) {
-      throw new EndpointError("Invalid canvas access token", "not_authorized");
-    }
-
-    throw err;
-  });
+  const allSections = await canvasApi.getSections(courseId);
+  const { aktivitetstillfalleIds, kurstillfalleIds } =
+    splitSections(allSections);
 
   const aktivitetstillfalle = await Promise.all(
-    getUniqueAktivitetstillfalleIds(allSections).map(
-      completeAktivitetstillfalleInformation
-    )
+    aktivitetstillfalleIds.map(async (id) => {
+      const akt = await getAktivitetstillfalle(id);
+
+      return formatAktivitetstillfalle(id, akt);
+    })
   );
 
   const kurstillfalle = await Promise.all(
-    getUniqueKurstillfalleIds(allSections).map(completeKurstillfalleInformation)
+    kurstillfalleIds.map(async (id) => {
+      const k = await getKurstillfalleStructure(id);
+
+      return formatKurstillfalle(id, k);
+    })
   );
 
   res.json({

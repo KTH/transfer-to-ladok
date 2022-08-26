@@ -7,7 +7,7 @@ name: Evolene CI
 on:
   push:
   pull_request:
-    branches: [ main ]
+    branches: [main]
   workflow_dispatch:
 
 jobs:
@@ -28,10 +28,10 @@ jobs:
           # Read more: https://github.com/kth/evolene
 
           # Environmental variables for Evolene:
-          # BUILD_INFORMATION_OUTPUT_FILE: "/config/version.js"  # Create a file with the build information
-          # BRANCHES_SAVE_STARTING_WITH: "origin/"          # Builds non main or master branches.
-          # BRANCHES_TAG_AS_MAIN: "True"                    # Do not add branch names to build artifacts
-          SLACK_CHANNELS: "#team-e-larande-build"                 # List of Slack channels for user information
+          BUILD_INFORMATION_OUTPUT_FILE: "/packages/t2l-backend/src/config/info.ts" # Create a file with the build information
+          BRANCHES_SAVE_STARTING_WITH: "refs/" # Builds non main or master branches.
+          BRANCHES_TAG_AS_MAIN: "True" # Do not add branch names to build artifacts
+          SLACK_CHANNELS: "#team-e-larande-build" # List of Slack channels for user information
           # SKIP_DRY_RUN: True                              # Skip "dry run" step
 
         run: |

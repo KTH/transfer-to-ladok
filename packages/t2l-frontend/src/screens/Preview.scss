@@ -1,0 +1,72 @@
+@import "../utils/variables.scss";
+
+.Preview {
+  padding-top: 1rem;
+
+  > header {
+    margin-bottom: 2rem;
+  }
+
+  // Assignment selector
+  .assignment {
+    display: flex;
+    align-items: center;
+    margin-top: 0.5rem;
+
+    select {
+      font: $font-default;
+      height: 2.5rem;
+      padding: 0 1rem;
+      width: 25rem;
+      border-radius: 0.25rem;
+      margin-right: 1rem;
+    }
+
+    .destination {
+      margin-left: 0.5rem;
+    }
+  }
+
+  .main {
+    margin: 2rem 0;
+    position: relative;
+
+    .loading-state {
+      height: 20rem;
+      width: 100%;
+      background: $color-gray-200;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+
+      > div {
+        text-align: center;
+      }
+    }
+
+    .empty-state {
+      margin: 0;
+      background: $color-gray-200;
+      padding: 0;
+      height: 20rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+
+      > div {
+        text-align: center;
+      }
+    }
+  }
+
+  footer {
+    .disclaimer {
+      max-width: 40rem;
+      font: $font-small;
+    }
+
+    &.disabled {
+      opacity: 0.5;
+    }
+  }
+}

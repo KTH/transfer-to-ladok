@@ -1,4 +1,11 @@
 node_modules
-dist
 .parcel-cache
 .env
+.DS_Store
+
+# Package-specific options
+
+# Note: "dist" directory in "t2l-backend" is NOT omitted because the project
+# should NOT create such directory never (i.e., the developer should take care
+# of explicitly removing the directory)
+packages/t2l-frontend/dist

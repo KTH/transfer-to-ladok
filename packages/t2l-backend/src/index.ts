@@ -1,37 +1,13 @@
-import "./config";
-import express from "express";
-import router from "./router";
-import sessionMiddleware from "express-session";
-import log, { skogMiddleware } from "skog";
-import path from "path";
+import "./config/start";
+import log from "skog";
+import app from "./server";
+// import { mockedServices } from "./mocks/example";
+import * as appInsights from "applicationinsights";
 
-const app = express();
 const port = 3000;
 
-app.set("trust proxy", 1);
-app.use(express.json());
-app.use(
-  sessionMiddleware({
-    name: "transfer-to-ladok.sid",
-    proxy: true,
-    cookie: {
-      domain: "localdev.kth.se",
-      maxAge: 3600 * 1000,
-      httpOnly: true,
-      secure: "auto",
-      sameSite: "none",
-    },
-    resave: true,
-    saveUninitialized: true,
-    secret: "super secret!",
-  })
-);
-app.use(skogMiddleware);
-app.use("/transfer-to-ladok", router);
-app.use(
-  "/transfer-to-ladok",
-  express.static(path.join(__dirname, "../../t2l-frontend/dist"))
-);
+// mockedServices.listen({ onUnhandledRequest: "bypass" });
+appInsights.setup();
 app.listen(port, () => {
   log.info(`Listening to port ${port}`);
 });

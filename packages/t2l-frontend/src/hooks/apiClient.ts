@@ -1,47 +1,58 @@
 /** Hooks that call the API Client */
-import { useQuery } from "react-query";
-import { T2LSections } from "../../../t2l-backend/src/apiHandlers/sections";
-import { ErrorCode } from "../../../t2l-backend/src/error";
+import { QueryClient, useQuery } from "react-query";
+import {
+  Columns,
+  CanvasGrades,
+  GradeableStudents,
+  GradesDestination,
+  Sections,
+} from "t2l-backend/src/types";
+import { ApiError } from "../utils/errors";
 
-export class ApiError extends Error {
-  code: ErrorCode;
+function getCourseId() {
+  const courseId = new URLSearchParams(location.search).get("courseId");
 
-  constructor(message: string, code: ErrorCode) {
-    super(message);
-    this.code = code;
+  if (!courseId) {
+    throw new Error("No course ID!");
   }
+
+  return courseId;
 }
 
 async function apiFetch(endpoint: string) {
   const response = await fetch(endpoint);
 
-  try {
-    const body = await response.json();
+  const body = await response.json().catch(() => {
+    throw new ApiError(endpoint, response);
+  });
 
-    if (response.status === 200) {
-      return response.json();
-    }
-
-    throw new ApiError(body.message, body.code);
-  } catch (err) {
-    // No way to parse the error message from the API
-    throw err;
+  if (response.status === 200) {
+    return body;
   }
+
+  throw new ApiError(endpoint, response, body);
 }
 
-interface SectionsQuery {
-  sections: T2LSections | null;
-  error: unknown;
-  status: "loading" | "error" | "success" | "idle" | "unauthenticated";
+export async function prefetchAssignments(queryClient: QueryClient) {
+  try {
+    const courseId = getCourseId();
+    await queryClient.prefetchQuery(["columns", courseId], () =>
+      apiFetch(`/transfer-to-ladok/api/courses/${courseId}/columns`)
+    );
+
+    console.log("prefetch completed");
+  } catch (err) {}
 }
 
-export function useSections(courseId: string): SectionsQuery {
-  const query = useQuery<T2LSections>(
+export function useSections() {
+  const courseId = getCourseId();
+
+  return useQuery<Sections>(
     ["sections", courseId],
     () => apiFetch(`/transfer-to-ladok/api/courses/${courseId}/sections`),
     {
       retry(failureCount: number, error: unknown) {
-        if (error instanceof ApiError && error.code === "not_authorized") {
+        if (error instanceof ApiError && error.code === "unauthorized") {
           return false;
         }
         if (failureCount > 3) {
@@ -52,29 +63,50 @@ export function useSections(courseId: string): SectionsQuery {
       },
     }
   );
+}
 
-  if (query.isError) {
-    if (
-      query.error instanceof ApiError &&
-      query.error.code === "not_authorized"
-    ) {
-      return {
-        status: "unauthenticated",
-        sections: null,
-        error: null,
-      };
-    } else {
-      return {
-        status: "error",
-        sections: null,
-        error: query.error,
-      };
+export function useAssignments() {
+  const courseId = getCourseId();
+
+  return useQuery<Columns>(["columns", courseId], () =>
+    apiFetch(`/transfer-to-ladok/api/courses/${courseId}/columns`)
+  );
+}
+
+export function useGradeableStudents(destination: GradesDestination) {
+  const courseId = getCourseId();
+
+  return useQuery<GradeableStudents>(
+    ["gradeable-students", courseId, destination],
+    () => {
+      if ("aktivitetstillfalle" in destination) {
+        return apiFetch(
+          `/transfer-to-ladok/api/courses/${courseId}/ladok-grades?aktivitetstillfalle=${destination.aktivitetstillfalle}`
+        );
+      } else {
+        return apiFetch(
+          `/transfer-to-ladok/api/courses/${courseId}/ladok-grades?kurstillfalle=${destination.kurstillfalle}&utbildningsinstans=${destination.utbildningsinstans}`
+        );
+      }
     }
-  }
+  );
+}
 
-  return {
-    status: query.status,
-    sections: query.data,
-    error: query.error,
-  };
+export function useCanvasGrades(assignmentId: string) {
+  const courseId = getCourseId();
+
+  return useQuery<CanvasGrades>(
+    ["canvas-grades", courseId, assignmentId],
+    () => {
+      if (assignmentId === "") {
+        return Promise.resolve([]);
+      } else if (assignmentId === "total") {
+        return apiFetch(`/transfer-to-ladok/api/courses/${courseId}/total`);
+      } else {
+        return apiFetch(
+          `/transfer-to-ladok/api/courses/${courseId}/assignments/${assignmentId}`
+        );
+      }
+    }
+  );
 }

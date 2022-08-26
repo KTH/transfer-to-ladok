@@ -1,0 +1,23 @@
+@import "../utils/variables.scss";
+
+.Done {
+  padding-top: 1rem;
+
+  > header {
+    margin-bottom: 2rem;
+  }
+
+  .main {
+    margin: 2rem 0;
+    position: relative;
+
+    .summary {
+      // font: $font;
+      margin-bottom: 1rem;
+    }
+  }
+
+  > footer > p {
+    margin-bottom: 3rem;
+  }
+}

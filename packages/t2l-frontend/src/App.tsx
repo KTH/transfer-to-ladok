@@ -1,27 +1,51 @@
 import * as React from "react";
 import { ErrorBoundary } from "react-error-boundary";
-import { QueryClient, QueryClientProvider } from "react-query";
-import FullPageError from "./components/FullPageError";
-import { useSections } from "./hooks/apiClient";
+import { QueryClient, QueryClientProvider, focusManager } from "react-query";
+import { prefetchAssignments, useSections } from "./hooks/apiClient";
+import { ApiError } from "./utils/errors";
+
+import FullPageError from "./screens/FullPageError";
+import Unauthenticated from "./screens/Unauthenticated";
+import Authenticated from "./screens/Authenticated";
+
+import "./App.scss";
 
 const queryClient = new QueryClient();
+focusManager.setEventListener(() => {
+  console.log("X");
+  return () => {};
+});
+
+prefetchAssignments(queryClient);
 
 function Home() {
-  const query = useSections("1");
+  const sectionsQuery = useSections();
 
-  if (query.status === "loading") {
-    return <div>loading...</div>;
+  if (sectionsQuery.isLoading) {
+    // Since the "loading" takes less than 1 second, we don't need to show any
+    // spinner.
+    //
+    // Read more: https://www.nngroup.com/articles/response-times-3-important-limits/
+    return <div></div>;
   }
 
-  if (query.status === "unauthenticated") {
-    return <div>You are not logged in</div>;
+  if (sectionsQuery.isError) {
+    if (
+      sectionsQuery.error instanceof ApiError &&
+      sectionsQuery.error.code === "unauthorized"
+    ) {
+      return <Unauthenticated />;
+    }
+
+    throw sectionsQuery.error;
   }
 
-  if (query.status === "error") {
-    throw query.error;
+  if (sectionsQuery.isSuccess) {
+    return <Authenticated sections={sectionsQuery.data} />;
   }
 
-  return <div>loaded!!!</div>;
+  // WTF
+  return <div></div>;
 }
 
 export default function App() {

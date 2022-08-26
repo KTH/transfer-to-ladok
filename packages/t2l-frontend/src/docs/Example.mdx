@@ -1,0 +1,267 @@
+# Transfer to Ladok API
+
+Welcome to Transfer to Ladok API documentation.
+
+Transfer to Ladok API is a REST-ful API maintained by e-lärande team at KTH that you can use to read grades (omdöme) from an examroom or courseroom in Canvas and transfer them as results (betyg) in Ladok.
+
+Please contact it-support@kth.se if you have questions on how to use the API or if you want to notify some errors in this documentation.
+
+---
+
+## Try the Transfer to Ladok API
+
+In this document we will guide you through Transfer to Ladok in **stage**. It means that we will use test environments of Ladok and Canvas:
+
+- Ladok: https://www.integrationstest.ladok.se
+- Canvas: https://kth.test.instructure.com
+
+The root URL for Transfer to Ladok API is `https://app-r.referens.sys.kth.se`.
+
+### A quick note on terminology
+
+In this documentation we will use the word _course_ to refer us to a Canvas course. At KTH we call them "course room" or "examination room"
+
+### Pre-requirements
+
+- You must be teacher or examiner in a Canvas course.
+- You must have permissions to write grades (_rättighet-rapportor_) in Ladok.
+
+> **Note**. It is recommended that you have some degree familiarity with REST APIs in general and with Canvas API in particular.
+
+---
+
+## Step 1. Get the Canvas Token and test your configuration
+
+The Transfer to Ladok API uses a Canvas token for authenticating and authorizing you.
+
+Go to [your settings in Canvas](https://kth.test.instructure.com/profile/settings) to get the Canvas token.
+
+Every endpoint in requires an "Authorization" header with the value:
+
+```
+Authorization: Bearer <<the canvas token obtained before>>
+```
+
+Next, you need a courseroom or examroom ID where you are a teacher. The ID is shown in the URL. For example, the ID `1` corresponds to the course https://kth.test.instructure.com/courses/1.
+
+With such ID, try the following API request:
+
+```
+GET /transfer-to-ladok/api/courses/:courseId/sections
+```
+
+<details>
+<summary>Common solutions if you get as response a status 401 Unauthorized</summary>
+
+### Wrong authorization header
+
+Make sure that the authorization header is `Bearer <access token>`, i.e. the word `Bearer` (with the uppercase "B") followed by a blank space and followed by the access token obtained from Canvas
+
+### Wrong access token
+
+Access tokens are different in Canvas test (https://kth.test.instructure.com) and Canvas production (https://canvas.kth.se). Make sure you have obtained the token from the right environment
+
+### Not enough permissions
+
+Make sure that you are a teacher or examiner in the course you have chosen.
+
+</details>
+
+If you get a status 200, you will get as response a JSON object with two attributes: `aktivitetstillfalle` and `kurstillfalle`. Depending on the course ID, either of the attributes or both will be empty arrays.
+
+| Type of Canvas course                 | `aktivitetstillfalle` array | `kurstillfalle` array |
+| ------------------------------------- | --------------------------- | --------------------- |
+| Examination room                      | non empty                   | empty                 |
+| Course room                           | empty                       | non empty             |
+| Other types of courses (e.g. sandbox) | empty                       | empty                 |
+
+The elements in the `aktivitetstillfalle` and `kurstillfalle` arrays are possible destinations for your grades, i.e., places in Ladok where you can send grades. Let's choose one of them!
+
+---
+
+## Step 2. Choose a destination
+
+### A. `aktivitetstillfalle` as Destination
+
+If the `aktivitetstilfalle` array is not empty, it will look like this:
+
+```json
+{
+  "aktivitetstillfalle": [
+    {
+      "id": "000270d7-ba28-11eb-9e80-39d878524635",
+      "name": "EL2520 TEN1 & EL2520 TEN1 - 2021-08-24",
+      "date": "2021-08-24"
+    },
+    {
+      "id": "b00e392e-520c-11ec-a5bb-5f5e44dd4232",
+      "name": "SF2743 TEN1 - 2022-01-17",
+      "date": "2022-01-17"
+    }
+  ]
+}
+```
+
+In the example above, you can choose between two different `aktivitetstillfalle`. You need the `id` for it. Use the other fields to ensure that you are selecting the right `aktivitetstillfalle`
+
+### B. Module or final grade in `kurstillfalle` as Destination
+
+If the `kurstillfalle` array is not empty, it will look like this:
+
+```json
+{
+  "kurstillfalle": [
+    {
+      "id": "c92efa08-e24c-4803-8a14-20302b4136e9", // (1-A)
+      "utbildningsinstans": "2bc9c259-5caa-4278-a4d1-3b754c3fafeb", // (1-B)
+      "courseCode": "SF1624",
+      "roundCode": "50584",
+      "modules": [
+        {
+          "utbildningsinstans": "ba5cf4b8-093b-446c-9771-5b8835433a84", // (1-C)
+          "code": "TEN1",
+          "name": "Tentamen"
+        }
+      ]
+    },
+    {
+      "id": "23de7f0a-5a09-4510-b2de-c9de0850ff3e", // (2-A)
+      "utbildningsinstans": "9fe06003-943f-49eb-bdc8-80d96414f924", // (2-B)
+      "courseCode": "SF1624",
+      "roundCode": "50581",
+      "modules": [
+        {
+          "utbildningsinstans": "b4e096d0-99ea-43d0-9685-66389b9e5a7d", // (2-C)
+          "code": "TEN1",
+          "name": "Tentamen"
+        }
+      ]
+    }
+  ]
+}
+```
+
+As Destination, you will need one `kurstillfalle` ID and one `utbildningsinstans` ID.
+
+- `kurstillfalle` IDs are the ones marked with `(1-A)` and `(2-A)`
+- If you want to report **final grades**, choose the `utbildningsinstans` in fields `(1-B)` or `(2-B)`
+- If you want to report a **module**, choose the `utbildningsinstans` inside the "modules" list (in this case fields `(1-C)` or `(2-C)`
+
+Examples:
+
+| I want to report...             | `kurstillfalle` | `utbildningsinstans` |
+| ------------------------------- | --------------- | -------------------- |
+| Final grades for SF1624 (50584) | `(1-A)`         | `(1-B)`              |
+| Final grades for SF1624 (50581) | `(2-A)`         | `(2-B)`              |
+| "TEN1" in SF1624 (50584)        | `(1-A)`         | `(1-C)`              |
+
+Once you got the **destination**, you can continue with the following steps
+
+---
+
+## Step 3. Get a list of gradeable students in a Destination
+
+Request (remember you need either one `aktivitetstillfalle` or a combination of one `kurstillfalle` and one `utbildningsinstans`)
+
+```
+GET /transfer-to-ladok/api/courses/:courseId/ladok-grades?aktivitetstillfalle=<<A>>
+GET /transfer-to-ladok/api/courses/:courseId/ladok-grades?kurstillfalle=<B>&utbildningsinstans=<C>
+```
+
+Response:
+
+```json
+[
+  {
+    "student": {
+      "id": "04bad14a-b5a6-11e7-96e6-896ca17746d1",
+      "sortableName": "XXXX, YYYY"
+    },
+    "scale": ["A", "B", "C", "D", "E", "FX", "F"],
+    "hasPermission": true
+  },
+  {
+    "student": {
+      "id": "a8ffa877-423f-11e8-8857-bcf89de54ff6",
+      "sortableName": "XXXX, YYYY"
+    },
+    "scale": ["A", "B", "C", "D", "E", "FX", "F"],
+    "hasPermission": true
+  },
+  {
+    "student": {
+      "id": "f3537b5a-9629-11e8-bf01-45625eef45e2",
+      "sortableName": "XXXX, YYYY"
+    },
+    "scale": ["A", "B", "C", "D", "E", "FX", "F"],
+    "hasPermission": true
+  }
+]
+```
+
+Each object represents one student. You need their ID to be able to send results.
+
+---
+
+## 4. Send a result
+
+Request:
+
+```
+POST /transfer-to-ladok/api/courses/:courseId/ladok-grades
+```
+
+Request body:
+
+```json
+{
+  "destination": {
+    "aktivitetstillfalle": "<< The ID from the first step >>"
+  },
+  "results": [
+    {
+      "id": "<< Student ID >>",
+      "draft": {
+        "grade": "<< Grade for the student. Example: 'F' >",
+        "examinationDate": "<< Examination date in YYYY-MM-DD format >>"
+      }
+    },
+    {
+      "id": "<< Another student ID >>",
+      "draft": {
+        "grade": "<< Grade for the second student >>",
+        "examinationDate": "<< Examination date >>"
+      }
+    }
+  ]
+}
+```
+
+Response (if success)
+
+```json
+{
+  "summary": {
+    "success": 2,
+    "error": 0
+  },
+  "results": [
+    {
+      "id": "df0d839b-b432-11e9-8bbd-25378c5a4e4c",
+      "draft": {
+        "grade": "B",
+        "examinationDate": "2022-05-05"
+      },
+      "status": "success"
+    },
+    {
+      "id": "13bf0c2a-b433-11e9-8bbd-25378c5a4e4c",
+      "draft": {
+        "grade": "F",
+        "examinationDate": "2023-05-05"
+      },
+      "status": "success"
+    }
+  ]
+}
+```
