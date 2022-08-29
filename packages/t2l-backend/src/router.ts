@@ -13,7 +13,7 @@ const router = Router();
 
 router.get("/_monitor", (req, res) => {
   res.set("Content-type", "text/plain");
-  res.send("APPLICATION_STATUS: OK (this value is hard-coded)");
+  res.send("APPLICATION_STATUS: OK");
 });
 
 router.get("/_about", (req, res) => {
