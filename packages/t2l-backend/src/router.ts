@@ -11,6 +11,11 @@ import { buildInfo } from "./config/info";
 
 const router = Router();
 
+router.get("/_monitor", (req, res) => {
+  res.set("Content-type", "text/plain");
+  res.send("APPLICATION_STATUS: OK (this value is hard-coded)");
+});
+
 router.get("/_about", (req, res) => {
   res.set("Content-type", "text/plain");
   res.send(`
