@@ -8,14 +8,23 @@ Please contact it-support@kth.se if you have questions on how to use the API or 
 
 ---
 
-## Try the Transfer to Ladok API
+## "Production" and "stage" environments
 
-In this document we will guide you through Transfer to Ladok in **stage**. It means that we will use test environments of Ladok and Canvas:
+Canvas and Ladok have test and production environments, and so does Transfer to Ladok API.
 
-- Ladok: https://www.integrationstest.ladok.se
-- Canvas: https://kth.test.instructure.com
+We strongly advice you to start using the "stage" environment in your programs, which uses the non-production environments of Ladok and Canvas. That way you can use the API without real students data. Switch to production once your program is ready and you are sure it is working correctly.
 
-The root URL for Transfer to Ladok API is `https://app-r.referens.sys.kth.se`.
+The following table shows which environments will be affected when you use either Transfer to Ladok API production or test.
+
+| Transfer to Ladok root                                  | Ladok              | Canvas              |
+| ------------------------------------------------------- | ------------------ | ------------------- |
+| https://app-r.referens.sys.kth.se/transfer-to-ladok/api | [ladok test]       | [canvas test]       |
+| https://app.kth.se/transfer-to-ladok/api                | [ladok production] | [canvas production] |
+
+[ladok test]: https://www.integrationstest.ladok.se
+[ladok production]: https://www.start.ladok.se
+[canvas test]: https://kth.test.instructure.com
+[canvas production]: https://canvas.kth.se
 
 ### A quick note on terminology
 
@@ -47,7 +56,7 @@ Next, you need a courseroom or examroom ID where you are a teacher. The ID is sh
 With such ID, try the following API request:
 
 ```
-GET /transfer-to-ladok/api/courses/:courseId/sections
+GET /courses/:courseId/sections
 ```
 
 <details>
@@ -164,8 +173,8 @@ Once you got the **destination**, you can continue with the following steps
 Request (remember you need either one `aktivitetstillfalle` or a combination of one `kurstillfalle` and one `utbildningsinstans`)
 
 ```
-GET /transfer-to-ladok/api/courses/:courseId/ladok-grades?aktivitetstillfalle=<<A>>
-GET /transfer-to-ladok/api/courses/:courseId/ladok-grades?kurstillfalle=<B>&utbildningsinstans=<C>
+GET /courses/:courseId/ladok-grades?aktivitetstillfalle=<<A>>
+GET /courses/:courseId/ladok-grades?kurstillfalle=<B>&utbildningsinstans=<C>
 ```
 
 Response:
@@ -208,7 +217,7 @@ Each object represents one student. You need their ID to be able to send results
 Request:
 
 ```
-POST /transfer-to-ladok/api/courses/:courseId/ladok-grades
+POST /courses/:courseId/ladok-grades
 ```
 
 Request body:
