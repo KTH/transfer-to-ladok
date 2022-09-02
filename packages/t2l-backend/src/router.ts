@@ -40,8 +40,10 @@ router.post("/", (req, res) => {
 });
 
 // Enable only for testing
-router.post("/mock/:id", (req, res) => {
-  res.redirect(`/transfer-to-ladok?courseId=mock-${req.params.id}`);
+router.post("/mock", (req, res) => {
+  res.redirect(
+    `/transfer-to-ladok/index.html?courseId=mock-${req.body.custom_courseid}`
+  );
 });
 
 // Authentication is handled via its own router under "/auth" endpoints

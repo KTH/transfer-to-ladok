@@ -1,0 +1,1396 @@
+{
+  "canvasGrades": [
+    {
+      "student": {
+        "id": "80013f50-20d1-4c1f-8d00-da167ca3fbb8",
+        "sortableName": "Berggren, Karolina"
+      },
+      "gradedAt": null,
+      "submittedAt": null
+    },
+    {
+      "student": {
+        "id": "87b4f54b-6ee3-4ec0-ab62-c1fd72afbcc9",
+        "sortableName": "Ahmed, Jonas Kendall"
+      },
+      "gradedAt": null,
+      "submittedAt": null
+    },
+    {
+      "student": {
+        "id": "94c9bb93-ecdf-46a4-b289-149fe356383f",
+        "sortableName": "Andersson, Barbro"
+      },
+      "gradedAt": null,
+      "submittedAt": null
+    },
+    {
+      "student": {
+        "id": "5bc3f6cb-9bf7-4023-8b91-d2b912f8dcf0",
+        "sortableName": "Mårtensson, Håkan Reese"
+      },
+      "gradedAt": null,
+      "submittedAt": null
+    },
+    {
+      "student": {
+        "id": "02c1e135-a0b7-4de4-9cd1-b0352ae84256",
+        "sortableName": "Lundqvist, Susanne Parker"
+      },
+      "gradedAt": null,
+      "submittedAt": null
+    },
+    {
+      "student": {
+        "id": "2ac0810a-d6a6-4084-8c8a-ccf0fcbc9267",
+        "sortableName": "Bengtsson, Julia Logan"
+      },
+      "gradedAt": null,
+      "submittedAt": null
+    },
+    {
+      "student": {
+        "id": "3d55b1e8-1baf-45dc-9dd9-53e5750bdeeb",
+        "sortableName": "Engström, Martin"
+      },
+      "gradedAt": null,
+      "submittedAt": null
+    },
+    {
+      "student": {
+        "id": "61ef5922-fa15-4f4e-a27f-d5f2b316b195",
+        "sortableName": "Lindström, Isabelle Charlie"
+      },
+      "gradedAt": null,
+      "submittedAt": null
+    },
+    {
+      "student": {
+        "id": "5c05ffd3-d59a-4d5b-9f57-14b4645e9e5e",
+        "sortableName": "Forsberg, Therese Alex"
+      },
+      "gradedAt": null,
+      "submittedAt": null
+    },
+    {
+      "student": {
+        "id": "ab4de9dc-e96c-41c0-9f39-2068628a2e77",
+        "sortableName": "Nilsson, Ulrika"
+      },
+      "gradedAt": null,
+      "submittedAt": null
+    },
+    {
+      "student": {
+        "id": "1f48fd97-50e5-4916-9d34-d4e042933a97",
+        "sortableName": "Nilsson, Ludvig Taylor"
+      },
+      "gradedAt": null,
+      "submittedAt": null
+    },
+    {
+      "student": {
+        "id": "ebbd9468-e531-4a42-bafd-bbe64865a221",
+        "sortableName": "Viklund, Emma Reign"
+      },
+      "gradedAt": null,
+      "submittedAt": null
+    },
+    {
+      "student": {
+        "id": "8c40b26b-4f96-4778-9f0e-1f8f89a08378",
+        "sortableName": "Sjöberg, Göran"
+      },
+      "gradedAt": null,
+      "submittedAt": null
+    },
+    {
+      "student": {
+        "id": "41217ff3-49fb-4535-9afc-87b0d81c49c1",
+        "sortableName": "Åberg, Lars Rowan"
+      },
+      "gradedAt": null,
+      "submittedAt": null
+    },
+    {
+      "student": {
+        "id": "cac620c8-6170-4860-b64e-e85fa9a5be0b",
+        "sortableName": "Lindberg, Yvonne"
+      },
+      "gradedAt": null,
+      "submittedAt": null
+    },
+    {
+      "student": {
+        "id": "0220d61a-f598-48c9-9996-7fc6ccb8e178",
+        "sortableName": "Karlsson, Jimmy Blake"
+      },
+      "gradedAt": null,
+      "submittedAt": null
+    },
+    {
+      "student": {
+        "id": "77f799ea-fa83-4a68-8919-3ce79f797e88",
+        "sortableName": "Johansson, Fredrik Bailey"
+      },
+      "gradedAt": null,
+      "submittedAt": null
+    },
+    {
+      "student": {
+        "id": "90678fd2-c6dc-4652-9147-23eaaa9f5d3e",
+        "sortableName": "Nordström, Gustav Logan"
+      },
+      "gradedAt": null,
+      "submittedAt": null
+    },
+    {
+      "student": {
+        "id": "1e178e0a-fe8b-4e9c-8b27-455ed9ec3888",
+        "sortableName": "Isaksson, Anette Sawyer"
+      },
+      "gradedAt": null,
+      "submittedAt": null
+    },
+    {
+      "student": {
+        "id": "f03126a1-93f7-40c7-8703-3f78999916f6",
+        "sortableName": "Björklund, Hugo"
+      },
+      "gradedAt": null,
+      "submittedAt": null
+    },
+    {
+      "student": {
+        "id": "da5f432d-7dd9-46a5-b690-0695c44bc0be",
+        "sortableName": "Åkesson, Agneta Jaden"
+      },
+      "gradedAt": null,
+      "submittedAt": null
+    },
+    {
+      "student": {
+        "id": "b473966a-1b92-498a-b3a3-b10e2c5cca72",
+        "sortableName": "Sundberg, Elsa"
+      },
+      "gradedAt": null,
+      "submittedAt": null
+    },
+    {
+      "student": {
+        "id": "344cec76-f978-4b52-b718-cfcd549b09e8",
+        "sortableName": "Isaksson, Torbjörn August"
+      },
+      "gradedAt": null,
+      "submittedAt": null
+    },
+    {
+      "student": {
+        "id": "3ffb31cb-f4a2-4fd1-82ea-d957e171d4c2",
+        "sortableName": "Andreasson, Mikaela"
+      },
+      "gradedAt": null,
+      "submittedAt": null
+    },
+    {
+      "student": {
+        "id": "d61338cb-c61b-41ed-9f69-509fe92f0112",
+        "sortableName": "Henriksson, Gunilla Taylor"
+      },
+      "gradedAt": null,
+      "submittedAt": null
+    },
+    {
+      "student": {
+        "id": "d1ef695a-af28-4b4e-b9a7-884b42e000b3",
+        "sortableName": "Berglund, Stefan Brooklyn"
+      },
+      "gradedAt": null,
+      "submittedAt": null
+    },
+    {
+      "student": {
+        "id": "e00f9546-103e-400f-8010-fdf00131c26a",
+        "sortableName": "Strömberg, Pernilla Angel"
+      },
+      "gradedAt": null,
+      "submittedAt": null
+    },
+    {
+      "student": {
+        "id": "41aad9fa-f4bf-4ee3-9e0a-3081118a8e1d",
+        "sortableName": "Andersson, Lucas"
+      },
+      "gradedAt": null,
+      "submittedAt": null
+    },
+    {
+      "student": {
+        "id": "326e0428-7050-4b44-a4d5-388bcc00c2f7",
+        "sortableName": "Pålsson, Cecilia Parker"
+      },
+      "gradedAt": null,
+      "submittedAt": null
+    },
+    {
+      "student": {
+        "id": "f687933f-bf2c-492c-90ed-5f5f02e0aeb1",
+        "sortableName": "Persson, Karolina"
+      },
+      "gradedAt": null,
+      "submittedAt": null
+    },
+    {
+      "student": {
+        "id": "31288f76-b877-44a7-b8d0-e853044ad0f7",
+        "sortableName": "Larsson, Wilma Cameron"
+      },
+      "gradedAt": null,
+      "submittedAt": null
+    },
+    {
+      "student": {
+        "id": "908b3050-6a30-41df-9a08-a02aca04862c",
+        "sortableName": "Fredriksson, Moa"
+      },
+      "gradedAt": null,
+      "submittedAt": null
+    },
+    {
+      "student": {
+        "id": "bc6d47ef-a718-4ed3-83df-102bcc945da8",
+        "sortableName": "Lindgren, Robert"
+      },
+      "gradedAt": null,
+      "submittedAt": null
+    },
+    {
+      "student": {
+        "id": "f0968f69-4838-452c-a57c-4ec96db4fd3c",
+        "sortableName": "Svensson, Annika"
+      },
+      "gradedAt": null,
+      "submittedAt": null
+    },
+    {
+      "student": {
+        "id": "00ec5d5d-370b-43f0-aef1-f2af1929827e",
+        "sortableName": "Lindström, Marcus Blake"
+      },
+      "gradedAt": null,
+      "submittedAt": null
+    },
+    {
+      "student": {
+        "id": "01c6f9f3-121f-4a9b-86f7-be6cf6452ee8",
+        "sortableName": "Hassan, Camilla"
+      },
+      "gradedAt": null,
+      "submittedAt": null
+    },
+    {
+      "student": {
+        "id": "4d765187-9407-44ab-9913-84151667696c",
+        "sortableName": "Blomqvist, Gunnel Jordan"
+      },
+      "gradedAt": null,
+      "submittedAt": null
+    },
+    {
+      "student": {
+        "id": "34d0a2f6-0408-49a8-b83c-ed07da06cbfe",
+        "sortableName": "Lundqvist, Britt Blake"
+      },
+      "gradedAt": null,
+      "submittedAt": null
+    },
+    {
+      "student": {
+        "id": "12b0d884-b94f-4f08-a63e-f895c3a4aa94",
+        "sortableName": "Lindström, Lena"
+      },
+      "gradedAt": null,
+      "submittedAt": null
+    },
+    {
+      "student": {
+        "id": "3fae51dc-ca2b-4dce-a64a-b8f479e978f6",
+        "sortableName": "Hansen, Lars Corey"
+      },
+      "gradedAt": null,
+      "submittedAt": null
+    },
+    {
+      "student": {
+        "id": "54319742-ed98-4925-af83-7292ccc2cfea",
+        "sortableName": "Berggren, Anette North"
+      },
+      "grade": "FX",
+      "gradedAt": null,
+      "submittedAt": null
+    },
+    {
+      "student": {
+        "id": "e0a7845f-f82d-45b5-a982-18e38eeefc22",
+        "sortableName": "Holm, Emelie Micah"
+      },
+      "grade": "B",
+      "gradedAt": null,
+      "submittedAt": null
+    },
+    {
+      "student": {
+        "id": "99ccebf0-e23b-4678-890e-46e8e60d334e",
+        "sortableName": "Mattsson, Ulla Noah"
+      },
+      "grade": "C",
+      "gradedAt": null,
+      "submittedAt": null
+    },
+    {
+      "student": {
+        "id": "ec41d5b9-87ef-45bb-a811-ef04a7b66ba9",
+        "sortableName": "Axelsson, Åsa Bailey"
+      },
+      "grade": "F",
+      "gradedAt": null,
+      "submittedAt": null
+    },
+    {
+      "student": {
+        "id": "e8729d92-592d-4456-9bff-005a2dd70f14",
+        "sortableName": "Lundin, Samuel James"
+      },
+      "grade": "D",
+      "gradedAt": null,
+      "submittedAt": null
+    },
+    {
+      "student": {
+        "id": "d5e323ab-9e36-4ce6-95b2-0a79f98f714b",
+        "sortableName": "Lindström, Rasmus Arden"
+      },
+      "grade": "A",
+      "gradedAt": null,
+      "submittedAt": null
+    },
+    {
+      "student": {
+        "id": "89cae408-8269-4523-b0f3-6fa6f7dd192c",
+        "sortableName": "Hellström, Berit"
+      },
+      "grade": "D",
+      "gradedAt": null,
+      "submittedAt": null
+    },
+    {
+      "student": {
+        "id": "40b9c4f0-fecd-4c7f-8f4d-a5057570eff4",
+        "sortableName": "Ström, Lovisa"
+      },
+      "grade": "F",
+      "gradedAt": null,
+      "submittedAt": null
+    },
+    {
+      "student": {
+        "id": "4ef38982-651e-4b01-9930-d915f5445d36",
+        "sortableName": "Lundberg, Olle Kendall"
+      },
+      "grade": "E",
+      "gradedAt": null,
+      "submittedAt": null
+    },
+    {
+      "student": {
+        "id": "cfea060f-fc3a-4980-89e0-4a905671b919",
+        "sortableName": "Sandberg, Anita"
+      },
+      "grade": "B",
+      "gradedAt": null,
+      "submittedAt": null
+    },
+    {
+      "student": {
+        "id": "7f2b6ee6-c05c-4930-8bd6-9bac67570e96",
+        "sortableName": "Norberg, Annika Micah"
+      },
+      "grade": "F",
+      "gradedAt": null,
+      "submittedAt": null
+    },
+    {
+      "student": {
+        "id": "6b2919a0-9ad4-43dc-bb81-4d9031c039aa",
+        "sortableName": "Ek, Alice"
+      },
+      "grade": "D",
+      "gradedAt": null,
+      "submittedAt": null
+    },
+    {
+      "student": {
+        "id": "e6e25668-815d-4fd6-9fae-6ed48a214526",
+        "sortableName": "Åberg, Pontus Gray"
+      },
+      "grade": "C",
+      "gradedAt": null,
+      "submittedAt": null
+    },
+    {
+      "student": {
+        "id": "aede4dfd-2831-45a8-9353-74f13097f7a9",
+        "sortableName": "Björklund, Olivia"
+      },
+      "grade": "B",
+      "gradedAt": null,
+      "submittedAt": null
+    },
+    {
+      "student": {
+        "id": "c322ef95-c3a4-4235-a0c1-60dfd8c718a9",
+        "sortableName": "Bergman, Lars"
+      },
+      "grade": "C",
+      "gradedAt": null,
+      "submittedAt": null
+    },
+    {
+      "student": {
+        "id": "4f346482-7834-43bc-abe6-c0ae0bc3f5bb",
+        "sortableName": "Sundberg, Linn"
+      },
+      "grade": "B",
+      "gradedAt": null,
+      "submittedAt": null
+    },
+    {
+      "student": {
+        "id": "4c0ba05d-6f43-4697-880a-a066e6c09f19",
+        "sortableName": "Engström, Pernilla"
+      },
+      "grade": "E",
+      "gradedAt": null,
+      "submittedAt": null
+    },
+    {
+      "student": {
+        "id": "a132329d-0433-4a53-8b7d-f0e08bbfa1bc",
+        "sortableName": "Mattsson, Yvonne"
+      },
+      "grade": "C",
+      "gradedAt": null,
+      "submittedAt": null
+    },
+    {
+      "student": {
+        "id": "c47f3ab0-57c1-4cbc-8deb-dec31fb38354",
+        "sortableName": "Claesson, Ida"
+      },
+      "grade": "D",
+      "gradedAt": null,
+      "submittedAt": null
+    },
+    {
+      "student": {
+        "id": "f028f8a0-6d8a-45c3-980a-068b855cae32",
+        "sortableName": "Henriksson, Jesper"
+      },
+      "grade": "D",
+      "gradedAt": null,
+      "submittedAt": null
+    },
+    {
+      "student": {
+        "id": "98d7cc45-b1b1-42dc-9e24-c5d176d5bdbd",
+        "sortableName": "Fredriksson, Olivia"
+      },
+      "grade": "B",
+      "gradedAt": null,
+      "submittedAt": null
+    },
+    {
+      "student": {
+        "id": "5f6b5b0d-3507-4a61-97dc-9d42fbb9ba79",
+        "sortableName": "Lindström, Åke Nico"
+      },
+      "grade": "C",
+      "gradedAt": null,
+      "submittedAt": null
+    },
+    {
+      "student": {
+        "id": "8d25395e-04a4-4e2f-99c7-576daeff8ee6",
+        "sortableName": "Bergman, Wilma Billie"
+      },
+      "grade": "D",
+      "gradedAt": null,
+      "submittedAt": null
+    },
+    {
+      "student": {
+        "id": "7e7ad247-86ac-43ad-9629-45cd1b66a789",
+        "sortableName": "Magnusson, Magnus Jamie"
+      },
+      "grade": "C",
+      "gradedAt": null,
+      "submittedAt": null
+    },
+    {
+      "student": {
+        "id": "1a44fa19-2df5-40eb-bdbb-5f5b0aa355de",
+        "sortableName": "Claesson, Jenny"
+      },
+      "grade": "A",
+      "gradedAt": null,
+      "submittedAt": null
+    },
+    {
+      "student": {
+        "id": "2538ca9e-98d5-4c75-9d77-98d21b9c26a6",
+        "sortableName": "Holmberg, Kerstin"
+      },
+      "grade": "B",
+      "gradedAt": null,
+      "submittedAt": null
+    },
+    {
+      "student": {
+        "id": "61cdcf11-2326-46df-9847-93e59ea8fb4e",
+        "sortableName": "Magnusson, Tobias"
+      },
+      "grade": "C",
+      "gradedAt": null,
+      "submittedAt": null
+    },
+    {
+      "student": {
+        "id": "7e1022ce-1759-4a72-8d90-105ba4f1fe10",
+        "sortableName": "Olsson, Kerstin Robin"
+      },
+      "grade": "B",
+      "gradedAt": null,
+      "submittedAt": null
+    },
+    {
+      "student": {
+        "id": "4d54d7d6-fbcb-4ce1-b5d1-587f27ba48eb",
+        "sortableName": "Löfgren, Yvonne James"
+      },
+      "grade": "B",
+      "gradedAt": null,
+      "submittedAt": null
+    },
+    {
+      "student": {
+        "id": "be6cba11-388f-4036-8740-1515e782c2de",
+        "sortableName": "Blom, Christer"
+      },
+      "grade": "B",
+      "gradedAt": null,
+      "submittedAt": null
+    },
+    {
+      "student": {
+        "id": "17d34474-a86b-407d-ae7f-7216d84bc00c",
+        "sortableName": "Axelsson, Emilia"
+      },
+      "grade": "FX",
+      "gradedAt": null,
+      "submittedAt": null
+    },
+    {
+      "student": {
+        "id": "2c4ffdd0-1e4b-402e-b204-fb6658469cb2",
+        "sortableName": "Lundström, Carina Arden"
+      },
+      "grade": "A",
+      "gradedAt": null,
+      "submittedAt": null
+    },
+    {
+      "student": {
+        "id": "3ad2100c-425a-451e-93cb-a6646cbed01a",
+        "sortableName": "Sandberg, Mikaela"
+      },
+      "grade": "C",
+      "gradedAt": null,
+      "submittedAt": null
+    },
+    {
+      "student": {
+        "id": "3330eefc-dc24-43de-857c-7902a9b100f8",
+        "sortableName": "Eriksson, Isak Corey"
+      },
+      "grade": "F",
+      "gradedAt": null,
+      "submittedAt": null
+    },
+    {
+      "student": {
+        "id": "dab1f74c-2b75-4447-a4b1-a13465edb794",
+        "sortableName": "Bergström, Viktoria"
+      },
+      "grade": "B",
+      "gradedAt": null,
+      "submittedAt": null
+    },
+    {
+      "student": {
+        "id": "7f8990e3-7154-4082-ac9a-7c3febbd4d42",
+        "sortableName": "Blomqvist, Sofie Bowie"
+      },
+      "grade": "F",
+      "gradedAt": null,
+      "submittedAt": null
+    },
+    {
+      "student": {
+        "id": "71900335-3c89-4686-993d-d21edf06a4bf",
+        "sortableName": "Berggren, Christer Bowie"
+      },
+      "grade": "E",
+      "gradedAt": null,
+      "submittedAt": null
+    },
+    {
+      "student": {
+        "id": "59b76e88-9062-4419-b8cc-4be18fd1909e",
+        "sortableName": "Ekström, Klara Arden"
+      },
+      "grade": "FX",
+      "gradedAt": null,
+      "submittedAt": null
+    },
+    {
+      "student": {
+        "id": "feeda5bc-85c6-4cdd-94f9-3a84374d5afb",
+        "sortableName": "Nilsson, Emil Greer"
+      },
+      "grade": "F",
+      "gradedAt": null,
+      "submittedAt": null
+    },
+    {
+      "student": {
+        "id": "949fd4f9-ee5d-476a-ab2f-c5e62c7ff295",
+        "sortableName": "Sandström, Filip"
+      },
+      "grade": "D",
+      "gradedAt": null,
+      "submittedAt": null
+    },
+    {
+      "student": {
+        "id": "8b843149-e953-4170-a672-e8b9a1e2f924",
+        "sortableName": "Holm, Lennart"
+      },
+      "grade": "F",
+      "gradedAt": null,
+      "submittedAt": null
+    },
+    {
+      "student": {
+        "id": "8763c254-854f-4437-ad41-982c151637c9",
+        "sortableName": "Gunnarsson, Lena"
+      },
+      "grade": "F",
+      "gradedAt": null,
+      "submittedAt": null
+    },
+    {
+      "student": {
+        "id": "937d398c-b17a-4b83-b4e3-ac898bf4c54b",
+        "sortableName": "Öberg, Klara"
+      },
+      "grade": "E",
+      "gradedAt": null,
+      "submittedAt": null
+    },
+    {
+      "student": {
+        "id": "0efcc85a-fba4-49f8-b478-5e7aafb9212a",
+        "sortableName": "Holmqvist, Anton"
+      },
+      "grade": "C",
+      "gradedAt": null,
+      "submittedAt": null
+    },
+    {
+      "student": {
+        "id": "566f8f75-1e8f-4ef8-b18c-61ed99820207",
+        "sortableName": "Bergman, Wilma"
+      },
+      "grade": "B",
+      "gradedAt": null,
+      "submittedAt": null
+    },
+    {
+      "student": {
+        "id": "5f9b5bc6-2d95-49b2-a426-021496726e33",
+        "sortableName": "Lindström, Olle Drew"
+      },
+      "grade": "F",
+      "gradedAt": null,
+      "submittedAt": null
+    },
+    {
+      "student": {
+        "id": "dca62e01-9f3c-41c9-bded-32a4e5307af5",
+        "sortableName": "Hassan, Mikael"
+      },
+      "grade": "A",
+      "gradedAt": null,
+      "submittedAt": null
+    },
+    {
+      "student": {
+        "id": "6447281e-365e-47dd-8dea-994cf4f2270a",
+        "sortableName": "Persson, Cecilia"
+      },
+      "grade": "C",
+      "gradedAt": null,
+      "submittedAt": null
+    },
+    {
+      "student": {
+        "id": "4400e0a1-ffe2-4822-bba5-21b11c53c9be",
+        "sortableName": "Ali, Ali North"
+      },
+      "grade": "C",
+      "gradedAt": null,
+      "submittedAt": null
+    },
+    {
+      "student": {
+        "id": "bf14849c-a7d5-404b-9237-244d6c4fba6d",
+        "sortableName": "Nordström, Johnny Noah"
+      },
+      "grade": "A",
+      "gradedAt": null,
+      "submittedAt": null
+    },
+    {
+      "student": {
+        "id": "e0aa5497-5cdf-4d74-b92e-b522a0ba8e36",
+        "sortableName": "Åberg, Malin"
+      },
+      "grade": "FX",
+      "gradedAt": null,
+      "submittedAt": null
+    },
+    {
+      "student": {
+        "id": "16451f59-907b-44b1-90ca-a0261cd70f2c",
+        "sortableName": "Forsberg, Karl Rowan"
+      },
+      "grade": "FX",
+      "gradedAt": null,
+      "submittedAt": null
+    },
+    {
+      "student": {
+        "id": "644e3462-b577-4e3c-98be-f95b3bce9457",
+        "sortableName": "Hellström, Sara River"
+      },
+      "grade": "E",
+      "gradedAt": null,
+      "submittedAt": null
+    },
+    {
+      "student": {
+        "id": "41a0e1d4-3a0b-4274-838e-1d1d6c6c7478",
+        "sortableName": "Svensson, Erik"
+      },
+      "grade": "E",
+      "gradedAt": null,
+      "submittedAt": null
+    },
+    {
+      "student": {
+        "id": "0f7b3c75-ce29-45da-8454-8a575619e58c",
+        "sortableName": "Sandström, Gustav"
+      },
+      "grade": "E",
+      "gradedAt": null,
+      "submittedAt": null
+    },
+    {
+      "student": {
+        "id": "4f3079e7-82bd-4dbc-b189-c2e408d9a98f",
+        "sortableName": "Dahl, Kurt Reese"
+      },
+      "grade": "B",
+      "gradedAt": null,
+      "submittedAt": null
+    },
+    {
+      "student": {
+        "id": "877157a6-7f7b-420f-88fe-671a82eca464",
+        "sortableName": "Berggren, Elias"
+      },
+      "grade": "B",
+      "gradedAt": null,
+      "submittedAt": null
+    },
+    {
+      "student": {
+        "id": "1fe32032-ff12-42fb-a20f-374ffece80d8",
+        "sortableName": "Hermansson, Gabriel"
+      },
+      "grade": "B",
+      "gradedAt": null,
+      "submittedAt": null
+    },
+    {
+      "student": {
+        "id": "09cee08a-d8b7-4eec-a244-2630f07ee5c3",
+        "sortableName": "Ek, Lisa"
+      },
+      "grade": "B",
+      "gradedAt": null,
+      "submittedAt": null
+    },
+    {
+      "student": {
+        "id": "d5165015-07ac-4461-acd3-8a28c564da1e",
+        "sortableName": "Nyberg, Max London"
+      },
+      "grade": "FX",
+      "gradedAt": null,
+      "submittedAt": null
+    }
+  ],
+  "ladokGrades": [
+    {
+      "student": {
+        "id": "80013f50-20d1-4c1f-8d00-da167ca3fbb8",
+        "sortableName": "Berggren, Karolina"
+      },
+      "scale": ["A", "B", "C", "D", "E", "F", "FX"],
+      "hasPermission": true,
+      "requiresTitle": false
+    },
+    {
+      "student": {
+        "id": "87b4f54b-6ee3-4ec0-ab62-c1fd72afbcc9",
+        "sortableName": "Ahmed, Jonas Kendall"
+      },
+      "scale": ["A", "B", "C", "D", "E", "F", "FX"],
+      "hasPermission": true,
+      "requiresTitle": false
+    },
+    {
+      "student": {
+        "id": "94c9bb93-ecdf-46a4-b289-149fe356383f",
+        "sortableName": "Andersson, Barbro"
+      },
+      "scale": ["A", "B", "C", "D", "E", "F", "FX"],
+      "hasPermission": true,
+      "requiresTitle": false
+    },
+    {
+      "student": {
+        "id": "5bc3f6cb-9bf7-4023-8b91-d2b912f8dcf0",
+        "sortableName": "Mårtensson, Håkan Reese"
+      },
+      "scale": ["A", "B", "C", "D", "E", "F", "FX"],
+      "hasPermission": true,
+      "requiresTitle": false
+    },
+    {
+      "student": {
+        "id": "02c1e135-a0b7-4de4-9cd1-b0352ae84256",
+        "sortableName": "Lundqvist, Susanne Parker"
+      },
+      "scale": ["A", "B", "C", "D", "E", "F", "FX"],
+      "hasPermission": true,
+      "requiresTitle": false
+    },
+    {
+      "student": {
+        "id": "2ac0810a-d6a6-4084-8c8a-ccf0fcbc9267",
+        "sortableName": "Bengtsson, Julia Logan"
+      },
+      "scale": ["A", "B", "C", "D", "E", "F", "FX"],
+      "hasPermission": true,
+      "requiresTitle": false
+    },
+    {
+      "student": {
+        "id": "3d55b1e8-1baf-45dc-9dd9-53e5750bdeeb",
+        "sortableName": "Engström, Martin"
+      },
+      "scale": ["A", "B", "C", "D", "E", "F", "FX"],
+      "hasPermission": true,
+      "requiresTitle": false
+    },
+    {
+      "student": {
+        "id": "61ef5922-fa15-4f4e-a27f-d5f2b316b195",
+        "sortableName": "Lindström, Isabelle Charlie"
+      },
+      "scale": ["A", "B", "C", "D", "E", "F", "FX"],
+      "hasPermission": true,
+      "requiresTitle": false
+    },
+    {
+      "student": {
+        "id": "5c05ffd3-d59a-4d5b-9f57-14b4645e9e5e",
+        "sortableName": "Forsberg, Therese Alex"
+      },
+      "scale": ["A", "B", "C", "D", "E", "F", "FX"],
+      "hasPermission": true,
+      "requiresTitle": false
+    },
+    {
+      "student": {
+        "id": "ab4de9dc-e96c-41c0-9f39-2068628a2e77",
+        "sortableName": "Nilsson, Ulrika"
+      },
+      "scale": ["A", "B", "C", "D", "E", "F", "FX"],
+      "hasPermission": true,
+      "requiresTitle": false
+    },
+    {
+      "student": {
+        "id": "1f48fd97-50e5-4916-9d34-d4e042933a97",
+        "sortableName": "Nilsson, Ludvig Taylor"
+      },
+      "scale": ["A", "B", "C", "D", "E", "F", "FX"],
+      "hasPermission": true,
+      "requiresTitle": false
+    },
+    {
+      "student": {
+        "id": "ebbd9468-e531-4a42-bafd-bbe64865a221",
+        "sortableName": "Viklund, Emma Reign"
+      },
+      "scale": ["A", "B", "C", "D", "E", "F", "FX"],
+      "hasPermission": true,
+      "requiresTitle": false
+    },
+    {
+      "student": {
+        "id": "8c40b26b-4f96-4778-9f0e-1f8f89a08378",
+        "sortableName": "Sjöberg, Göran"
+      },
+      "scale": ["A", "B", "C", "D", "E", "F", "FX"],
+      "hasPermission": true,
+      "requiresTitle": false
+    },
+    {
+      "student": {
+        "id": "41217ff3-49fb-4535-9afc-87b0d81c49c1",
+        "sortableName": "Åberg, Lars Rowan"
+      },
+      "scale": ["A", "B", "C", "D", "E", "F", "FX"],
+      "hasPermission": true,
+      "requiresTitle": false
+    },
+    {
+      "student": {
+        "id": "cac620c8-6170-4860-b64e-e85fa9a5be0b",
+        "sortableName": "Lindberg, Yvonne"
+      },
+      "scale": ["A", "B", "C", "D", "E", "F", "FX"],
+      "hasPermission": true,
+      "requiresTitle": false
+    },
+    {
+      "student": {
+        "id": "0220d61a-f598-48c9-9996-7fc6ccb8e178",
+        "sortableName": "Karlsson, Jimmy Blake"
+      },
+      "scale": ["A", "B", "C", "D", "E", "F", "FX"],
+      "hasPermission": true,
+      "requiresTitle": false
+    },
+    {
+      "student": {
+        "id": "77f799ea-fa83-4a68-8919-3ce79f797e88",
+        "sortableName": "Johansson, Fredrik Bailey"
+      },
+      "scale": ["A", "B", "C", "D", "E", "F", "FX"],
+      "hasPermission": true,
+      "requiresTitle": false
+    },
+    {
+      "student": {
+        "id": "90678fd2-c6dc-4652-9147-23eaaa9f5d3e",
+        "sortableName": "Nordström, Gustav Logan"
+      },
+      "scale": ["A", "B", "C", "D", "E", "F", "FX"],
+      "hasPermission": true,
+      "requiresTitle": false
+    },
+    {
+      "student": {
+        "id": "1e178e0a-fe8b-4e9c-8b27-455ed9ec3888",
+        "sortableName": "Isaksson, Anette Sawyer"
+      },
+      "scale": ["A", "B", "C", "D", "E", "F", "FX"],
+      "hasPermission": true,
+      "requiresTitle": false
+    },
+    {
+      "student": {
+        "id": "f03126a1-93f7-40c7-8703-3f78999916f6",
+        "sortableName": "Björklund, Hugo"
+      },
+      "scale": ["A", "B", "C", "D", "E", "F", "FX"],
+      "hasPermission": true,
+      "requiresTitle": false
+    },
+    {
+      "student": {
+        "id": "da5f432d-7dd9-46a5-b690-0695c44bc0be",
+        "sortableName": "Åkesson, Agneta Jaden"
+      },
+      "scale": ["A", "B", "C", "D", "E", "F", "FX"],
+      "hasPermission": true,
+      "requiresTitle": false
+    },
+    {
+      "student": {
+        "id": "b473966a-1b92-498a-b3a3-b10e2c5cca72",
+        "sortableName": "Sundberg, Elsa"
+      },
+      "scale": ["A", "B", "C", "D", "E", "F", "FX"],
+      "hasPermission": true,
+      "requiresTitle": false
+    },
+    {
+      "student": {
+        "id": "344cec76-f978-4b52-b718-cfcd549b09e8",
+        "sortableName": "Isaksson, Torbjörn August"
+      },
+      "scale": ["A", "B", "C", "D", "E", "F", "FX"],
+      "hasPermission": true,
+      "requiresTitle": false
+    },
+    {
+      "student": {
+        "id": "3ffb31cb-f4a2-4fd1-82ea-d957e171d4c2",
+        "sortableName": "Andreasson, Mikaela"
+      },
+      "scale": ["A", "B", "C", "D", "E", "F", "FX"],
+      "hasPermission": true,
+      "requiresTitle": false
+    },
+    {
+      "student": {
+        "id": "d61338cb-c61b-41ed-9f69-509fe92f0112",
+        "sortableName": "Henriksson, Gunilla Taylor"
+      },
+      "scale": ["A", "B", "C", "D", "E", "F", "FX"],
+      "hasPermission": true,
+      "requiresTitle": false
+    },
+    {
+      "student": {
+        "id": "d1ef695a-af28-4b4e-b9a7-884b42e000b3",
+        "sortableName": "Berglund, Stefan Brooklyn"
+      },
+      "scale": ["A", "B", "C", "D", "E", "F", "FX"],
+      "hasPermission": true,
+      "requiresTitle": false
+    },
+    {
+      "student": {
+        "id": "e00f9546-103e-400f-8010-fdf00131c26a",
+        "sortableName": "Strömberg, Pernilla Angel"
+      },
+      "scale": ["A", "B", "C", "D", "E", "F", "FX"],
+      "hasPermission": true,
+      "requiresTitle": false
+    },
+    {
+      "student": {
+        "id": "41aad9fa-f4bf-4ee3-9e0a-3081118a8e1d",
+        "sortableName": "Andersson, Lucas"
+      },
+      "scale": ["A", "B", "C", "D", "E", "F", "FX"],
+      "hasPermission": true,
+      "requiresTitle": false
+    },
+    {
+      "student": {
+        "id": "326e0428-7050-4b44-a4d5-388bcc00c2f7",
+        "sortableName": "Pålsson, Cecilia Parker"
+      },
+      "scale": ["A", "B", "C", "D", "E", "F", "FX"],
+      "hasPermission": true,
+      "requiresTitle": false
+    },
+    {
+      "student": {
+        "id": "f687933f-bf2c-492c-90ed-5f5f02e0aeb1",
+        "sortableName": "Persson, Karolina"
+      },
+      "scale": ["A", "B", "C", "D", "E", "F", "FX"],
+      "hasPermission": true,
+      "requiresTitle": false
+    },
+    {
+      "student": {
+        "id": "31288f76-b877-44a7-b8d0-e853044ad0f7",
+        "sortableName": "Larsson, Wilma Cameron"
+      },
+      "scale": ["A", "B", "C", "D", "E", "F", "FX"],
+      "hasPermission": true,
+      "requiresTitle": false
+    },
+    {
+      "student": {
+        "id": "908b3050-6a30-41df-9a08-a02aca04862c",
+        "sortableName": "Fredriksson, Moa"
+      },
+      "scale": ["A", "B", "C", "D", "E", "F", "FX"],
+      "hasPermission": true,
+      "requiresTitle": false
+    },
+    {
+      "student": {
+        "id": "bc6d47ef-a718-4ed3-83df-102bcc945da8",
+        "sortableName": "Lindgren, Robert"
+      },
+      "scale": ["A", "B", "C", "D", "E", "F", "FX"],
+      "hasPermission": true,
+      "requiresTitle": false
+    },
+    {
+      "student": {
+        "id": "f0968f69-4838-452c-a57c-4ec96db4fd3c",
+        "sortableName": "Svensson, Annika"
+      },
+      "scale": ["A", "B", "C", "D", "E", "F", "FX"],
+      "hasPermission": true,
+      "requiresTitle": false
+    },
+    {
+      "student": {
+        "id": "00ec5d5d-370b-43f0-aef1-f2af1929827e",
+        "sortableName": "Lindström, Marcus Blake"
+      },
+      "scale": ["A", "B", "C", "D", "E", "F", "FX"],
+      "hasPermission": true,
+      "requiresTitle": false
+    },
+    {
+      "student": {
+        "id": "01c6f9f3-121f-4a9b-86f7-be6cf6452ee8",
+        "sortableName": "Hassan, Camilla"
+      },
+      "scale": ["A", "B", "C", "D", "E", "F", "FX"],
+      "hasPermission": true,
+      "requiresTitle": false
+    },
+    {
+      "student": {
+        "id": "4d765187-9407-44ab-9913-84151667696c",
+        "sortableName": "Blomqvist, Gunnel Jordan"
+      },
+      "scale": ["A", "B", "C", "D", "E", "F", "FX"],
+      "hasPermission": true,
+      "requiresTitle": false
+    },
+    {
+      "student": {
+        "id": "34d0a2f6-0408-49a8-b83c-ed07da06cbfe",
+        "sortableName": "Lundqvist, Britt Blake"
+      },
+      "scale": ["A", "B", "C", "D", "E", "F", "FX"],
+      "hasPermission": true,
+      "requiresTitle": false
+    },
+    {
+      "student": {
+        "id": "12b0d884-b94f-4f08-a63e-f895c3a4aa94",
+        "sortableName": "Lindström, Lena"
+      },
+      "scale": ["A", "B", "C", "D", "E", "F", "FX"],
+      "hasPermission": true,
+      "requiresTitle": false
+    },
+    {
+      "student": {
+        "id": "3fae51dc-ca2b-4dce-a64a-b8f479e978f6",
+        "sortableName": "Hansen, Lars Corey"
+      },
+      "scale": ["A", "B", "C", "D", "E", "F", "FX"],
+      "hasPermission": true,
+      "requiresTitle": false
+    },
+    {
+      "student": {
+        "id": "54319742-ed98-4925-af83-7292ccc2cfea",
+        "sortableName": "Berggren, Anette North"
+      },
+      "scale": ["A", "B", "C", "D", "E", "F", "FX"],
+      "hasPermission": true,
+      "requiresTitle": false
+    },
+    {
+      "student": {
+        "id": "e0a7845f-f82d-45b5-a982-18e38eeefc22",
+        "sortableName": "Holm, Emelie Micah"
+      },
+      "scale": ["A", "B", "C", "D", "E", "F", "FX"],
+      "hasPermission": true,
+      "requiresTitle": false
+    },
+    {
+      "student": {
+        "id": "99ccebf0-e23b-4678-890e-46e8e60d334e",
+        "sortableName": "Mattsson, Ulla Noah"
+      },
+      "scale": ["A", "B", "C", "D", "E", "F", "FX"],
+      "hasPermission": true,
+      "requiresTitle": false
+    },
+    {
+      "student": {
+        "id": "ec41d5b9-87ef-45bb-a811-ef04a7b66ba9",
+        "sortableName": "Axelsson, Åsa Bailey"
+      },
+      "scale": ["A", "B", "C", "D", "E", "F", "FX"],
+      "hasPermission": true,
+      "requiresTitle": false
+    },
+    {
+      "student": {
+        "id": "e8729d92-592d-4456-9bff-005a2dd70f14",
+        "sortableName": "Lundin, Samuel James"
+      },
+      "scale": ["A", "B", "C", "D", "E", "F", "FX"],
+      "hasPermission": true,
+      "requiresTitle": false
+    },
+    {
+      "student": {
+        "id": "d5e323ab-9e36-4ce6-95b2-0a79f98f714b",
+        "sortableName": "Lindström, Rasmus Arden"
+      },
+      "scale": ["A", "B", "C", "D", "E", "F", "FX"],
+      "hasPermission": true,
+      "requiresTitle": false
+    },
+    {
+      "student": {
+        "id": "89cae408-8269-4523-b0f3-6fa6f7dd192c",
+        "sortableName": "Hellström, Berit"
+      },
+      "scale": ["A", "B", "C", "D", "E", "F", "FX"],
+      "hasPermission": true,
+      "requiresTitle": false
+    },
+    {
+      "student": {
+        "id": "40b9c4f0-fecd-4c7f-8f4d-a5057570eff4",
+        "sortableName": "Ström, Lovisa"
+      },
+      "scale": ["A", "B", "C", "D", "E", "F", "FX"],
+      "hasPermission": true,
+      "requiresTitle": false
+    },
+    {
+      "student": {
+        "id": "4ef38982-651e-4b01-9930-d915f5445d36",
+        "sortableName": "Lundberg, Olle Kendall"
+      },
+      "scale": ["A", "B", "C", "D", "E", "F", "FX"],
+      "hasPermission": true,
+      "requiresTitle": false
+    },
+    {
+      "student": {
+        "id": "cfea060f-fc3a-4980-89e0-4a905671b919",
+        "sortableName": "Sandberg, Anita"
+      },
+      "scale": ["A", "B", "C", "D", "E", "F", "FX"],
+      "hasPermission": true,
+      "requiresTitle": false
+    }
+  ],
+  "sections": {
+    "kurstillfalle": [
+      {
+        "id": "c4ae571e-7021-444b-ab06-d6abb45dbf4d",
+        "courseCode": "BL6465",
+        "utbildningsinstans": "a08d39c4-a7e5-42f3-b904-92159367cb25",
+        "roundCode": "45172",
+        "modules": [
+          {
+            "code": "NON9",
+            "name": "Non Music 9",
+            "utbildningsinstans": "442e18c4-1507-4a44-8096-877983ab829b"
+          },
+          {
+            "code": "HIP3",
+            "name": "Hip Hop 3",
+            "utbildningsinstans": "879b20b4-eaa8-4362-9330-12d8d2f1ab3f"
+          },
+          {
+            "code": "NON7",
+            "name": "Non Music 7",
+            "utbildningsinstans": "807d4d6a-3b2f-4473-9c40-a9aa6a030a9f"
+          },
+          {
+            "code": "CLA1",
+            "name": "Classical 1",
+            "utbildningsinstans": "0ccdebbc-31fe-4ddc-b931-a1a219a68478"
+          }
+        ]
+      }
+    ],
+    "aktivitetstillfalle": []
+  },
+  "columns": {
+    "assignments": [
+      {
+        "id": "8567",
+        "name": "Ojos Azules",
+        "gradingType": "letter_grade",
+        "dueAt": null,
+        "unlockAt": null,
+        "lockAt": null
+      },
+      {
+        "id": "8429",
+        "name": "British Shorthair",
+        "gradingType": "letter_grade",
+        "dueAt": null,
+        "unlockAt": null,
+        "lockAt": null
+      },
+      {
+        "id": "8808",
+        "name": "Kurilian Bobtail",
+        "gradingType": "letter_grade",
+        "dueAt": null,
+        "unlockAt": null,
+        "lockAt": null
+      },
+      {
+        "id": "6366",
+        "name": "Japanese Bobtail",
+        "gradingType": "letter_grade",
+        "dueAt": null,
+        "unlockAt": null,
+        "lockAt": null
+      },
+      {
+        "id": "1356",
+        "name": "Turkish Angora",
+        "gradingType": "letter_grade",
+        "dueAt": null,
+        "unlockAt": null,
+        "lockAt": null
+      }
+    ],
+    "finalGrades": {
+      "hasLetterGrade": true
+    }
+  }
+}
