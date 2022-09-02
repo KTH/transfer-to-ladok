@@ -77,10 +77,9 @@ function RowAfter({ result, id }: { result: RowAfter; id: string }) {
           <div>Error: {result.error.message}</div>
         </td>
       )}
-      {result.error && <td className="status">{result.error.message}</td>}
-      {result.warning && (
+      {result.status === "not_transferred" && (
         <td className="status">
-          <div>{result.warning.message}</div>
+          <div>Not transferred</div>
         </td>
       )}
     </tr>
