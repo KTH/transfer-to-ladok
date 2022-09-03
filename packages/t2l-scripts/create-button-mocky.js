@@ -79,7 +79,7 @@ async function start() {
       },
       {
         name: "stage (referens)",
-        value: "https://api-r.referens.sys.kth.se/transfer-to-ladok/mock",
+        value: "https://app-r.referens.sys.kth.se/transfer-to-ladok/mock",
       },
     ],
   });
