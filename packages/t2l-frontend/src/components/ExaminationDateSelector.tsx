@@ -1,27 +1,27 @@
 import React, { useEffect } from "react";
 import DatePicker from "react-datepicker";
-import "./DateSelector.scss";
+import "./ExaminationDateSelector.scss";
 import "react-datepicker/dist/react-datepicker.css";
 
-export type Values =
+export type ExaminationDate =
   | { option: "fixed-date" }
   | { option: "submission-date" }
   | { option: "manual-date"; date: string };
 
-export default function DateSelector({
+export default function ExaminationDateSelector({
   fixedOption,
   value,
   onChange,
 }: {
   fixedOption?: string;
-  value: Values;
-  onChange(value: Values): void;
+  value: ExaminationDate;
+  onChange(value: ExaminationDate): void;
 }) {
   // Inside this component, values for "option" and "date" are controlled
   // by two separate components. Therefore we use two states internally
-  const [selectedOption, setSelectedOption] = React.useState<Values["option"]>(
-    value.option
-  );
+  const [selectedOption, setSelectedOption] = React.useState<
+    ExaminationDate["option"]
+  >(value.option);
   const [manualDate, setManualDate] = React.useState<Date | null>(new Date());
   const manualDateStr = manualDate?.toISOString().split("T")[0] ?? "";
 

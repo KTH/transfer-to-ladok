@@ -10,9 +10,9 @@ import { getResultsToBeTransferred } from "../utils/getResultsToBeTransferred";
 import Loading from "../components/Loading";
 import { ArrowRight } from "../utils/icons";
 import AssignmentSelector from "../components/AssignmentSelector";
-import DateSelector, {
-  Values as ExaminationDateValues,
-} from "../components/DateSelector";
+import ExaminationDateSelector, {
+  ExaminationDate as ExaminationDateValues,
+} from "../components/ExaminationDateSelector";
 import "./Preview.scss";
 import { SendGradesInput } from "../hooks/useSendGrades";
 
@@ -113,7 +113,7 @@ export default function Preview({
           <ArrowRight />
           <div className="destination">{destinationName}</div>
         </div>
-        <DateSelector
+        <ExaminationDateSelector
           fixedOption={fixedExaminationDate}
           value={examinationDateOption}
           onChange={setExaminationDateOption}
