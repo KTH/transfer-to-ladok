@@ -8,24 +8,20 @@ export type ExaminationDate =
   | { option: "submission-date" }
   | { option: "manual-date"; date: string };
 
-export default function ExaminationDateSelector({
-  fixedOption,
-  value,
-  onChange,
-}: {
-  fixedOption?: string;
-  value: ExaminationDate;
-  onChange(value: ExaminationDate): void;
-}) {
-  // Inside this component, values for "option" and "date" are controlled
-  // by two separate components. Therefore we use two states internally
-  const [selectedOption, setSelectedOption] = React.useState<
-    ExaminationDate["option"]
-  >(value.option);
+/**
+ * Returns callbacks to manage the properties "option" and "date" separately.
+ * It also return the values as if they were independent from eath other.
+ */
+function useExaminationDate(
+  initialOption: ExaminationDate["option"],
+  onChange: (value: ExaminationDate) => void
+) {
+  const [selectedOption, setSelectedOption] =
+    React.useState<ExaminationDate["option"]>(initialOption);
   const [manualDate, setManualDate] = React.useState<Date | null>(new Date());
   const manualDateStr = manualDate?.toISOString().split("T")[0] ?? "";
 
-  // We use this hook to merge the two states into a single value
+  // Update the actual value whenever selectedOption or manualDate changes
   useEffect(() => {
     if (selectedOption === "manual-date") {
       onChange({
@@ -37,7 +33,27 @@ export default function ExaminationDateSelector({
         option: selectedOption,
       });
     }
-  }, [manualDate, selectedOption]);
+  }, [manualDateStr, selectedOption]);
+
+  return {
+    manualDate,
+    setManualDate,
+    selectedOption,
+    setSelectedOption,
+  };
+}
+
+export default function ExaminationDateSelector({
+  fixedOption,
+  value,
+  onChange,
+}: {
+  fixedOption?: string;
+  value: ExaminationDate;
+  onChange(value: ExaminationDate): void;
+}) {
+  const { manualDate, setManualDate, selectedOption, setSelectedOption } =
+    useExaminationDate(value.option, onChange);
 
   return (
     <div className="DateSelector">
