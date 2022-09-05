@@ -1351,7 +1351,7 @@
       {
         "id": "8567",
         "name": "Ojos Azules",
-        "gradingType": "letter_grade",
+        "gradingType": "points",
         "dueAt": null,
         "unlockAt": null,
         "lockAt": null
@@ -1359,7 +1359,7 @@
       {
         "id": "8429",
         "name": "British Shorthair",
-        "gradingType": "letter_grade",
+        "gradingType": "points",
         "dueAt": null,
         "unlockAt": null,
         "lockAt": null
@@ -1367,7 +1367,7 @@
       {
         "id": "8808",
         "name": "Kurilian Bobtail",
-        "gradingType": "letter_grade",
+        "gradingType": "points",
         "dueAt": null,
         "unlockAt": null,
         "lockAt": null
@@ -1375,7 +1375,7 @@
       {
         "id": "6366",
         "name": "Japanese Bobtail",
-        "gradingType": "letter_grade",
+        "gradingType": "points",
         "dueAt": null,
         "unlockAt": null,
         "lockAt": null
@@ -1383,7 +1383,7 @@
       {
         "id": "1356",
         "name": "Turkish Angora",
-        "gradingType": "letter_grade",
+        "gradingType": "points",
         "dueAt": null,
         "unlockAt": null,
         "lockAt": null

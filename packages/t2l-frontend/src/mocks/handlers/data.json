@@ -637,7 +637,7 @@
       }
     ],
     "finalGrades": {
-      "hasLetterGrade": true
+      "hasLetterGrade": false
     }
   }
 }
