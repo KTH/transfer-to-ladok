@@ -6,7 +6,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "lerna run dev --parallel --stream"
+    "bootstrap": "lerna bootstrap",
+    "dev": "FORCE_COLOR=1 lerna run dev --parallel --stream"
   },
   "keywords": [],
   "author": "KTH Royal Institute of Technology",
