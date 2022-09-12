@@ -7,9 +7,11 @@ import { ArrowLeft } from "../utils/icons";
 export default function Done({
   ladokUrl = "",
   results,
+  onStartOver,
 }: {
   ladokUrl: string;
   results: RowAfter[];
+  onStartOver?: (event: React.MouseEvent) => void;
 }) {
   const successCount = results.filter((r) => r.status === "success").length;
   const errorCount = results.filter((r) => r.status === "error").length;
@@ -44,7 +46,10 @@ export default function Done({
           adjustments
         </p>
 
-        <button className="btn-secondary with-icon">
+        <button
+          className="btn-secondary with-icon"
+          onClick={(event) => onStartOver?.(event)}
+        >
           <ArrowLeft />
           <div className="label">Start over</div>
         </button>

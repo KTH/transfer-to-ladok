@@ -135,7 +135,13 @@ export default function Authenticated({ sections }: { sections: Sections }) {
   }
 
   if (sendGradesMutation.isSuccess) {
-    return <Done ladokUrl={ladokUrl} results={sendGradesMutation.data} />;
+    return (
+      <Done
+        ladokUrl={ladokUrl}
+        results={sendGradesMutation.data}
+        onStartOver={() => sendGradesMutation.reset()}
+      />
+    );
   }
 
   // If there are no aktivitetstillfälle or kurstillfälle, then
