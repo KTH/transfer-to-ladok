@@ -41,6 +41,10 @@
         font: $font-small;
       }
 
+      .react-datepicker-popper {
+        z-index: 100;
+      }
+
       .react-datepicker-wrapper {
         margin: 0 0 0 0.5rem;
         display: inline-block;
