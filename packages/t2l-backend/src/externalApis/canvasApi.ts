@@ -25,6 +25,13 @@ export interface Assignment {
   due_at: string | null;
   unlock_at: string | null;
   lock_at: string | null;
+
+  /**
+   * Indicates if there is at least one submission submitted by anyone.
+   * If true, users can choose the "submission date" in this assignment as the
+   * examination date
+   */
+  has_submitted_submissions: boolean;
 }
 
 export interface Submission {

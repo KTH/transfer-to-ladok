@@ -82,6 +82,8 @@ export interface Assignment {
 
   /** Assignment "lock" date in ISO format */
   lockAt: string | null;
+
+  hasSubmissions: boolean;
 }
 
 /**

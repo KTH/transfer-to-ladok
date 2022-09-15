@@ -100,6 +100,10 @@ export default function Preview({
     );
   }
 
+  const selectedAssignment = assignmentsQuery.data.assignments.find(
+    (a) => a.id === assignmentId
+  );
+
   return (
     <div className="Preview">
       <header>
@@ -118,8 +122,36 @@ export default function Preview({
           value={examinationDateOption}
           onChange={setExaminationDateOption}
         />
+        {examinationDateOption.option === "submission-date" &&
+          assignmentId === "total" && (
+            <div>
+              The “Total” column does not have submission date. Select a manual
+              examination date instead
+            </div>
+          )}
+        {examinationDateOption.option === "submission-date" &&
+          selectedAssignment?.hasSubmissions === false && (
+            <div>
+              The assignment <em>{selectedAssignment?.name}</em> does not have
+              any submissions and therefore there is no submission date. Select
+              manual input instead.
+            </div>
+          )}
       </header>
       <main className="main">
+        <header>
+          <div>
+            {ladokGradesQuery.data.length} students remaining (without grades in
+            Ladok).{" "}
+            <a href={ladokUrl} target="_blank">
+              Check it in Ladok
+            </a>
+          </div>
+          <div>
+            {tableContent.filter((r) => r.status === "transferable").length}{" "}
+            results are ready to be transferred
+          </div>
+        </header>
         {canvasGradesQuery.isFetching && (
           <div className="loading-state">
             <Loading>Loading results from Canvas...</Loading>
