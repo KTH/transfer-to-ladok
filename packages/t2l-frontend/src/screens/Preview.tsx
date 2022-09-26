@@ -8,7 +8,7 @@ import {
 } from "../hooks/apiClient";
 import { getResultsToBeTransferred } from "../utils/getResultsToBeTransferred";
 import Loading from "../components/Loading";
-import { ArrowRight } from "../utils/icons";
+import { ArrowRight, Warning } from "../utils/icons";
 import AssignmentSelector from "../components/AssignmentSelector";
 import ExaminationDateSelector, {
   ExaminationDate as ExaminationDateValues,
@@ -124,9 +124,12 @@ export default function Preview({
         />
         {examinationDateOption.option === "submission-date" &&
           assignmentId === "total" && (
-            <div>
-              The “Total” column does not have submission date. Select a manual
-              examination date instead
+            <div className="warning">
+              <Warning className="warning-icon" />
+              <div className="warning-text">
+                The “Total” column does not have submission date. Select a
+                manual examination date instead
+              </div>
             </div>
           )}
         {examinationDateOption.option === "submission-date" &&
@@ -140,7 +143,7 @@ export default function Preview({
       </header>
       <main className="main">
         <header>
-          <div>
+          {/* <div>
             {ladokGradesQuery.data.length} students remaining (without grades in
             Ladok).{" "}
             <a href={ladokUrl} target="_blank">
@@ -150,7 +153,7 @@ export default function Preview({
           <div>
             {tableContent.filter((r) => r.status === "transferable").length}{" "}
             results are ready to be transferred
-          </div>
+          </div> */}
         </header>
         {canvasGradesQuery.isFetching && (
           <div className="loading-state">
