@@ -95,7 +95,7 @@ export default function ExaminationDateSelector({
               setSelectedOption("manual-date");
             }}
           />
-          <label htmlFor="manual-date">Custom</label>
+          <label htmlFor="manual-date">Manual</label>
           <DatePicker
             dateFormat="yyyy-MM-dd"
             calendarStartDay={1}
