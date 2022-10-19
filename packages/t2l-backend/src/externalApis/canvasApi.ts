@@ -63,16 +63,6 @@ export interface Enrollment {
   };
 }
 
-function getToken(token = "") {
-  if (token.startsWith("Bearer ")) {
-    return token.substring(7);
-  }
-
-  throw new UnauthorizedError(
-    "Unauthorized. You must access this endpoint either with a session or an authorization header"
-  );
-}
-
 export default class CanvasClient {
   client: CanvasAPI;
 
@@ -82,8 +72,11 @@ export default class CanvasClient {
       typeof canvasApiUrl === "string",
       "Missing environmental variable [CANVAS_API_URL]"
     );
-    const token =
-      req.session.accessToken || getToken(req.headers.authorization);
+    const token = req.session.accessToken;
+
+    if (!token) {
+      throw new UnauthorizedError("Unauthorized. You need to be logged in");
+    }
 
     this.client = new CanvasAPI(canvasApiUrl, token);
     this.client.errorHandler = minimalErrorHandler;
