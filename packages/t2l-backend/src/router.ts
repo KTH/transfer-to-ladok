@@ -7,6 +7,7 @@ import {
 } from "./apiHandlers/canvasGrades";
 import { getGradesHandler, postGradesHandler } from "./apiHandlers/ladokGrades";
 import auth from "./otherHandlers/auth";
+import { checkLadokPermissionsMiddleware } from "./otherHandlers/checkLadokPermissions";
 import { buildInfo } from "./config/info";
 
 const router = Router();
@@ -41,6 +42,10 @@ router.post("/", (req, res) => {
 
 // Authentication is handled via its own router under "/auth" endpoints
 router.use("/auth", auth);
+
+router.use("/api", (req, res, next) =>
+  checkLadokPermissionsMiddleware(req, res, next).catch(next)
+);
 
 //
 //

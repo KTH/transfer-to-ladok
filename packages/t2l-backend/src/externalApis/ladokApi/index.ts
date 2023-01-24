@@ -4,8 +4,9 @@
  * NOTE: Some functions are strange because how Ladok works.
  */
 import got from "got";
-import type {
+import {
   Aktivitetstillfalle,
+  Behorighetsprofil,
   Betygsgrad,
   Kurstillfalle,
   RapporteringsMojlighetInput,
@@ -90,6 +91,16 @@ export function searchRapporteringsMojlighet(
           KontrolleraRapporteringsrattighetlista,
         },
       }
+    )
+    .then((response) => response.body);
+}
+
+export function getReporters() {
+  const REPORTER_UID = "0997fd42-7488-11e8-920e-2de0ccaf48ac";
+
+  return gotClient
+    .get<Behorighetsprofil>(
+      `kataloginformation/behorighetsprofil/${REPORTER_UID}/koppladeanvandare`
     )
     .then((response) => response.body);
 }

@@ -21,6 +21,12 @@ export class UnauthorizedError extends Error {
   }
 }
 
+export class Forbidden extends Error {
+  constructor(message: string) {
+    super(message);
+  }
+}
+
 /** Converts a HTTPError from Got to something readable */
 export class UnhandledApiError extends Error {
   public options?: {
@@ -105,6 +111,13 @@ export function errorHandler(
   if (err instanceof UnprocessableEntityError) {
     return res.status(422).json({
       code: "unprocessable_entity",
+      message: err.message,
+    });
+  }
+
+  if (err instanceof Forbidden) {
+    return res.status(403).json({
+      code: "forbidden",
       message: err.message,
     });
   }

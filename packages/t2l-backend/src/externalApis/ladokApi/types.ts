@@ -151,6 +151,12 @@ export interface Betygsgrad {
   Kod: string;
 }
 
+export interface Behorighetsprofil {
+  Anvandare: {
+    Anvandarnamn: string;
+  }[];
+}
+
 export interface LadokApiError {
   Detaljkod: string;
   FelUID: string;

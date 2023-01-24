@@ -21,6 +21,29 @@ export default function FullPageError({ error }: FallbackProps) {
     );
   }
 
+  if (error instanceof ApiError && error.code === "forbidden") {
+    return (
+      <div className="FullPageError">
+        <header>
+          <h1>Unauthorized</h1>
+        </header>
+        <main>
+          <p>You need reporter permissions in Ladok to use this app</p>
+          <p>
+            <a href="https://intra.kth.se/utbildning/systemstod/ladok">
+              Information on Ladok at KTH intranet
+            </a>
+          </p>
+          <p className="small">
+            Contact IT-support if you need more help:{" "}
+            <a href="mailto:it-support@kth.se">it-support@kth.se</a> and provide
+            the message above.
+          </p>
+        </main>
+      </div>
+    );
+  }
+
   if (error instanceof ApiError) {
     return (
       <div className="FullPageError">
