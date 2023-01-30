@@ -33,10 +33,11 @@ RUN npm ci --omit=dev --unsafe-perm
 #
 # Third, build the production image with a minimal node (alpine)
 FROM node:18-alpine AS production
+COPY --from=backend node_modules node_modules
 COPY --from=frontend packages/t2l-frontend/dist packages/t2l-frontend/dist
 COPY --from=backend packages/t2l-backend/node_modules packages/t2l-backend/node_modules
 COPY . .
 
 EXPOSE 3000
-WORKDIR /packaages/t2l-backend
+WORKDIR /packages/t2l-backend
 CMD npm start
