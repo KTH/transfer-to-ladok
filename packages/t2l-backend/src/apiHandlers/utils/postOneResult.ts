@@ -31,7 +31,9 @@ function formatInputForLadok(
 ): Resultat {
   const letterGrade = input.draft.grade;
   const scaleId = gradingInformation._obj.Rapporteringskontext.BetygsskalaID;
-  const gradeId = getBetyg(scaleId).find((b) => b.Kod === letterGrade)?.ID;
+  const gradeId = getBetyg(scaleId).find(
+    (b) => b.Kod.toUpperCase() === letterGrade.toUpperCase()
+  )?.ID;
 
   if (!gradeId) {
     throw new PostResultError(
