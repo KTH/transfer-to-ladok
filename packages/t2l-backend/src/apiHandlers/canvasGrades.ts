@@ -23,7 +23,7 @@ export async function assignmentGradesHandler(
         id: s.user.integration_id,
         sortableName: s.user.sortable_name,
       },
-      grade: s.grade,
+      grade: s.grade?.toUpperCase() ?? null,
       gradedAt: s.graded_at,
       submittedAt: s.submitted_at,
     }))
@@ -50,7 +50,7 @@ export async function courseGradesHandler(
         id: e.user.integration_id,
         sortableName: e.user.sortable_name,
       },
-      grade: e.grades?.unposted_current_grade,
+      grade: e.grades?.unposted_current_grade.toUpperCase() ?? null,
       gradedAt: null,
       submittedAt: null,
     }))
