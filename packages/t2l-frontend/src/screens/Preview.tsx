@@ -122,6 +122,16 @@ export default function Preview({
           value={examinationDateOption}
           onChange={setExaminationDateOption}
         />
+        {selectedAssignment?.gradingType !== "letter_grade" && (
+          <div className="warning">
+            <Warning className="warning-icon" />
+            <div className="warning-text">
+              This assignment does not have letter grades so it is not possible
+              to transfer results to Ladok from it. Choose a different
+              assignment or set letter grade type to it.
+            </div>
+          </div>
+        )}
         {examinationDateOption.option === "submission-date" &&
           assignmentId === "total" && (
             <div className="warning">

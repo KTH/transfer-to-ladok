@@ -15,9 +15,7 @@ export default function AssignmentSelector({
       <option value="">Select an assignment</option>
       <optgroup label="Assignments">
         {columns.assignments.map((a) => (
-          <option value={a.id} disabled={a.gradingType !== "letter_grade"}>
-            {a.name}
-          </option>
+          <option value={a.id}>{a.name}</option>
         ))}
       </optgroup>
       <optgroup label="Other columns">
