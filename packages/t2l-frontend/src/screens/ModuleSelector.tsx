@@ -3,12 +3,17 @@ import { GradesDestination, Sections } from "t2l-backend/src/types";
 
 import "./ModuleSelector.scss";
 
+export interface DestinationWithUrl {
+  destination: GradesDestination;
+  url: string;
+}
+
 export default function ModuleSelector({
   sections,
   onSelect,
 }: {
   sections: Sections;
-  onSelect(destination: GradesDestination): void;
+  onSelect(destination: DestinationWithUrl): void;
 }) {
   return (
     <div className="ModuleSelector">
@@ -25,7 +30,10 @@ export default function ModuleSelector({
                 onClick={(e) => {
                   e.preventDefault();
                   onSelect({
-                    aktivitetstillfalle: a.id,
+                    url: a.url,
+                    destination: {
+                      aktivitetstillfalle: a.id,
+                    },
                   });
                 }}
               >
@@ -48,8 +56,11 @@ export default function ModuleSelector({
                   onClick={(e) => {
                     e.preventDefault();
                     onSelect({
-                      kurstillfalle: ktf.id,
-                      utbildningsinstans: m.utbildningsinstans,
+                      url: m.url,
+                      destination: {
+                        kurstillfalle: ktf.id,
+                        utbildningsinstans: m.utbildningsinstans,
+                      },
                     });
                   }}
                 >
@@ -64,8 +75,11 @@ export default function ModuleSelector({
                 onClick={(e) => {
                   e.preventDefault();
                   onSelect({
-                    kurstillfalle: ktf.id,
-                    utbildningsinstans: ktf.utbildningsinstans,
+                    url: ktf.url,
+                    destination: {
+                      kurstillfalle: ktf.id,
+                      utbildningsinstans: ktf.utbildningsinstans,
+                    },
                   });
                 }}
               >
