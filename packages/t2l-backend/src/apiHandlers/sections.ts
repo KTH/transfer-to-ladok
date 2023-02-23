@@ -13,6 +13,21 @@ import {
   Kurstillfalle,
 } from "../externalApis/ladokApi";
 
+// Maps between possible "LADOK_API_BASE_URL" and Ladok root URL (frontend).
+const ALL_LADOK_ROOTS: Record<string, string> = {
+  "https://api.integrationstest.ladok.se":
+    "https://www.integrationstest.ladok.se",
+  "https://api.ladok.se": "https://www.start.ladok.se",
+};
+
+const LADOK_ROOT = ALL_LADOK_ROOTS[process.env.LADOK_BASE_URL || ""];
+
+if (!LADOK_ROOT) {
+  throw new Error(
+    `Incorrect LADOK_BASE_URL [${process.env.LADOK_BASE_URL}]. There is no Frontend URL associated with it`
+  );
+}
+
 export function formatAktivitetstillfalle(
   uid: string,
   ladokAkt: Aktivitetstillfalle
@@ -23,11 +38,13 @@ export function formatAktivitetstillfalle(
   );
   const date = ladokAkt.Datumperiod.Startdatum;
   const name = codes.join(" & ") + " - " + date;
+  const url = `${LADOK_ROOT}/gui/app/gui/#/studiedokumentation/aktivitetstillfalleshantering/${uid}/rapportering`;
 
   return {
     id: uid,
     name,
     date,
+    url,
   };
 }
 
@@ -43,10 +60,12 @@ export function formatKurstillfalle(
     utbildningsinstans: ladokKur.UtbildningsinstansUID,
     courseCode: ladokKur.Utbildningskod,
     roundCode: ladokKur.Kurstillfalleskod,
+    url: `${LADOK_ROOT}/gui/app/gui/#/studiedokumentation/resultathantering/${ladokKur.UtbildningsinstansUID}/rapportering/rapportera/${ladokKur.UtbildningsinstansUID}?valtKurstillfalle=${uid}`,
     modules: ladokKur.IngaendeMoment.map((m) => ({
       utbildningsinstans: m.UtbildningsinstansUID,
       code: m.Utbildningskod,
       name: m.Benamning.sv,
+      url: `${LADOK_ROOT}/gui/app/gui/#/studiedokumentation/resultathantering/${ladokKur.UtbildningsinstansUID}/rapportering/rapportera/${m.UtbildningsinstansUID}?valtKurstillfalle=${uid}`,
     })),
   };
 }
