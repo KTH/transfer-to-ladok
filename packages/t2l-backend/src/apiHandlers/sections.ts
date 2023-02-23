@@ -20,11 +20,11 @@ const ALL_LADOK_ROOTS: Record<string, string> = {
   "https://api.ladok.se": "https://www.start.ladok.se",
 };
 
-const LADOK_ROOT = ALL_LADOK_ROOTS[process.env.LADOK_BASE_URL || ""];
+const LADOK_ROOT = ALL_LADOK_ROOTS[process.env.LADOK_API_BASEURL || ""];
 
 if (!LADOK_ROOT) {
   throw new Error(
-    `Incorrect LADOK_BASE_URL [${process.env.LADOK_BASE_URL}]. There is no Frontend URL associated with it`
+    `Incorrect environmental variable LADOK_API_BASEURL [${process.env.LADOK_BASE_URL}]. There is no Frontend URL associated with it`
   );
 }
 
