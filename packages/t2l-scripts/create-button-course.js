@@ -152,11 +152,7 @@ async function start() {
 
     if (!proceed) return;
 
-    await canvas.requestUrl(
-      `accounts/${accountId}/external_tools`,
-      "POST",
-      body
-    );
+    await canvas.requestUrl(`courses/${courseId}/external_tools`, "POST", body);
 
     console.log(
       `New button created. You can see it in any course at ${canvasRoot}courses/${courseId}`
@@ -167,7 +163,7 @@ async function start() {
     console.log();
     console.log("You are going to make a PUT request");
     console.log(
-      `to ${canvasRoot}api/v1/accounts/${courseId}/external_tools/${buttonId}`
+      `to ${canvasRoot}api/v1/courses/${courseId}/external_tools/${buttonId}`
     );
     console.log("with the body printed above");
     const { proceed } = await inquirer.prompt({
