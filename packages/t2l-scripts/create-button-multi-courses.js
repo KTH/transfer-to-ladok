@@ -12,10 +12,12 @@ const courseIds = [
 
 async function start() {
   console.log(
-    'This is the "create-button-beta" script.\n\n' +
+    'This is the "create-button-multi-course" script.\n\n' +
       `Here you will add Transfer to Ladok to a given set of ${courseIds.length} courses.\n` +
       "It means that the button is visible to them.\n\n" +
-      "Edit the file 'create-button-beta' to change the list of courses"
+      "Edit this file to change the list of courses\n\n" +
+      "Use 'create-button-course' or 'create-button-account' for installing the\n" +
+      "for installing the app in one course or account"
   );
 
   const { answer } = await inquirer.prompt({

@@ -12,5 +12,8 @@
   "dependencies": {
     "@kth/canvas-api": "^4.2.0",
     "inquirer": "^8.2.2"
+  },
+  "devDependencies": {
+    "@types/inquirer": "^8.2.6"
   }
 }
