@@ -15,9 +15,6 @@
     "lerna": "^6.4.1",
     "prettier": "^2.5.1"
   },
-  "dependencies": {
-    "applicationinsights": "^2.3.4"
-  },
   "workspaces": [
     "packages/*"
   ]
