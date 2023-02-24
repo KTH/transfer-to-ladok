@@ -5,7 +5,7 @@
 import assert from "assert";
 import CanvasAPI, { minimalErrorHandler } from "@kth/canvas-api";
 import { Request } from "express";
-import { UnauthorizedError } from "../otherHandlers/error";
+import { UnauthorizedError } from "../apiHandlers/error";
 
 export interface CanvasCourse {
   grading_standard_id: number | null;
@@ -25,6 +25,13 @@ export interface Assignment {
   due_at: string | null;
   unlock_at: string | null;
   lock_at: string | null;
+
+  /**
+   * Indicates if there is at least one submission submitted by anyone.
+   * If true, users can choose the "submission date" in this assignment as the
+   * examination date
+   */
+  has_submitted_submissions: boolean;
 }
 
 export interface Submission {
@@ -56,16 +63,6 @@ export interface Enrollment {
   };
 }
 
-function getToken(token = "") {
-  if (token.startsWith("Bearer ")) {
-    return token.substring(7);
-  }
-
-  throw new UnauthorizedError(
-    "Unauthorized. You must access this endpoint either with a session or an authorization header"
-  );
-}
-
 export default class CanvasClient {
   client: CanvasAPI;
 
@@ -75,8 +72,11 @@ export default class CanvasClient {
       typeof canvasApiUrl === "string",
       "Missing environmental variable [CANVAS_API_URL]"
     );
-    const token =
-      req.session.accessToken || getToken(req.headers.authorization);
+    const token = req.session.accessToken;
+
+    if (!token) {
+      throw new UnauthorizedError("Unauthorized. You need to be logged in");
+    }
 
     this.client = new CanvasAPI(canvasApiUrl, token);
     this.client.errorHandler = minimalErrorHandler;

@@ -8,12 +8,11 @@ import {
 } from "../hooks/apiClient";
 import { getResultsToBeTransferred } from "../utils/getResultsToBeTransferred";
 import Loading from "../components/Loading";
-import { ArrowRight } from "../utils/icons";
-import { IndeterminateProgressBar } from "../components/ProgressBar";
+import { ArrowRight, Warning } from "../utils/icons";
 import AssignmentSelector from "../components/AssignmentSelector";
-import DateSelector, {
-  Values as ExaminationDateValues,
-} from "../components/DateSelector";
+import ExaminationDateSelector, {
+  ExaminationDate as ExaminationDateValues,
+} from "../components/ExaminationDateSelector";
 import "./Preview.scss";
 import { SendGradesInput } from "../hooks/useSendGrades";
 
@@ -21,11 +20,13 @@ export default function Preview({
   fixedExaminationDate,
   destinationName,
   destination,
+  ladokUrl,
   onSubmit,
 }: {
   fixedExaminationDate?: string;
   destinationName: string;
   destination: GradesDestination;
+  ladokUrl: string;
   onSubmit(results: SendGradesInput): void;
 }) {
   const [assignmentId, setAssignmentId] = useState<string>("");
@@ -83,6 +84,26 @@ export default function Preview({
     );
   }
 
+  if (ladokGradesQuery.data.length === 0) {
+    return (
+      <div>
+        <h2>All results have been already transferred</h2>
+        <p>
+          <a href={ladokUrl} target="_blank">
+            Go to Ladok to see the results.
+          </a>{" "}
+          From there you can continue the process: mark grades as ready (
+          <em>klarmarkera</em>), certify (<em>attestera</em>) and make any other
+          adjustments
+        </p>
+      </div>
+    );
+  }
+
+  const selectedAssignment = assignmentsQuery.data.assignments.find(
+    (a) => a.id === assignmentId
+  );
+
   return (
     <div className="Preview">
       <header>
@@ -96,19 +117,56 @@ export default function Preview({
           <ArrowRight />
           <div className="destination">{destinationName}</div>
         </div>
-        <DateSelector
+        <ExaminationDateSelector
           fixedOption={fixedExaminationDate}
           value={examinationDateOption}
           onChange={setExaminationDateOption}
         />
+        {examinationDateOption.option === "submission-date" &&
+          assignmentId === "total" && (
+            <div className="warning">
+              <Warning className="warning-icon" />
+              <div className="warning-text">
+                The “Total” column does not have submission date. Select a
+                manual examination date instead
+              </div>
+            </div>
+          )}
+        {examinationDateOption.option === "submission-date" &&
+          selectedAssignment?.hasSubmissions === false && (
+            <div>
+              The assignment <em>{selectedAssignment?.name}</em> does not have
+              any submissions and therefore there is no submission date. Select
+              manual input instead.
+            </div>
+          )}
       </header>
       <main className="main">
-        <IndeterminateProgressBar visible={canvasGradesQuery.isFetching} />
-        <GradesTable results={tableContent} />
-        {assignmentId === "" && (
+        <header>
+          {/* <div>
+            {ladokGradesQuery.data.length} students remaining (without grades in
+            Ladok).{" "}
+            <a href={ladokUrl} target="_blank">
+              Check it in Ladok
+            </a>
+          </div>
+          <div>
+            {tableContent.filter((r) => r.status === "transferable").length}{" "}
+            results are ready to be transferred
+          </div> */}
+        </header>
+        {canvasGradesQuery.isFetching && (
+          <div className="loading-state">
+            <Loading>Loading results from Canvas...</Loading>
+          </div>
+        )}
+        {!canvasGradesQuery.isFetching && assignmentId !== "" && (
+          <GradesTable results={tableContent} />
+        )}
+        {!canvasGradesQuery.isFetching && assignmentId === "" && (
           <div className="empty-state">
             <div>
-              Choose an assignment to see a preview of what is going to be
+              Select an assignment to see a preview of what is going to be
               transferred
             </div>
           </div>

@@ -66,14 +66,32 @@ a.btn-primary {
     background: $color-blue-900;
   }
 }
-
-.btn-secondary {
-  background: white;
-  border: 1px solid black;
+button.btn-secondary {
+  font: $font-bold;
+  background: $color-white;
+  display: inline-block;
+  color: $color-black;
+  padding: 0.5rem 1rem;
   border-radius: 4px;
-  font: $font-small;
-  padding: 0 0.75rem;
-  height: 1.5rem;
+  border: 1px $color-black solid;
+
+  &:hover:enabled {
+    text-decoration: none;
+    background: $color-gray-200;
+  }
+}
+
+button.with-icon {
+  svg {
+    height: 1.5rem;
+    vertical-align: middle;
+  }
+
+  .label {
+    margin: 0 0.5rem;
+    display: inline-block;
+    vertical-align: middle;
+  }
 }
 
 a.with-icon {

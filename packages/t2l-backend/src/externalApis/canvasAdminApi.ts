@@ -3,7 +3,46 @@
  * Functions do not contain any logic
  */
 import assert from "assert";
-import CanvasAPI, { minimalErrorHandler } from "@kth/canvas-api";
+import CanvasAPI from "@kth/canvas-api";
+import { Method, Headers, HTTPError } from "got";
+
+export class CanvasAdminError extends Error {
+  options?: {
+    headers: Headers;
+    url: string;
+    method: Method;
+  };
+  response?: {
+    body: unknown;
+    headers: Headers;
+    ip?: string;
+    retryCount: number;
+    statusCode: number;
+    statusMessage?: string;
+  };
+  code: number;
+
+  constructor(gotError: HTTPError) {
+    super(gotError.message);
+    this.code = gotError.response.statusCode;
+    this.name = "CanvasApiAdminError";
+    this.options = {
+      headers: gotError.options.headers,
+      url: gotError.options.url.toString(),
+      method: gotError.options.method,
+    };
+    this.response = {
+      body: gotError.response.body,
+      headers: gotError.response.headers,
+      ip: gotError.response.ip,
+      retryCount: gotError.response.retryCount,
+      statusCode: gotError.response.statusCode,
+      statusMessage: gotError.response.statusMessage,
+    };
+
+    this.options.headers.authorization = "[HIDDEN]";
+  }
+}
 
 export default class CanvasAdminClient {
   client: CanvasAPI;
@@ -20,7 +59,13 @@ export default class CanvasAdminClient {
       "Missing environmental variable [CANVAS_API_ADMIN_TOKEN]"
     );
     this.client = new CanvasAPI(canvasApiUrl, canvasApiToken);
-    this.client.errorHandler = minimalErrorHandler;
+    this.client.errorHandler = function (err: unknown): never {
+      if (err instanceof HTTPError) {
+        throw new CanvasAdminError(err);
+      } else {
+        throw err;
+      }
+    };
   }
 
   getUserLoginId(userId: number): Promise<string> {

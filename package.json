@@ -6,16 +6,19 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "lerna run dev --parallel --stream"
+    "dev": "FORCE_COLOR=1 lerna run dev --parallel --stream"
   },
   "keywords": [],
   "author": "KTH Royal Institute of Technology",
   "license": "MIT",
   "devDependencies": {
-    "lerna": "^5.4.0",
+    "lerna": "^6.4.1",
     "prettier": "^2.5.1"
   },
   "dependencies": {
     "applicationinsights": "^2.3.4"
-  }
+  },
+  "workspaces": [
+    "packages/*"
+  ]
 }

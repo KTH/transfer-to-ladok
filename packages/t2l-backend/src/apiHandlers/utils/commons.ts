@@ -1,70 +1,4 @@
-import {
-  SokResultat,
-  searchAktivitetstillfalleStudieresultat,
-  searchUtbildningsinstansStudieresultat,
-  getSkaFinnasStudenter,
-  Studieresultat,
-  RapporteringsMojlighetOutput,
-  getBetyg,
-  searchRapporteringsMojlighet,
-} from "../../externalApis/ladokApi";
-import type { GradeableStudents, GradesDestination } from "./types";
 import { CanvasSection } from "../../externalApis/canvasApi";
-
-/**
- * Given a "sok" function and its arguments, go through all pages and returns
- * a list of StudieResultat
- */
-async function searchAll(
-  sokFn: (arg1: string, arg2: string[], page: number) => Promise<SokResultat>,
-  arg1: string,
-  arg2: string[]
-): Promise<Studieresultat[]> {
-  let page = 1;
-  const allResults: Studieresultat[] = [];
-  const result = await sokFn(arg1, arg2, page);
-  allResults.push(...result.Resultat);
-
-  while (result.TotaltAntalPoster > allResults.length) {
-    page++;
-    const result = await sokFn(arg1, arg2, page);
-    allResults.push(...result.Resultat);
-  }
-
-  return allResults;
-}
-
-/**
- * @private Get all {@link Studieresultat} in an Aktivitetstillfälle.
- *
- * This function is used internally by {@link getAllStudieresultat}
- */
-function searchAllAktivitetstillfalleStudieresultat(
-  aktivitetstillfalleUID: string,
-  kurstillfallenUID: string[]
-) {
-  return searchAll(
-    searchAktivitetstillfalleStudieresultat,
-    aktivitetstillfalleUID,
-    kurstillfallenUID
-  );
-}
-
-/**
- * @private Get all {@link Studieresultat} in an Utbildningsinstans.
- *
- * This function is used internally by {@link getAllStudieresultat}
- */
-function searchAllUtbildningsinstansStudieresultat(
-  utbildningsinstansUID: string,
-  kurstillfallenUID: string[]
-) {
-  return searchAll(
-    searchUtbildningsinstansStudieresultat,
-    utbildningsinstansUID,
-    kurstillfallenUID
-  );
-}
 
 /**
  * Given a list of {@link CanvasSection}, identifies which ones are linked to
@@ -77,9 +11,9 @@ function searchAllUtbildningsinstansStudieresultat(
  * that the returned list are actual Ladok IDs
  */
 export function splitSections(sections: CanvasSection[]) {
-  const AKTIVITETSTILLFALLE_REGEX = /^AKT\.([a-z0-9-]+)(\.\w+)?$/;
+  const AKTIVITETSTILLFALLE_REGEX =
+    /^AKT\.(\w{8}-\w{4}-\w{4}-\w{4}-\w{12})(\.\w+)?$/;
   const KURSTILLFALLE_REGEX = /^\w{8}-\w{4}-\w{4}-\w{4}-\w{12}$/;
-  const OLD_KURSTILLFALLE_REGEX = /^\w{6,7}(HT|VT)\d{3}$/;
 
   const aktIds = sections
     .map((s) => AKTIVITETSTILLFALLE_REGEX.exec(s.sis_section_id ?? "")?.[1])
@@ -90,167 +24,11 @@ export function splitSections(sections: CanvasSection[]) {
     .map((s) => s.sis_section_id)
     .filter((id): id is string => typeof id === "string");
 
-  const OLD__kurIds = sections
-    .filter((s) => OLD_KURSTILLFALLE_REGEX.test(s.sis_section_id ?? ""))
-    .map((s) => s.integration_id)
-    .filter((id): id is string => typeof id === "string");
-
   // This function should return each ID once.
   // Examrooms have multiple sections including same ID but with different
   // suffixes.
   return {
     aktivitetstillfalleIds: Array.from(new Set(aktIds)),
-    kurstillfalleIds: Array.from(new Set([...kurIds, ...OLD__kurIds])),
+    kurstillfalleIds: Array.from(new Set(kurIds)),
   };
-}
-
-/**
- * Given a destination ({@link GradesDestination}), get a list of all
- * {@link Studieresultat} in that destination
- */
-export async function getAllStudieresultat(
-  destination: GradesDestination
-): Promise<Studieresultat[]> {
-  if ("aktivitetstillfalle" in destination) {
-    // We use this function only to get all Kurstillfälle that are linked with a given aktivitetstillfälle.
-    const kurstillfalleUID = await getSkaFinnasStudenter(
-      destination.aktivitetstillfalle
-    ).then((s) => s.Utbildningstillfalle.map((u) => u.Uid));
-
-    return searchAllAktivitetstillfalleStudieresultat(
-      destination.aktivitetstillfalle,
-      kurstillfalleUID
-    );
-  } else {
-    return searchAllUtbildningsinstansStudieresultat(
-      destination.utbildningsinstans,
-      [destination.kurstillfalle]
-    );
-  }
-}
-
-/** Get an existing draft in a "Studieresultat" */
-export function getExistingDraft(studentResultat: Studieresultat) {
-  const arbetsunderlag = studentResultat.ResultatPaUtbildningar?.find(
-    (rpu) => rpu.Arbetsunderlag?.ProcessStatus === 1
-  )?.Arbetsunderlag;
-
-  return arbetsunderlag;
-}
-
-/** Get an existing "klarmarkerade" result in a Studieresultat */
-export function getExistingReady(studentResultat: Studieresultat) {
-  const arbetsunderlagReady = studentResultat.ResultatPaUtbildningar?.find(
-    (rpu) => rpu.Arbetsunderlag?.ProcessStatus === 2
-  )?.Arbetsunderlag;
-
-  return arbetsunderlagReady;
-}
-
-/** Get an existing "senaste attesterade" result if any */
-export function getLatestCertified(studentResultat: Studieresultat) {
-  const arbetsunderlagCertified = studentResultat.ResultatPaUtbildningar?.find(
-    (rpu) =>
-      // For some strange reason, the API returns results from other completely
-      // unrelated modules (¯\_(ツ)_/¯)
-      // We need to filter out things to prevent bugs
-      rpu.SenastAttesteradeResultat?.UtbildningsinstansUID ===
-      studentResultat.Rapporteringskontext.UtbildningsinstansUID
-  )?.SenastAttesteradeResultat;
-
-  return arbetsunderlagCertified;
-}
-
-/**
- * Given a list of {@link Studieresultat}, get a list of which ones the user
- * has permissions to send grades to.
- */
-export async function getAllPermissions(
-  allStudieresultat: Studieresultat[],
-  email: string
-) {
-  return searchRapporteringsMojlighet(
-    email,
-    allStudieresultat.map((s) => ({
-      StudieresultatUID: s.Uid,
-      UtbildningsinstansAttRapporteraPaUID:
-        s.Rapporteringskontext.UtbildningsinstansUID,
-    }))
-  );
-}
-
-/** Checks if the Studieresultat is part of the "RapporteringsMojlighetOutput" list */
-export function containsPermission(
-  studieresultat: Studieresultat,
-  allPermissions: RapporteringsMojlighetOutput
-) {
-  return allPermissions.KontrolleraRapporteringsrattighetlista.some(
-    (r) =>
-      r.StudieresultatUID === studieresultat.Uid &&
-      r.UtbildningsinstansAttRapporteraPaUID ===
-        studieresultat.Rapporteringskontext.UtbildningsinstansUID &&
-      r.HarRattighet
-  );
-}
-
-/**
- * Merges a list of {@link Studieresultat} and the object {@link RapporteringsMojlighetOutput}
- * into a single human-readable list
- */
-export function normalizeStudieresultat(
-  allStudieresultat: Studieresultat[],
-  allPermissions: RapporteringsMojlighetOutput
-): GradeableStudents {
-  return allStudieresultat.map(
-    (oneStudieresultat): GradeableStudents[number] => {
-      const scale = getBetyg(
-        oneStudieresultat.Rapporteringskontext.BetygsskalaID
-      ).map((b) => b.Kod);
-
-      const hasPermission = containsPermission(
-        oneStudieresultat,
-        allPermissions
-      );
-
-      const draft = getExistingDraft(oneStudieresultat);
-      const certified = getLatestCertified(oneStudieresultat);
-      const ready = getExistingReady(oneStudieresultat);
-
-      return {
-        student: {
-          id: oneStudieresultat.Student.Uid,
-          sortableName: `${oneStudieresultat.Student.Efternamn}, ${oneStudieresultat.Student.Fornamn}`,
-        },
-        scale,
-        hasPermission,
-        requiresTitle:
-          oneStudieresultat.Rapporteringskontext.KravPaProjekttitel,
-        draft:
-          draft && hasPermission
-            ? {
-                grade: draft.Betygsgradsobjekt?.Kod,
-                examinationDate: draft.Examinationsdatum,
-                projectTitle: draft.Projekttitel && {
-                  title: draft.Projekttitel.Titel,
-                  alternativeTitle: draft.Projekttitel.AlternativTitel,
-                },
-              }
-            : undefined,
-        markedAsReady:
-          ready && hasPermission
-            ? {
-                grade: ready.Betygsgradsobjekt.Kod,
-                examinationDate: ready.Examinationsdatum,
-              }
-            : undefined,
-        certified:
-          certified && hasPermission
-            ? {
-                grade: certified.Betygsgradsobjekt.Kod,
-                examinationDate: certified.Examinationsdatum,
-              }
-            : undefined,
-      };
-    }
-  );
 }

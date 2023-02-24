@@ -1,58 +1,13 @@
 import "./config/start";
-import express from "express";
-import router from "./router";
-import sessionMiddleware from "express-session";
-import connectMongoDbSession from "connect-mongodb-session";
-import log, { skogMiddleware } from "skog";
-import path from "path";
+import log from "skog";
+import app from "./server";
+// import { mockedServices } from "./mocks/example";
+import * as appInsights from "applicationinsights";
 
-const MongoDbStore = connectMongoDbSession(sessionMiddleware);
-
-const app = express();
-const store = new MongoDbStore({
-  uri: process.env.MONGODB_CONNECTION_STRING || "",
-  databaseName: "transfer-to-ladok",
-  collection: "sessions",
-
-  // Azure Cosmos MongoDB requires an index called "_ts".
-  // Read more: https://github.com/mongodb-js/connect-mongodb-session#azure-cosmos-mongodb-support
-  expiresKey: "_ts",
-
-  expiresAfterSeconds: 14 * 24 * 3600,
-});
 const port = 3000;
 
-app.set("trust proxy", 1);
-app.use(express.json());
-app.use(express.urlencoded());
-app.use(
-  sessionMiddleware({
-    name: "transfer-to-ladok.sid",
-    proxy: true,
-    store: store,
-    cookie: {
-      domain: new URL(process.env.PROXY_HOST || "").hostname,
-      maxAge: 14 * 24 * 3600 * 1000,
-      httpOnly: true,
-      secure: "auto",
-      sameSite: "none",
-    },
-
-    // Read more: https://www.npmjs.com/package/express-session#resave
-    resave: false,
-
-    // Save only sessions when user is authenticated. Setting "saveUnitialized"
-    // to "false" prevents creation of sessions when app is accessed via API
-    saveUninitialized: false,
-    secret: process.env.SESSION_SECRET || "",
-  })
-);
-app.use(skogMiddleware);
-app.use("/transfer-to-ladok", router);
-app.use(
-  "/transfer-to-ladok",
-  express.static(path.join(__dirname, "../../t2l-frontend/dist"))
-);
+// mockedServices.listen({ onUnhandledRequest: "bypass" });
+appInsights.setup();
 app.listen(port, () => {
   log.info(`Listening to port ${port}`);
 });

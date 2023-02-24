@@ -8,9 +8,14 @@ import {
 } from "./apiHandlers/canvasGrades";
 import { getGradesHandler, postGradesHandler } from "./apiHandlers/ladokGrades";
 import auth from "./otherHandlers/auth";
-import { errorHandler } from "./otherHandlers/error";
 import { buildInfo } from "./config/info";
+
 const router = Router();
+
+router.get("/_monitor", (req, res) => {
+  res.set("Content-type", "text/plain");
+  res.send("APPLICATION_STATUS: OK");
+});
 
 router.get("/_about", (req, res) => {
   res.set("Content-type", "text/plain");
@@ -30,10 +35,7 @@ Transfer to Ladok
 // This endpoint is where the user lands after clicking "Transfer to Ladok"
 // from the left-side menu
 router.post("/", (req, res) => {
-  // const domain = req.body.custom_domain;
   const courseId = req.body.custom_courseid;
-
-  //
 
   res.redirect(`/transfer-to-ladok?courseId=${courseId}`);
 });
@@ -41,6 +43,8 @@ router.post("/", (req, res) => {
 // Authentication is handled via its own router under "/auth" endpoints
 router.use("/auth", auth);
 
+//
+//
 // From here, everything are api endpoints:
 
 // Middleware to add "courseId" to all app-insights
@@ -68,7 +72,5 @@ router.get("/api/courses/:courseId/ladok-grades", (req, res, next) =>
 router.post("/api/courses/:courseId/ladok-grades", (req, res, next) =>
   postGradesHandler(req, res).catch(next)
 );
-
-router.use("/api", errorHandler);
 
 export default router;

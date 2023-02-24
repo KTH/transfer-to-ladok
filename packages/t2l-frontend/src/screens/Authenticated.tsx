@@ -66,6 +66,8 @@ function AppWithSelector({
     return <ModuleSelector sections={sections} onSelect={setDestination} />;
   }
 
+  const ladokUrl = getLadokUrl(sections, destination);
+
   return (
     <div className="Authenticated">
       <header className="header">
@@ -82,6 +84,7 @@ function AppWithSelector({
         </a>
       </header>
       <Preview
+        ladokUrl={ladokUrl}
         destination={destination}
         destinationName={getName(sections, destination) || ""}
         fixedExaminationDate={getDate(sections, destination)}
@@ -93,13 +96,18 @@ function AppWithSelector({
 
 function AppWithoutSelector({
   akt,
+  sections,
   onSubmit,
 }: {
   akt: AktivitetstillfalleSection;
+  sections: Sections;
   onSubmit(results: SendGradesInput): void;
 }) {
+  const ladokUrl = getLadokUrl(sections, { aktivitetstillfalle: akt.id });
+
   return (
     <Preview
+      ladokUrl={ladokUrl}
       destination={{ aktivitetstillfalle: akt.id }}
       destinationName={akt.name}
       fixedExaminationDate={akt.date}
@@ -127,7 +135,13 @@ export default function Authenticated({ sections }: { sections: Sections }) {
   }
 
   if (sendGradesMutation.isSuccess) {
-    return <Done ladokUrl={ladokUrl} results={sendGradesMutation.data} />;
+    return (
+      <Done
+        ladokUrl={ladokUrl}
+        results={sendGradesMutation.data}
+        onStartOver={() => sendGradesMutation.reset()}
+      />
+    );
   }
 
   // If there are no aktivitetstillfälle or kurstillfälle, then
@@ -140,7 +154,11 @@ export default function Authenticated({ sections }: { sections: Sections }) {
   // we don't show any selector
   if (aktivitetstillfalle.length === 1 && kurstillfalle.length === 0) {
     return (
-      <AppWithoutSelector akt={aktivitetstillfalle[0]} onSubmit={koooor} />
+      <AppWithoutSelector
+        sections={sections}
+        akt={aktivitetstillfalle[0]}
+        onSubmit={koooor}
+      />
     );
   }
 

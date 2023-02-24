@@ -2,12 +2,7 @@ import { Request, Response } from "express";
 import assert from "node:assert/strict";
 import CanvasClient, { CanvasSection } from "../externalApis/canvasApi";
 import CanvasAdminClient from "../externalApis/canvasAdminApi";
-import {
-  getAllStudieresultat,
-  splitSections,
-  getAllPermissions,
-  normalizeStudieresultat,
-} from "./utils/commons";
+import { splitSections } from "./utils/commons";
 import type {
   GradesDestination,
   GradeableStudents,
@@ -17,10 +12,7 @@ import type {
   ResultOutput,
   Transference,
 } from "./utils/types";
-import {
-  BadRequestError,
-  UnprocessableEntityError,
-} from "../otherHandlers/error";
+import { BadRequestError, UnprocessableEntityError } from "./error";
 import {
   assertGradesDestination,
   assertPostLadokGradesInput,
@@ -28,6 +20,7 @@ import {
 import postOneResult from "./utils/postOneResult";
 import { getKurstillfalleStructure } from "../externalApis/ladokApi";
 import { insertTransference } from "../externalApis/mongo";
+import { getGradingInformation } from "./utils/GradingInformation";
 
 /** Checks if the given `utbildningsinstans` belongs to the given `kurstillfalle` */
 async function checkUtbildningsinstansInKurstillfalle(
@@ -51,7 +44,7 @@ async function checkUtbildningsinstansInKurstillfalle(
 }
 
 /** Checks if the destination exists in a given list of sections */
-async function assertDestinationInSections(
+async function checkDestinationInSections(
   destination: GradesDestination,
   sections: CanvasSection[]
 ) {
@@ -99,14 +92,13 @@ export async function getGradesHandler(
   const canvasAdminClient = new CanvasAdminClient();
   const canvasClient = new CanvasClient(req);
   const sections = await canvasClient.getSections(courseId);
-  await assertDestinationInSections(destination, sections);
+  await checkDestinationInSections(destination, sections);
 
   const { id: userId } = await canvasClient.getSelf();
   const email = await canvasAdminClient.getUserLoginId(userId);
 
-  const allStudieresultat = await getAllStudieresultat(destination);
-  const allPermissions = await getAllPermissions(allStudieresultat, email);
-  res.json(normalizeStudieresultat(allStudieresultat, allPermissions));
+  const gradingInformation = await getGradingInformation(destination, email);
+  res.json(gradingInformation.map((g) => g.toObject()));
 }
 
 /**
@@ -126,12 +118,15 @@ export async function postGradesHandler(
   const canvasClient = new CanvasClient(req);
   const canvasAdminClient = new CanvasAdminClient();
   const sections = await canvasClient.getSections(courseId);
-  await assertDestinationInSections(req.body.destination, sections);
+  await checkDestinationInSections(req.body.destination, sections);
 
   const { id: userId } = await canvasClient.getSelf();
   const email = await canvasAdminClient.getUserLoginId(userId);
-  const allStudieresultat = await getAllStudieresultat(req.body.destination);
-  const allPermissions = await getAllPermissions(allStudieresultat, email);
+
+  const gradingInformation = await getGradingInformation(
+    req.body.destination,
+    email
+  );
 
   const output: ResultOutput[] = [];
   const transference: Transference = {
@@ -151,12 +146,10 @@ export async function postGradesHandler(
   };
 
   for (const resultInput of req.body.results) {
-    await postOneResult(resultInput, allStudieresultat, allPermissions).then(
-      (o) => {
-        transference.results.push(o);
-        output.push(o);
-      }
-    );
+    await postOneResult(resultInput, gradingInformation).then((o) => {
+      transference.results.push(o);
+      output.push(o);
+    });
   }
 
   const summary = {

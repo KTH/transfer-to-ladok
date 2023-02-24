@@ -10,11 +10,21 @@ import "./GradesTable.scss";
 function Header() {
   return (
     <tr className="row">
-      <th className="transferable"></th>
-      <th className="name">Student</th>
-      <th className="grade">Grade</th>
-      <th className="date">Examination date</th>
-      <th className="status">Notes</th>
+      <th className="transferable">
+        <div>&nbsp;</div>
+      </th>
+      <th className="name">
+        <div>Student</div>
+      </th>
+      <th className="grade">
+        <div>Grade</div>
+      </th>
+      <th className="date">
+        <div>Examination date</div>
+      </th>
+      <th className="status">
+        <div>Notes</div>
+      </th>
     </tr>
   );
 }
@@ -67,10 +77,9 @@ function RowAfter({ result, id }: { result: RowAfter; id: string }) {
           <div>Error: {result.error.message}</div>
         </td>
       )}
-      {result.error && <td className="status">{result.error.message}</td>}
-      {result.warning && (
+      {result.status === "not_transferred" && (
         <td className="status">
-          <div>{result.warning.message}</div>
+          <div>Not transferred</div>
         </td>
       )}
     </tr>
@@ -87,14 +96,8 @@ export function GradesTable({
     compareFn(a.student.sortableName, b.student.sortableName)
   );
 
-  const [expanded, setExpanded] = React.useState(sortedResults.length < 7);
-
-  React.useEffect(() => {
-    setExpanded(sortedResults.length < 7);
-  }, [sortedResults.length]);
-
   return (
-    <div className={["GradesTable", expanded && "expanded"].join(" ")}>
+    <div className="GradesTable">
       <table className="table">
         <thead>
           <Header />
@@ -109,11 +112,6 @@ export function GradesTable({
           )}
         </tbody>
       </table>
-      <div className="show-all">
-        <button className="btn-secondary" onClick={() => setExpanded(true)}>
-          Show all
-        </button>
-      </div>
     </div>
   );
 }

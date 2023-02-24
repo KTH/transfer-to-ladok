@@ -1,9 +1,27 @@
 @import "../utils/variables.scss";
 
+.warning {
+  margin: 16px 0;
+  padding: 16px;
+  border-radius: 8px;
+  display: flex;
+  background: $color-yellow-200;
+  border: $color-yellow-700 1px solid;
+  align-items: flex-start;
+
+  .warning-icon {
+    display: block;
+    color: $color-yellow-700;
+    width: 24px;
+    height: 18px;
+    margin: 3px 12px 3px 4px;
+  }
+}
+
 .Preview {
   padding-top: 1rem;
 
-  header {
+  > header {
     margin-bottom: 2rem;
   }
 
@@ -31,11 +49,24 @@
     margin: 2rem 0;
     position: relative;
 
+    .loading-state {
+      height: 20rem;
+      width: 100%;
+      background: $color-gray-200;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+
+      > div {
+        text-align: center;
+      }
+    }
+
     .empty-state {
       margin: 0;
       background: $color-gray-200;
       padding: 0;
-      height: 200px;
+      height: 20rem;
       display: flex;
       flex-direction: column;
       justify-content: center;

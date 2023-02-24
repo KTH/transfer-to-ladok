@@ -1,31 +1,27 @@
 import React, { useEffect } from "react";
 import DatePicker from "react-datepicker";
-import "./DateSelector.scss";
+import "./ExaminationDateSelector.scss";
 import "react-datepicker/dist/react-datepicker.css";
 
-export type Values =
+export type ExaminationDate =
   | { option: "fixed-date" }
   | { option: "submission-date" }
   | { option: "manual-date"; date: string };
 
-export default function DateSelector({
-  fixedOption,
-  value,
-  onChange,
-}: {
-  fixedOption?: string;
-  value: Values;
-  onChange(value: Values): void;
-}) {
-  // Inside this component, values for "option" and "date" are controlled
-  // by two separate components. Therefore we use two states internally
-  const [selectedOption, setSelectedOption] = React.useState<Values["option"]>(
-    value.option
-  );
+/**
+ * Returns callbacks to manage the properties "option" and "date" separately.
+ * It also return the values as if they were independent from eath other.
+ */
+function useExaminationDate(
+  initialOption: ExaminationDate["option"],
+  onChange: (value: ExaminationDate) => void
+) {
+  const [selectedOption, setSelectedOption] =
+    React.useState<ExaminationDate["option"]>(initialOption);
   const [manualDate, setManualDate] = React.useState<Date | null>(new Date());
   const manualDateStr = manualDate?.toISOString().split("T")[0] ?? "";
 
-  // We use this hook to merge the two states into a single value
+  // Update the actual value whenever selectedOption or manualDate changes
   useEffect(() => {
     if (selectedOption === "manual-date") {
       onChange({
@@ -37,7 +33,27 @@ export default function DateSelector({
         option: selectedOption,
       });
     }
-  }, [manualDate, selectedOption]);
+  }, [manualDateStr, selectedOption]);
+
+  return {
+    manualDate,
+    setManualDate,
+    selectedOption,
+    setSelectedOption,
+  };
+}
+
+export default function ExaminationDateSelector({
+  fixedOption,
+  value,
+  onChange,
+}: {
+  fixedOption?: string;
+  value: ExaminationDate;
+  onChange(value: ExaminationDate): void;
+}) {
+  const { manualDate, setManualDate, selectedOption, setSelectedOption } =
+    useExaminationDate(value.option, onChange);
 
   return (
     <div className="DateSelector">
@@ -79,7 +95,7 @@ export default function DateSelector({
               setSelectedOption("manual-date");
             }}
           />
-          <label htmlFor="manual-date">Custom</label>
+          <label htmlFor="manual-date">Manual</label>
           <DatePicker
             dateFormat="yyyy-MM-dd"
             calendarStartDay={1}

@@ -1,12 +1,11 @@
 import { Request, Response } from "express";
 import CanvasClient from "../externalApis/canvasApi";
 import type { Columns } from "./utils/types";
-
 /**
  * HTTP request: `GET /courses/:courseId/assignments`
  * Get the assignments in a given Canvas `:courseId`
  *
- * @see {@link Assignments} to see how the response looks like
+ * @see {@link Columns} to see how the response looks like
  */
 export default async function columnsHandler(
   req: Request<{ courseId: string }>,
@@ -29,6 +28,7 @@ export default async function columnsHandler(
       dueAt: assignment.due_at,
       unlockAt: assignment.unlock_at,
       lockAt: assignment.lock_at,
+      hasSubmissions: assignment.has_submitted_submissions,
     })),
   });
 }

@@ -82,6 +82,8 @@ export interface Assignment {
 
   /** Assignment "lock" date in ISO format */
   lockAt: string | null;
+
+  hasSubmissions: boolean;
 }
 
 /**
@@ -250,4 +252,9 @@ export interface Transference {
     success: number;
     error: number;
   };
+}
+
+export interface ApiError<Codes = string> {
+  code: Codes;
+  message: string;
 }
