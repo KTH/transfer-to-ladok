@@ -1,5 +1,4 @@
 import { Router } from "express";
-import appInsights from "applicationinsights";
 import sectionsHandler from "./apiHandlers/sections";
 import columnsHandler from "./apiHandlers/columns";
 import {
@@ -9,6 +8,7 @@ import {
 import { getGradesHandler, postGradesHandler } from "./apiHandlers/ladokGrades";
 import auth from "./otherHandlers/auth";
 import { buildInfo } from "./config/info";
+import { insightsMiddleware } from "./apiHandlers/utils/applicationInsights";
 
 const router = Router();
 
@@ -48,9 +48,7 @@ router.use("/auth", auth);
 // From here, everything are api endpoints:
 
 // Middleware to add "courseId" to all app-insights
-router.use("/api/courses/:courseId", (req, res, next) => {
-  //
-});
+router.use("/api/courses/:courseId", insightsMiddleware);
 
 router.get("/api/courses/:courseId/sections", (req, res, next) =>
   sectionsHandler(req, res).catch(next)

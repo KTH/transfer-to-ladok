@@ -8,6 +8,10 @@ import type FlushOptions from "applicationinsights/out/Library/FlushOptions";
 
 const storage = new AsyncLocalStorage<TelemetryClient>();
 
+function _getClient() {
+  return storage.getStore() || defaultClient;
+}
+
 /**
  * Creates an Application Insights instance with the current user ID and
  * attaches it to a Async Context
@@ -44,10 +48,6 @@ export function setInsightsField(key: keyof ContextTagKeys, value: string) {
 
 export function getInsightsField(key: keyof ContextTagKeys) {
   return storage.getStore()?.context.tags[defaultClient.context.keys[key]];
-}
-
-function _getClient() {
-  return storage.getStore() || defaultClient;
 }
 
 export function trackAvailability(telemetry: Contracts.AvailabilityTelemetry) {
