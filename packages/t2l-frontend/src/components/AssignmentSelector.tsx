@@ -19,9 +19,7 @@ export default function AssignmentSelector({
         ))}
       </optgroup>
       <optgroup label="Other columns">
-        <option value="total" disabled={!columns.finalGrades.hasLetterGrade}>
-          Total column
-        </option>
+        <option value="total">Total column</option>
       </optgroup>
     </select>
   );
