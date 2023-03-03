@@ -55,7 +55,7 @@ export interface Enrollment {
    * The other returned values are omitted in this type definition on purpose.
    */
   grades: {
-    unposted_current_grade: string;
+    unposted_current_grade: string | null;
   };
   user: {
     integration_id: string;
