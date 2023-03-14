@@ -7,7 +7,7 @@ import {
 import { SendGradesInput, useSendGrades } from "../hooks/useSendGrades";
 import Preview from "./Preview";
 import Done from "./Done";
-import ModuleSelector from "./ModuleSelector";
+import ModuleSelector, { type DestinationWithUrl } from "./ModuleSelector";
 import { ArrowLeft } from "../utils/icons";
 
 import "./Authenticated.scss";
@@ -60,13 +60,11 @@ function AppWithSelector({
   sections: Sections;
   onSubmit(results: SendGradesInput): void;
 }) {
-  const [destination, setDestination] = React.useState<GradesDestination>();
+  const [selection, setSelection] = React.useState<DestinationWithUrl>();
 
-  if (!destination) {
-    return <ModuleSelector sections={sections} onSelect={setDestination} />;
+  if (!selection) {
+    return <ModuleSelector sections={sections} onSelect={setSelection} />;
   }
-
-  const ladokUrl = getLadokUrl(sections, destination);
 
   return (
     <div className="Authenticated">
@@ -76,7 +74,7 @@ function AppWithSelector({
           className="with-icon"
           onClick={(e) => {
             e.preventDefault();
-            setDestination(undefined);
+            setSelection(undefined);
           }}
         >
           <ArrowLeft />
@@ -84,10 +82,10 @@ function AppWithSelector({
         </a>
       </header>
       <Preview
-        ladokUrl={ladokUrl}
-        destination={destination}
-        destinationName={getName(sections, destination) || ""}
-        fixedExaminationDate={getDate(sections, destination)}
+        ladokUrl={selection.url}
+        destination={selection.destination}
+        destinationName={getName(sections, selection.destination) || ""}
+        fixedExaminationDate={getDate(sections, selection.destination)}
         onSubmit={onSubmit}
       />
     </div>
@@ -96,18 +94,14 @@ function AppWithSelector({
 
 function AppWithoutSelector({
   akt,
-  sections,
   onSubmit,
 }: {
   akt: AktivitetstillfalleSection;
-  sections: Sections;
   onSubmit(results: SendGradesInput): void;
 }) {
-  const ladokUrl = getLadokUrl(sections, { aktivitetstillfalle: akt.id });
-
   return (
     <Preview
-      ladokUrl={ladokUrl}
+      ladokUrl={akt.url}
       destination={{ aktivitetstillfalle: akt.id }}
       destinationName={akt.name}
       fixedExaminationDate={akt.date}
@@ -154,11 +148,7 @@ export default function Authenticated({ sections }: { sections: Sections }) {
   // we don't show any selector
   if (aktivitetstillfalle.length === 1 && kurstillfalle.length === 0) {
     return (
-      <AppWithoutSelector
-        sections={sections}
-        akt={aktivitetstillfalle[0]}
-        onSubmit={koooor}
-      />
+      <AppWithoutSelector akt={aktivitetstillfalle[0]} onSubmit={koooor} />
     );
   }
 

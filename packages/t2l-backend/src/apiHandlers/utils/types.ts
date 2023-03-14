@@ -24,6 +24,9 @@ export interface AktivitetstillfalleSection {
 
   /** Date when the aktivitetstillfälle is held. Example: 2022-01-01 */
   date: string;
+
+  /** Go to this URL to report grades in this Aktivitetstillfälle  */
+  url: string;
 }
 
 /** A Canvas Section linked with a Ladok kurstillfalle  */
@@ -40,6 +43,9 @@ export type KurstillfalleSection = {
   /** Code for kurstillfälle: "50071" */
   roundCode: string;
 
+  /** Go to this URL to report final grades of this kurstillfälle */
+  url: string;
+
   /** Modules in the kurstillfälle */
   modules: {
     /** Use this identifier to send grades to this specific module */
@@ -50,6 +56,9 @@ export type KurstillfalleSection = {
 
     /** Human readable name of the module. Example: "Examination" */
     name: string;
+
+    /** Go to this URL to report grades for this module */
+    url: string;
   }[];
 };
 
