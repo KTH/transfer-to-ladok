@@ -11,10 +11,10 @@ export default function AssignmentSelector({
   onChange: (value: string) => void;
 }) {
   const sortedAssignments = columns.assignments.slice().sort((a, b) => {
-    if (a.gradingType === "letter_grade") {
+    if (a.gradingType === "letter_grade" && b.gradingType !== "letter_grade") {
       return -1;
     }
-    if (b.gradingType === "letter_grade") {
+    if (b.gradingType === "letter_grade" && a.gradingType !== "letter_grade") {
       return 1;
     }
     return a.name.localeCompare(b.name);
