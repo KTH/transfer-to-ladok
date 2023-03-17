@@ -117,6 +117,30 @@ export default function Preview({
           <ArrowRight />
           <div className="destination">{destinationName}</div>
         </div>
+        {selectedAssignment &&
+          selectedAssignment.gradingType !== "letter_grade" && (
+            <div className="warning">
+              <Warning className="warning-icon" />
+              <div className="warning-text">
+                This assignment does not have letter grades so it is not
+                possible to transfer results to Ladok from it. Choose a
+                different assignment or set letter grade type to this
+                assignment.
+              </div>
+            </div>
+          )}
+
+        {assignmentId === "total" &&
+          !assignmentsQuery.data.finalGrades.hasLetterGrade && (
+            <div className="warning">
+              <Warning className="warning-icon" />
+              <div className="warning-text">
+                The course has no letter grades set up so it is not possible to
+                transfer results to Ladok from total column. Choose a different
+                assignment or set letter grade type in course settings.
+              </div>
+            </div>
+          )}
         <ExaminationDateSelector
           fixedOption={fixedExaminationDate}
           value={examinationDateOption}
@@ -134,10 +158,13 @@ export default function Preview({
           )}
         {examinationDateOption.option === "submission-date" &&
           selectedAssignment?.hasSubmissions === false && (
-            <div>
-              The assignment <em>{selectedAssignment?.name}</em> does not have
-              any submissions and therefore there is no submission date. Select
-              manual input instead.
+            <div className="warning">
+              <Warning className="warning-icon" />
+              <div className="warning-text">
+                The assignment <em>{selectedAssignment?.name}</em> does not have
+                any submissions and therefore there is no submission date.
+                Select manual input instead.
+              </div>
             </div>
           )}
       </header>

@@ -10,20 +10,26 @@ export default function AssignmentSelector({
   value: string;
   onChange: (value: string) => void;
 }) {
+  const sortedAssignments = columns.assignments.slice().sort((a, b) => {
+    if (a.gradingType === "letter_grade" && b.gradingType !== "letter_grade") {
+      return -1;
+    }
+    if (b.gradingType === "letter_grade" && a.gradingType !== "letter_grade") {
+      return 1;
+    }
+    return a.name.localeCompare(b.name);
+  });
+
   return (
     <select value={value} onChange={(e) => onChange(e.target.value)}>
       <option value="">Select an assignment</option>
       <optgroup label="Assignments">
-        {columns.assignments.map((a) => (
-          <option value={a.id} disabled={a.gradingType !== "letter_grade"}>
-            {a.name}
-          </option>
+        {sortedAssignments.map((a) => (
+          <option value={a.id}>{a.name}</option>
         ))}
       </optgroup>
       <optgroup label="Other columns">
-        <option value="total" disabled={!columns.finalGrades.hasLetterGrade}>
-          Total column
-        </option>
+        <option value="total">Total column</option>
       </optgroup>
     </select>
   );
