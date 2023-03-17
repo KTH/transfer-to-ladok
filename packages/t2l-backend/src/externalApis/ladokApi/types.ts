@@ -114,6 +114,9 @@ export interface Studieresultat {
        * update or delete a result
        */
       Uid: string;
+
+      /** Use this to filter-out "utkast" or "klarmarkerade" that are unrelated */
+      UtbildningsinstansUID: string;
     };
 
     /** Latest "atesterade" resultat if any */

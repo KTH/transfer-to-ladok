@@ -132,6 +132,15 @@ export default class GradingInformation {
       return;
     }
 
+    // Ladok returns all utkast for a student in a course, even outside of
+    // the current module. We need to filter-out it
+    if (
+      utkast?.UtbildningsinstansUID !==
+      this._obj.Rapporteringskontext.UtbildningsinstansUID
+    ) {
+      return;
+    }
+
     return {
       id: utkast.Uid,
       updatedAt: utkast.SenasteResultatandring,
