@@ -7,6 +7,7 @@ import { ApiError } from "./utils/errors";
 import FullPageError from "./screens/FullPageError";
 import Unauthenticated from "./screens/Unauthenticated";
 import Authenticated from "./screens/Authenticated";
+import { InfoAlert } from "./components/Alert";
 
 import "./App.scss";
 
@@ -52,6 +53,10 @@ export default function App() {
   return (
     <ErrorBoundary FallbackComponent={FullPageError}>
       <QueryClientProvider client={queryClient}>
+        <InfoAlert>
+          This is a new version of Transfer to Ladok. Read more about this
+          update here. You can still use the old version here.
+        </InfoAlert>
         <Home />
       </QueryClientProvider>
     </ErrorBoundary>

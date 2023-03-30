@@ -1,0 +1,10 @@
+@use "../utils/variables.scss" as v;
+
+.alert-info {
+  border: v.$color-blue-700 2px solid;
+  border-block-start-width: 6px;
+  padding: 8px 16px;
+}
+
+.alert-error {
+}
