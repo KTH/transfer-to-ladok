@@ -52,7 +52,10 @@ export function useSections() {
     () => apiFetch(`/transfer-to-ladok/api/courses/${courseId}/sections`),
     {
       retry(failureCount: number, error: unknown) {
-        if (error instanceof ApiError && error.code === "unauthorized") {
+        if (
+          error instanceof ApiError &&
+          (error.code === "unauthorized" || error.code === "forbidden")
+        ) {
           return false;
         }
         if (failureCount > 3) {
