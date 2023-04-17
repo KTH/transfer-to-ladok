@@ -6,6 +6,7 @@
 import got from "got";
 import type {
   Aktivitetstillfalle,
+  Behorighetsprofil,
   Betygsgrad,
   Kurstillfalle,
   RapporteringsMojlighetInput,
@@ -20,6 +21,18 @@ const gotClient = got.extend({
   prefixUrl: process.env.LADOK_API_BASEURL,
   headers: {
     Accept: "application/vnd.ladok-resultat+json",
+  },
+  responseType: "json",
+  https: {
+    pfx: Buffer.from(process.env.LADOK_API_PFX_BASE64 as string, "base64"),
+    passphrase: process.env.LADOK_API_PFX_PASSPHRASE,
+  },
+});
+
+const gotClientKatalog = got.extend({
+  prefixUrl: process.env.LADOK_API_BASEURL,
+  headers: {
+    Accept: "application/vnd.ladok-kataloginformation+json",
   },
   responseType: "json",
   https: {
@@ -68,6 +81,17 @@ export function searchStudieresultat(
         Page: page,
       },
     })
+    .then((r) => r.body);
+}
+
+/** Get people with the behorighetsprofil "Resultatrapportor - Lärare" */
+export function getBehorighetsprofil(): Promise<Behorighetsprofil> {
+  const behorighetsprofilUID = "0997fd42-7488-11e8-920e-2de0ccaf48ac";
+
+  return gotClientKatalog
+    .get<Behorighetsprofil>(
+      `kataloginformation/behorighetsprofil/${behorighetsprofilUID}/koppladeanvandare`
+    )
     .then((r) => r.body);
 }
 

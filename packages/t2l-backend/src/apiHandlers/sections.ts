@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import CanvasClient from "../externalApis/canvasApi";
-import { splitSections } from "./utils/commons";
+import { checkPermissionProfile, splitSections } from "./utils/commons";
 import type {
   AktivitetstillfalleSection,
   KurstillfalleSection,
@@ -12,6 +12,7 @@ import {
   getKurstillfalleStructure,
   Kurstillfalle,
 } from "../externalApis/ladokApi";
+import CanvasAdminClient from "../externalApis/canvasAdminApi";
 
 // Maps between possible "LADOK_API_BASE_URL" and Ladok root URL (frontend).
 const ALL_LADOK_ROOTS: Record<string, string> = {
@@ -87,6 +88,11 @@ export default async function sectionsHandler(
 ) {
   const canvasApi = new CanvasClient(req);
   const courseId = req.params.courseId;
+  const { id: userId } = await canvasApi.getSelf();
+  const canvasAdminClient = new CanvasAdminClient();
+  const email = await canvasAdminClient.getUserLoginId(userId);
+  await checkPermissionProfile(email);
+
   const allSections = await canvasApi.getSections(courseId);
   const { aktivitetstillfalleIds, kurstillfalleIds } =
     splitSections(allSections);

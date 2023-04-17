@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import assert from "node:assert/strict";
 import CanvasClient, { CanvasSection } from "../externalApis/canvasApi";
 import CanvasAdminClient from "../externalApis/canvasAdminApi";
-import { splitSections } from "./utils/commons";
+import { checkPermissionProfile, splitSections } from "./utils/commons";
 import type {
   GradesDestination,
   GradeableStudents,
@@ -96,6 +96,7 @@ export async function getGradesHandler(
 
   const { id: userId } = await canvasClient.getSelf();
   const email = await canvasAdminClient.getUserLoginId(userId);
+  await checkPermissionProfile(email);
 
   const gradingInformation = await getGradingInformation(destination, email);
   res.json(gradingInformation.map((g) => g.toObject()));
@@ -122,6 +123,7 @@ export async function postGradesHandler(
 
   const { id: userId } = await canvasClient.getSelf();
   const email = await canvasAdminClient.getUserLoginId(userId);
+  await checkPermissionProfile(email);
 
   const gradingInformation = await getGradingInformation(
     req.body.destination,

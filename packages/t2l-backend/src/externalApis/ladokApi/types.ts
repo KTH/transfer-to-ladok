@@ -136,6 +136,12 @@ export interface SokResultat {
   Resultat: Array<Studieresultat>;
 }
 
+export interface Behorighetsprofil {
+  Anvandare: {
+    Anvandarnamn: string;
+  }[];
+}
+
 export interface RapporteringsMojlighetInput {
   UtbildningsinstansAttRapporteraPaUID: string;
   StudieresultatUID: string;

@@ -1,4 +1,7 @@
 import { CanvasSection } from "../../externalApis/canvasApi";
+import { getBehorighetsprofil } from "../../externalApis/ladokApi";
+import assert from "node:assert/strict";
+import { ForbiddenError } from "../error";
 
 /**
  * Given a list of {@link CanvasSection}, identifies which ones are linked to
@@ -31,4 +34,19 @@ export function splitSections(sections: CanvasSection[]) {
     aktivitetstillfalleIds: Array.from(new Set(aktIds)),
     kurstillfalleIds: Array.from(new Set(kurIds)),
   };
+}
+
+/** Check if a person has the right profile in Ladok to send grades */
+export async function checkPermissionProfile(email: string) {
+  const hasProfile = await getBehorighetsprofil().then(
+    (profile) =>
+      profile.Anvandare.filter((a) => a.Anvandarnamn === email).length > 0
+  );
+
+  assert(
+    hasProfile,
+    new ForbiddenError(
+      `You don't have the profile "KTH - Resultatrapportör lärare" in Ladok`
+    )
+  );
 }
