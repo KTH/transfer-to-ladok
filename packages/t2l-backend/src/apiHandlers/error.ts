@@ -21,6 +21,12 @@ export class UnauthorizedError extends Error {
   }
 }
 
+export class ForbiddenError extends Error {
+  constructor(message: string) {
+    super(message);
+  }
+}
+
 /** Converts a HTTPError from Got to something readable */
 export class UnhandledApiError extends Error {
   public options?: {
@@ -86,6 +92,13 @@ export function errorHandler(
         message: "Not found",
       });
     }
+  }
+
+  if (err instanceof ForbiddenError) {
+    return res.status(403).json({
+      code: "forbidden",
+      message: err.message,
+    });
   }
 
   if (err instanceof UnauthorizedError) {
