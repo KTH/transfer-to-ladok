@@ -3,24 +3,31 @@ import { Request, Response, NextFunction } from "express";
 import { Headers, HTTPError, Method } from "got";
 import log from "skog";
 
+/** Thrown when the request contains syntax errors */
 export class BadRequestError extends Error {
   constructor(message: string) {
     super(message);
   }
 }
 
+/** Thrown when the request contains semantic errors */
 export class UnprocessableEntityError extends Error {
   constructor(message: string) {
     super(message);
   }
 }
 
+/** Thrown when the user is not logged in */
 export class UnauthorizedError extends Error {
   constructor(message: string) {
     super(message);
   }
 }
 
+/**
+ * Thrown when the user is logged in but does not have enough permissions to
+ * perform the requested action
+ */
 export class ForbiddenError extends Error {
   constructor(message: string) {
     super(message);
