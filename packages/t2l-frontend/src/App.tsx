@@ -54,8 +54,14 @@ export default function App() {
     <ErrorBoundary FallbackComponent={FullPageError}>
       <QueryClientProvider client={queryClient}>
         <InfoAlert>
-          This is a new version of Transfer to Ladok. Read more about this
-          update here. You can still use the old version here.
+          We have updated Transfer to Ladok to make it easier and safer to use
+          with the same functionality.{" "}
+          <a href="#">Read more about the update</a>. In the meantime you can
+          still use <a href="#">the previous version of Transfer to Ladok</a>.
+          Send us your feedback to{" "}
+          <a href="mailto:it-support@kth.se" style={{ whiteSpace: "nowrap" }}>
+            it-support@kth.se
+          </a>
         </InfoAlert>
         <Home />
       </QueryClientProvider>
