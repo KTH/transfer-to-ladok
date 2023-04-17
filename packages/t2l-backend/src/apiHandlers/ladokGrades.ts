@@ -12,7 +12,7 @@ import type {
   ResultOutput,
   Transference,
 } from "./utils/types";
-import { BadRequestError, UnprocessableEntityError } from "./error";
+import { UnprocessableEntityError } from "./error";
 import {
   assertGradesDestination,
   assertPostLadokGradesInput,
@@ -86,7 +86,7 @@ export async function getGradesHandler(
   res: Response<GradeableStudents>
 ) {
   const destination = req.query;
-  assertGradesDestination(destination, BadRequestError);
+  assertGradesDestination(destination);
 
   const courseId = req.params.courseId;
   const canvasAdminClient = new CanvasAdminClient();
