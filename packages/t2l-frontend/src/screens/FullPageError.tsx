@@ -26,12 +26,16 @@ export default function FullPageError({ error }: FallbackProps) {
       return (
         <div className="FullPageError">
           <header>
-            <h1>You are not allowed to use Transfer to Ladok</h1>
+            <h1>Not allowed to transfer grades to Ladok</h1>
           </header>
           <main>
             <p>{error.message}</p>
             <p className="small">
-              Please try again later or contact{" "}
+              Read more about{" "}
+              <a href="https://intra.kth.se/en/utbildning/systemstod/ladok/anvandarutbildningar-1.971219">
+                User traning Ladok at KTH intranet
+              </a>{" "}
+              or contact{" "}
               <a href="mailto:it-support@kth.se">it-support@kth.se</a> and
               provide the message above.
             </p>
