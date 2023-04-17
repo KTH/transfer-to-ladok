@@ -22,6 +22,24 @@ export default function FullPageError({ error }: FallbackProps) {
   }
 
   if (error instanceof ApiError) {
+    if (error.code === "forbidden") {
+      return (
+        <div className="FullPageError">
+          <header>
+            <h1>You are not allowed to use Transfer to Ladok</h1>
+          </header>
+          <main>
+            <p>{error.message}</p>
+            <p className="small">
+              Please try again later or contact{" "}
+              <a href="mailto:it-support@kth.se">it-support@kth.se</a> and
+              provide the message above.
+            </p>
+          </main>
+        </div>
+      );
+    }
+
     return (
       <div className="FullPageError">
         <header>
