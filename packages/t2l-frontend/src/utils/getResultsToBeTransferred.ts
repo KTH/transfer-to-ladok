@@ -1,9 +1,10 @@
-import type { CanvasGrades, GradeableStudents } from "t2l-backend/src/types";
-import {
+import type {
+  CanvasGrades,
+  GradeableStudents,
   GradesDestination,
   PostLadokGradesInput,
   PostLadokGradesOutput,
-} from "t2l-backend/src/types";
+} from "t2l-backend";
 
 interface Row {
   student: {

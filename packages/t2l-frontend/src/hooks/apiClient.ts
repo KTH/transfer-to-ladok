@@ -6,7 +6,7 @@ import {
   GradeableStudents,
   GradesDestination,
   Sections,
-} from "t2l-backend/src/types";
+} from "t2l-backend";
 import { ApiError } from "../utils/errors";
 
 function getCourseId() {

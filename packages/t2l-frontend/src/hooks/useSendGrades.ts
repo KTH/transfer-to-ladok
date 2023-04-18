@@ -3,7 +3,7 @@ import {
   GradesDestination,
   PostLadokGradesInput,
   PostLadokGradesOutput,
-} from "t2l-backend/src/types";
+} from "t2l-backend";
 import { ApiError } from "../utils/errors";
 import {
   convertToApiInput,

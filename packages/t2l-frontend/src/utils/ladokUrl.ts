@@ -1,7 +1,4 @@
-import {
-  GradesDestination,
-  Sections,
-} from "t2l-backend/src/apiHandlers/utils/types";
+import { GradesDestination, Sections } from "t2l-backend";
 
 export default function ladokUrl(
   sections: Sections,

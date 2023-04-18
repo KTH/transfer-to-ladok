@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { GradesDestination } from "t2l-backend/src/types";
+import { GradesDestination } from "t2l-backend";
 import { GradesTable } from "../components/GradesTable";
 import {
   useAssignments,

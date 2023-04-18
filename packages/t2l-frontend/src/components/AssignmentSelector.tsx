@@ -1,5 +1,5 @@
 import React from "react";
-import { Columns } from "t2l-backend/src/apiHandlers/utils/types";
+import { Columns } from "t2l-backend";
 
 export default function AssignmentSelector({
   columns,

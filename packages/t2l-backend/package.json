@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "This is the \"backend\" side of Transfer to Ladok",
   "main": "src/index.ts",
-  "types": "src/types.ts",
+  "types": "src/apiHandlers/utils/types.ts",
   "scripts": {
     "dev": "ts-node-dev --respawn src/index.ts | pino-pretty -e options,response -o '{msg}' --ignore options,pid,hostname --singleLine --translateTime 'HH:MM:ss.l'",
     "start": "ts-node --transpile-only src/index.ts",

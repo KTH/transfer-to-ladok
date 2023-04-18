@@ -7,7 +7,7 @@ import {
   PostLadokGradesInput,
   PostLadokGradesOutput,
   Sections,
-} from "t2l-backend/src/apiHandlers/utils/types";
+} from "t2l-backend";
 
 const letters = ["A", "B", "C", "D", "E", "F", "FX"];
 
@@ -55,6 +55,7 @@ const handlers = [
             id: "09e14f93-5f2d-11eb-a0ce-c629d09c4bde",
             date: "2022-01-01",
             name: "AA0001 TENX 2022-01-01",
+            url: "https://example.com/09e14f93-5f2d-11eb-a0ce-c629d09c4bde",
           },
         ],
         kurstillfalle: [],

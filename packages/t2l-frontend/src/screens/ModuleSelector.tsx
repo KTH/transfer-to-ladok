@@ -1,5 +1,5 @@
 import React from "react";
-import { GradesDestination, Sections } from "t2l-backend/src/types";
+import { GradesDestination, Sections } from "t2l-backend";
 
 import "./ModuleSelector.scss";
 

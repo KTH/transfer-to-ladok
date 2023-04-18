@@ -3,7 +3,7 @@ import {
   Sections,
   AktivitetstillfalleSection,
   GradesDestination,
-} from "t2l-backend/src/types";
+} from "t2l-backend";
 import { SendGradesInput, useSendGrades } from "../hooks/useSendGrades";
 import Preview from "./Preview";
 import Done from "./Done";

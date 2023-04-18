@@ -4,7 +4,7 @@ import {
   Columns,
   GradeableStudents,
   Sections,
-} from "t2l-backend/src/apiHandlers/utils/types";
+} from "t2l-backend";
 
 function sleep(t: number) {
   return new Promise((resolve) => setTimeout(resolve, t));
@@ -24,11 +24,13 @@ const handlers = [
             roundCode: "example1",
             id: "0000-0000",
             utbildningsinstans: "0000-0000",
+            url: "https://example.com/0000-0000",
             modules: [
               {
                 code: "TEN1",
                 name: "Tentamen",
                 utbildningsinstans: "0000-0001",
+                url: "https://example.com/0000-0001",
               },
             ],
           },

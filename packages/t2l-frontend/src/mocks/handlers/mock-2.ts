@@ -7,7 +7,7 @@ import {
   PostLadokGradesInput,
   PostLadokGradesOutput,
   Sections,
-} from "t2l-backend/src/apiHandlers/utils/types";
+} from "t2l-backend";
 
 const prefix = "/transfer-to-ladok/api/courses/mock-2";
 
@@ -36,11 +36,13 @@ const handlers = [
             courseCode: "AA0001",
             utbildningsinstans: "xx",
             roundCode: "12345",
+            url: "https://example.com/xxxx",
             modules: [
               {
                 code: "TEN1",
                 name: "Tentamen",
                 utbildningsinstans: "xy",
+                url: "https://example.com/xxxx",
               },
             ],
           },
