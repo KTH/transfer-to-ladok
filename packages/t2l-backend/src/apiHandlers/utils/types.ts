@@ -263,6 +263,7 @@ export interface Transference {
   };
 }
 
+/** Error response of any endpoint */
 export interface ApiError<Codes = string> {
   code: Codes;
   message: string;
