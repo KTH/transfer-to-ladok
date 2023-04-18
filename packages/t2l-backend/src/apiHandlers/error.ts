@@ -2,7 +2,7 @@ import { CanvasApiError } from "@kth/canvas-api";
 import { Request, Response, NextFunction } from "express";
 import { Headers, HTTPError, Method } from "got";
 import log from "skog";
-import { ApiError } from "../types";
+import { ApiError } from "./utils/types";
 
 /** Thrown when the request contains syntax errors */
 export class BadRequestError extends Error {
