@@ -5,7 +5,7 @@ import {
   updateResult,
 } from "../../externalApis/ladokApi";
 import { ResultInput, ResultOutput } from "./types";
-import { PostResultError, handleError } from "./postOneResultError";
+import { PostResultInputError, handleError } from "./postOneResultError";
 import GradingInformation from "./GradingInformation";
 import { trackEvent } from "./applicationInsights";
 
@@ -17,7 +17,7 @@ function getStudentsGradingInformation(
   const r = allGradingInformation.find((r) => r.belongsTo(studentId));
 
   if (!r) {
-    throw new PostResultError(
+    throw new PostResultInputError(
       `Student [${studentId}] is not present in the list of gradeable students. Use endpoint GET /transfer-to-ladok/api/courses/:courseId/ladok-grades to get such list`
     );
   }
@@ -36,7 +36,7 @@ function formatInputForLadok(
   )?.ID;
 
   if (!gradeId) {
-    throw new PostResultError(
+    throw new PostResultInputError(
       `You cannot set the grade [${letterGrade}] to this student. Use endpoint GET /transfer-to-ladok/api/courses/:courseId/ladok-grades to get the list of possible grades`
     );
   }
@@ -74,7 +74,7 @@ export default async function postOneResult(
     const ladokInput = formatInputForLadok(resultInput, gradingInformation);
 
     if (!gradingInformation.hasPermission) {
-      throw new PostResultError(
+      throw new PostResultInputError(
         "You don't have permissions to send results to this student"
       );
     }

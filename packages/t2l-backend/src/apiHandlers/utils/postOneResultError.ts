@@ -15,13 +15,10 @@ type LadokApiErrorCodes =
   | "unknown_ladok_error"
   | "unknown_error";
 
-/** Errors detected by us */
-export class PostResultError extends Error {
-  message: string;
-
+/** Thrown when client wants to create a result containing errors */
+export class PostResultInputError extends Error {
   constructor(message: string) {
     super(message);
-    this.message = message;
   }
 }
 
@@ -35,7 +32,7 @@ export function isLadokApiError(obj: any): obj is LadokApiError {
 }
 
 export function handleError(err: unknown): ApiError<LadokApiErrorCodes> {
-  if (err instanceof PostResultError) {
+  if (err instanceof PostResultInputError) {
     return {
       code: "input_error",
       message: err.message,
