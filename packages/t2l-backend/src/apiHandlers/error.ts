@@ -2,6 +2,7 @@ import { CanvasApiError } from "@kth/canvas-api";
 import { Request, Response, NextFunction } from "express";
 import { Headers, HTTPError, Method } from "got";
 import log from "skog";
+import { ApiError } from "../types";
 
 /** Thrown when the request contains syntax errors */
 export class BadRequestError extends Error {
@@ -80,10 +81,7 @@ export class UnhandledApiError extends Error {
 export function errorHandler(
   err: unknown,
   req: Request,
-  res: Response<{
-    code: string;
-    message: string;
-  }>,
+  res: Response<ApiError>,
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   _next: NextFunction
 ) {
