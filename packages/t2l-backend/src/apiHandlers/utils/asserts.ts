@@ -13,6 +13,10 @@ import type {
 } from "./types";
 import { BadRequestError } from "../error";
 
+/**
+ * Check if an object is a valid {@link GradesDestination}
+ * @param obj the object to check
+ */
 export function assertGradesDestination(
   obj: any
 ): asserts obj is GradesDestination {
@@ -43,6 +47,10 @@ export function assertGradesDestination(
   );
 }
 
+/**
+ * Check if an object is a valid {@link ResultInput}
+ * @param obj the object to check
+ */
 export function assertGradeResult(obj: any): asserts obj is ResultInput {
   assert("id" in obj, new BadRequestError("Missing required field [id]"));
   assert("draft" in obj, new BadRequestError("Missing required field [draft]"));
@@ -73,6 +81,10 @@ export function assertGradeResult(obj: any): asserts obj is ResultInput {
   );
 }
 
+/**
+ * Check if an object is a valid {@link PostLadokGradesInput}
+ * @param obj the object to check
+ */
 export function assertPostLadokGradesInput(
   obj: any
 ): asserts obj is PostLadokGradesInput {

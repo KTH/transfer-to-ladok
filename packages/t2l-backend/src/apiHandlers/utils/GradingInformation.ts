@@ -10,6 +10,9 @@ import {
   Studieresultat,
 } from "../../externalApis/ladokApi/types";
 
+/**
+ * Calls {@link searchStudieresultat} and fetches all pages of results.
+ */
 export async function _searchAllStudieresultat(
   type: "utbildningsinstans" | "aktivitetstillfalle",
   UID: string,
@@ -79,6 +82,10 @@ export async function _getAllStudieresultat(
   }
 }
 
+/**
+ * Given a destination ({@link GradesDestination}), get a list of all
+ * {@link GradingInformation} in that destination
+ */
 export async function getGradingInformation(
   destination: GradesDestination,
   teacherEmail: string
@@ -94,19 +101,30 @@ export async function getGradingInformation(
   );
 }
 
+/**
+ * Utility class that wraps a {@link Studieresultat}.
+ */
 export default class GradingInformation {
   _obj: Studieresultat;
   hasPermission: boolean;
 
+  /**
+   *
+   * @param obj the {@link Studieresultat} to wrap
+   * @param allPermissions an object containing all permissions for the user
+   */
   constructor(
-    obj: Studieresultat,
+    studieresultat: Studieresultat,
     allPermissions: RapporteringsMojlighetOutput
   ) {
-    this._obj = obj;
-    this.hasPermission = this._containsPermission(obj, allPermissions);
+    this._obj = studieresultat;
+    this.hasPermission = this._containsPermission(
+      studieresultat,
+      allPermissions
+    );
   }
 
-  _containsPermission(
+  private _containsPermission(
     studieresultat: Studieresultat,
     allPermissions: RapporteringsMojlighetOutput
   ) {
@@ -119,11 +137,12 @@ export default class GradingInformation {
     );
   }
 
+  /** @returns true if this result refers to a given student */
   belongsTo(studentId: string) {
     return this._obj.Student.Uid === studentId;
   }
 
-  _draft() {
+  private _draft() {
     const utkast = this._obj.ResultatPaUtbildningar?.find(
       (rpu) => rpu.Arbetsunderlag?.ProcessStatus === 1
     )?.Arbetsunderlag;
@@ -153,7 +172,7 @@ export default class GradingInformation {
     };
   }
 
-  _certified() {
+  private _certified() {
     const attesterade = this._obj.ResultatPaUtbildningar?.find(
       (rpu) =>
         // For some strange reason, the API returns results from other completely
@@ -173,7 +192,7 @@ export default class GradingInformation {
     };
   }
 
-  _ready() {
+  private _ready() {
     const klarmarkerade = this._obj.ResultatPaUtbildningar?.find(
       (rpu) => rpu.Arbetsunderlag?.ProcessStatus === 2
     )?.Arbetsunderlag;
@@ -188,6 +207,7 @@ export default class GradingInformation {
     };
   }
 
+  /** Returns a readable representation of a gradeable student */
   toObject(): GradeableStudents[number] {
     return {
       student: {

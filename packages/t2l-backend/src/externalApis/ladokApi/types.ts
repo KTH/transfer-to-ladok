@@ -1,3 +1,4 @@
+/** Represents an aktivitetstillfälle in Ladok */
 export interface Aktivitetstillfalle {
   Aktiviteter: {
     Kursinstans: {
@@ -25,6 +26,7 @@ export interface Resultat {
   };
 }
 
+/** Represents a course round ("Kurstillfälle") in Ladok */
 export interface Kurstillfalle {
   Benamning: {
     sv: string;
@@ -59,9 +61,7 @@ export interface SkaFinnasStudenter {
   }[];
 }
 
-/**
- * An object that contains information to create or edit grades in Ladok
- */
+/** An object that contains information to create or edit grades in Ladok */
 export interface Studieresultat {
   Avbrott?: {
     Avbrottsdatum: string;
