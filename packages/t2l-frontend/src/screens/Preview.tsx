@@ -204,10 +204,8 @@ export default function Preview({
               <Warning className="warning-icon" />
               <div className="warning-text">
                 There are {nonRegistered.length} students with grades in Canvas
-                that are not registered in the examination in Ladok. Contact{" "}
-                <a href="mailto:it-support@kth.se">IT support</a> to manually
-                register (late-register) students in Ladok or go to grade the
-                students manually there.
+                that are not registered in the examination in Ladok. You need to
+                grade those students manually in Ladok.
                 <details>
                   <summary>See the affected students</summary>
                   <ul>
