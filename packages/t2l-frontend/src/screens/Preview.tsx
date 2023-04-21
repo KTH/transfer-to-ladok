@@ -6,7 +6,10 @@ import {
   useCanvasGrades,
   useGradeableStudents,
 } from "../hooks/apiClient";
-import { getResultsToBeTransferred } from "../utils/getResultsToBeTransferred";
+import {
+  getNonRegisteredStudents,
+  getResultsToBeTransferred,
+} from "../utils/getResultsToBeTransferred";
 import Loading from "../components/Loading";
 import { ArrowRight, Warning } from "../utils/icons";
 import AssignmentSelector from "../components/AssignmentSelector";
@@ -58,6 +61,13 @@ export default function Preview({
       }
     }
   );
+
+  const nonRegistered = getNonRegisteredStudents(
+    canvasGradesQuery.data ?? [],
+    ladokGradesQuery.data ?? []
+  );
+
+  console.log("non registered", nonRegistered);
 
   const readyToTransfer =
     !ladokGradesQuery.isFetching &&
@@ -187,6 +197,30 @@ export default function Preview({
             <Loading>Loading results from Canvas...</Loading>
           </div>
         )}
+        {!canvasGradesQuery.isFetching &&
+          "aktivitetstillfalle" in destination &&
+          nonRegistered.length > 0 && (
+            <div className="warning">
+              <Warning className="warning-icon" />
+              <div className="warning-text">
+                There are {nonRegistered.length} students with grades in Canvas
+                that are not registered in the examination in Ladok. Contact{" "}
+                <a href="mailto:it-support@kth.se">IT support</a> to manually
+                register (late-register) students in Ladok or go to grade the
+                students manually there.
+                <details>
+                  <summary>See the affected students</summary>
+                  <ul>
+                    {nonRegistered.map((grade) => (
+                      <li key={grade.student.id}>
+                        {grade.student.sortableName}
+                      </li>
+                    ))}
+                  </ul>
+                </details>
+              </div>
+            </div>
+          )}
         {!canvasGradesQuery.isFetching && assignmentId !== "" && (
           <GradesTable results={tableContent} />
         )}

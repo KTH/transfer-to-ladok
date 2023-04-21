@@ -34,6 +34,23 @@ export interface RowAfter extends Row {
 }
 
 /**
+ * Get a list of students with grades that are not present in Ladok
+ * @param canvasGrades Grades taken from Canvas
+ * @param ladokGradeableStudents
+ */
+export function getNonRegisteredStudents(
+  canvasGrades: CanvasGrades,
+  ladokGradeableStudents: GradeableStudents
+): CanvasGrades {
+  console.log(canvasGrades);
+  return canvasGrades.filter(
+    (c) =>
+      c.grade &&
+      !ladokGradeableStudents.find((l) => l.student.id === c.student.id)
+  );
+}
+
+/**
  *
  * @param canvasGrades Grades taken from Canvas
  * @param ladokGradeableStudents List of students that can have grades
