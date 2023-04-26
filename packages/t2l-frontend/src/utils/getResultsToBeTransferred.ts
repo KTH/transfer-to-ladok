@@ -42,7 +42,6 @@ export function getNonRegisteredStudents(
   canvasGrades: CanvasGrades,
   ladokGradeableStudents: GradeableStudents
 ): CanvasGrades {
-  console.log(canvasGrades);
   return canvasGrades.filter(
     (c) =>
       c.grade &&

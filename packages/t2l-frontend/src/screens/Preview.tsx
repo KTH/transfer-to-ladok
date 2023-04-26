@@ -67,8 +67,6 @@ export default function Preview({
     ladokGradesQuery.data ?? []
   );
 
-  console.log("non registered", nonRegistered);
-
   const readyToTransfer =
     !ladokGradesQuery.isFetching &&
     !canvasGradesQuery.isFetching &&
@@ -203,11 +201,11 @@ export default function Preview({
             <div className="warning">
               <Warning className="warning-icon" />
               <div className="warning-text">
-                There are {nonRegistered.length} students with grades in Canvas
-                that are not registered for the examination in Ladok. You need to
-                grade those students manually in Ladok.
+                {nonRegistered.length} students have to be graded manually in Ladok.
                 <details>
-                  <summary>See the affected students</summary>
+                  <summary>More info</summary>
+                  <p>The following students are not registered for the examination in Ladok, and therefor have to be graded manually in Ladok.</p>
+
                   <ul>
                     {nonRegistered.map((grade) => (
                       <li key={grade.student.id}>
