@@ -204,7 +204,7 @@ export default function Preview({
                 {nonRegistered.length} students have to be graded manually in Ladok.
                 <details>
                   <summary>More info</summary>
-                  <p>The following students are not registered for the examination in Ladok, and therefor have to be graded manually in Ladok:</p>
+                  <p>The following students are not registered for the examination in Ladok, and therefor can't be transferred. They have to be handled manually.</p>
 
                   <ul>
                     {nonRegistered.map((grade) => (
