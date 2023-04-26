@@ -201,15 +201,20 @@ export default function Preview({
             <div className="warning">
               <Warning className="warning-icon" />
               <div className="warning-text">
-                {nonRegistered.length} students have to be graded manually in Ladok.
+                {nonRegistered.length} students have to be graded manually in
+                Ladok.
                 <details>
                   <summary>More info</summary>
-                  <p>The following students are not registered for the examination in Ladok, and therefor can't be transferred. They have to be handled manually.</p>
+                  <p>
+                    The following students are not registered for the
+                    examination in Ladok, and therefore cannot be transferred.
+                    They have to be handled manually.
+                  </p>
 
                   <ul>
                     {nonRegistered.map((grade) => (
                       <li key={grade.student.id}>
-                        {grade.student.sortableName}, grade: {grade.grade}, 
+                        {grade.student.sortableName} (grade: {grade.grade})
                       </li>
                     ))}
                   </ul>
