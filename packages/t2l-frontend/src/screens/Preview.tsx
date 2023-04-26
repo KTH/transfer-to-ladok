@@ -204,12 +204,12 @@ export default function Preview({
                 {nonRegistered.length} students have to be graded manually in Ladok.
                 <details>
                   <summary>More info</summary>
-                  <p>The following students are not registered for the examination in Ladok, and therefor have to be graded manually in Ladok.</p>
+                  <p>The following students are not registered for the examination in Ladok, and therefor have to be graded manually in Ladok:</p>
 
                   <ul>
                     {nonRegistered.map((grade) => (
                       <li key={grade.student.id}>
-                        {grade.student.sortableName}
+                        {grade.student.sortableName}, grade: {grade.grade}, 
                       </li>
                     ))}
                   </ul>
