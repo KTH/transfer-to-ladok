@@ -142,9 +142,15 @@ export default class GradingInformation {
     return this._obj.Student.Uid === studentId;
   }
 
-  private _draft() {
+  draft() {
     const utkast = this._obj.ResultatPaUtbildningar?.find(
-      (rpu) => rpu.Arbetsunderlag?.ProcessStatus === 1
+      (rpu) =>
+        rpu.Arbetsunderlag?.ProcessStatus === 1 &&
+        // For some strange reason, the API returns results from other completely
+        // unrelated modules (¯\_(ツ)_/¯)
+        // We need to filter out things to prevent bugs
+        rpu.Arbetsunderlag?.UtbildningsinstansUID ===
+          this._obj.Rapporteringskontext.UtbildningsinstansUID
     )?.Arbetsunderlag;
 
     if (!utkast || !this.hasPermission) {
@@ -153,12 +159,6 @@ export default class GradingInformation {
 
     // Ladok returns all utkast for a student in a course, even outside of
     // the current module. We need to filter-out it
-    if (
-      utkast?.UtbildningsinstansUID !==
-      this._obj.Rapporteringskontext.UtbildningsinstansUID
-    ) {
-      return;
-    }
 
     return {
       id: utkast.Uid,
@@ -219,7 +219,7 @@ export default class GradingInformation {
       ),
       hasPermission: this.hasPermission,
       requiresTitle: this._obj.Rapporteringskontext.KravPaProjekttitel,
-      draft: this._draft(),
+      draft: this.draft(),
       markedAsReady: this._ready(),
       certified: this._certified(),
     };
