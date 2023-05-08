@@ -1,10 +1,6 @@
 import React from "react";
-import {
-  RowBefore,
-  RowAfter,
-  getResultsToBeTransferred,
-} from "../utils/getResultsToBeTransferred";
-import { Check, Error, Warning } from "../utils/icons";
+import { RowBefore, RowAfter } from "../utils/getResultsToBeTransferred";
+import { Check, Error } from "../utils/icons";
 import "./GradesTable.scss";
 
 function Header() {
@@ -35,7 +31,7 @@ function isBefore(result: RowBefore | RowAfter): result is RowBefore {
   );
 }
 
-function RowBefore({ result, id }: { result: RowBefore; id: string }) {
+function RowBefore({ result }: { result: RowBefore; id: string }) {
   return (
     <tr className={result.status === "not_transferable" ? "dimmed" : ""}>
       <td className="transferable">
@@ -54,7 +50,7 @@ function RowBefore({ result, id }: { result: RowBefore; id: string }) {
   );
 }
 
-function RowAfter({ result, id }: { result: RowAfter; id: string }) {
+function RowAfter({ result }: { result: RowAfter; id: string }) {
   return (
     <tr
       className={

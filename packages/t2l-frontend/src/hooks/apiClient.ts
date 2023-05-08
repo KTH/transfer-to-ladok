@@ -41,7 +41,9 @@ export async function prefetchAssignments(queryClient: QueryClient) {
     );
 
     console.log("prefetch completed");
-  } catch (err) {}
+  } catch (err) {
+    //
+  }
 }
 
 export function useSections() {

@@ -13,6 +13,7 @@ import "./App.scss";
 const queryClient = new QueryClient();
 focusManager.setEventListener(() => {
   console.log("X");
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   return () => {};
 });
 

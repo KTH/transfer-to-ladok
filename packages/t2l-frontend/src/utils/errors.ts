@@ -18,6 +18,8 @@ export class ApiError extends Error {
   code: string;
   endpoint: string;
 
+  // TODO: `body` should be "unknown" and this function should check its type
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   constructor(endpoint: string, response: Response, body?: any) {
     // If we are lucky and the "body" is legible means that we have written
     // the error

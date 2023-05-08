@@ -5,7 +5,7 @@
   "description": "Send grades from Canvas to Ladok",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "lerna run test",
     "dev": "FORCE_COLOR=1 lerna run dev --parallel --stream"
   },
   "keywords": [],
