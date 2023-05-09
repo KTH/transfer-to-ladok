@@ -1,3 +1,4 @@
+import log from "skog";
 import { Router } from "express";
 import sectionsHandler from "./apiHandlers/sections";
 import columnsHandler from "./apiHandlers/columns";
@@ -8,12 +9,26 @@ import {
 import { getGradesHandler, postGradesHandler } from "./apiHandlers/ladokGrades";
 import auth from "./otherHandlers/auth";
 import { buildInfo } from "./config/info";
+import { getAutentiserad } from "./externalApis/ladokApi";
 
 const router = Router();
 
-router.get("/_monitor", (req, res) => {
+router.get("/_monitor", async (req, res) => {
   res.set("Content-type", "text/plain");
-  res.send("APPLICATION_STATUS: OK");
+
+  try {
+    const { Anvandarnamn } = await getAutentiserad();
+
+    res.send(`
+APPLICATION_STATUS: OK
+----------------------
+- Ladok User: ${Anvandarnamn}
+    `);
+  } catch (error) {
+    log.error(error as Error, "Error. Ladok might be down");
+
+    res.send("APPLICATION_STATUS: ERROR");
+  }
 });
 
 router.get("/_about", (req, res) => {

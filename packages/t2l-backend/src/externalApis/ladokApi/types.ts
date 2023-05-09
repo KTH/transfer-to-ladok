@@ -1,3 +1,8 @@
+/** Represents "ourself" in Ladok */
+export interface AutentiseradAnvandare {
+  Anvandarnamn: string;
+}
+
 /** Represents an aktivitetstillfälle in Ladok */
 export interface Aktivitetstillfalle {
   Aktiviteter: {

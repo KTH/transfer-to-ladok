@@ -8,6 +8,7 @@
 import got from "got";
 import type {
   Aktivitetstillfalle,
+  AutentiseradAnvandare,
   Behorighetsprofil,
   Betygsgrad,
   Kurstillfalle,
@@ -44,6 +45,15 @@ const gotClientKatalog = got.extend({
     passphrase: process.env.LADOK_API_PFX_PASSPHRASE,
   },
 });
+
+/**
+ * Get information of "ourselves"
+ */
+export async function getAutentiserad() {
+  return gotClientKatalog
+    .get<AutentiseradAnvandare>(`kataloginformation/anvandare/autentiserad`)
+    .then((response) => response.body);
+}
 
 /**
  * Get information of a single activity round (aktivitetstillfälle)
