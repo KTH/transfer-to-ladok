@@ -51,7 +51,7 @@ Transfer to Ladok
 router.post("/", (req, res) => {
   const courseId = req.body.custom_courseid;
 
-  res.redirect(`/transfer-to-ladok?courseId=${courseId}`);
+  res.redirect(`/transfer-to-ladok/?courseId=${courseId}`);
 });
 
 // Authentication is handled via its own router under "/auth" endpoints
