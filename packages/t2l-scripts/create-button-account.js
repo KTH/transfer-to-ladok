@@ -91,25 +91,25 @@ async function start() {
     choices: [
       {
         name: "localdev.kth.se",
-        value: "https://localdev.kth.se:4443/transfer-to-ladok",
+        value: "https://localdev.kth.se:4443/transfer-to-ladok/",
       },
       {
         name: "stage (referens)",
-        value: "https://app-r.referens.sys.kth.se/transfer-to-ladok",
+        value: "https://app-r.referens.sys.kth.se/transfer-to-ladok/",
       },
       {
         name: "production (app.kth.se)",
-        value: "https://app.kth.se/transfer-to-ladok",
+        value: "https://app.kth.se/transfer-to-ladok/",
       },
     ],
   });
 
   let defaultName = "KTH Transfer to Ladok";
 
-  if (buttonUrl === "https://localdev.kth.se:4443/transfer-to-ladok") {
+  if (buttonUrl === "https://localdev.kth.se:4443/transfer-to-ladok/") {
     defaultName = "Transfer to Ladok - localdev.kth.se";
   } else if (
-    buttonUrl === "https://app-r.referens.sys.kth.se/transfer-to-ladok"
+    buttonUrl === "https://app-r.referens.sys.kth.se/transfer-to-ladok/"
   ) {
     defaultName = "Transfer to Ladok - referens";
   }
