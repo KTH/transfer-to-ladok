@@ -1,4 +1,5 @@
 import React from "react";
+import DatePicker from "react-datepicker";
 
 export default function SelectionStep() {
   return (
@@ -23,6 +24,14 @@ export default function SelectionStep() {
         Examination Date. If you need to set a different date on an individual
         level, please change it in Ladok after transferring.
       </p>
+      <DatePicker
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        onChange={() => {}}
+        dateFormat="yyyy-MM-dd"
+        calendarStartDay={1}
+      />
+
+      <button>Continue</button>
     </div>
   );
 }
