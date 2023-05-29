@@ -6,10 +6,8 @@ export default function SelectionStep() {
     <div>
       <h1>Select assignment and date</h1>
       <p>
-        To be able to transfer grades from Canvas to Ladok, you need to map a
-        Canvas assignment to a Ladok module or examination. Please select both a
-        Canvas assignment as source, a Ladok module as target and an examination
-        date for the grades to be transfered, before you can proceed.
+        In this step you map a Canvas assignment to a Ladok module or
+        examination.
       </p>
 
       <h2>Canvas assignment</h2>
@@ -20,9 +18,9 @@ export default function SelectionStep() {
 
       <h2>Examination date</h2>
       <p>
-        When transferring to Ladok, all affected grades will receive the same
-        Examination Date. If you need to set a different date on an individual
-        level, please change it in Ladok after transferring.
+        All affected grades will receive the same Examination Date. To set a
+        different date on an individual level, change it in Ladok after
+        transferring.
       </p>
       <DatePicker
         // eslint-disable-next-line @typescript-eslint/no-empty-function
