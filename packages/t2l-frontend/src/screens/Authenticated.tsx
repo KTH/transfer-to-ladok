@@ -1,124 +1,18 @@
-import React, { useState } from "react";
-import {
-  Sections,
-  AktivitetstillfalleSection,
-  GradesDestination,
-} from "t2l-backend";
-import { SendGradesInput, useSendGrades } from "../hooks/useSendGrades";
-import Preview from "./Preview";
-import Done from "./Done";
-import ModuleSelector, { type DestinationWithUrl } from "./ModuleSelector";
-import { ArrowLeft } from "../utils/icons";
+import React from "react";
+import { Sections } from "t2l-backend";
+import { useSendGrades } from "../hooks/useSendGrades";
+import SelectionStep from "./wizard/SelectionStep";
+import DoneStep from "./wizard/DoneStep";
+import PreviewStep from "./wizard/PreviewStep";
 
 import "./Authenticated.scss";
 import { InvalidCourseError } from "../utils/errors";
 import Loading from "../components/Loading";
-import getLadokUrl from "../utils/ladokUrl";
-
-function getName(sections: Sections, destination: GradesDestination) {
-  if ("aktivitetstillfalle" in destination) {
-    const akt = sections.aktivitetstillfalle.find(
-      (a) => a.id === destination.aktivitetstillfalle
-    );
-
-    return akt?.name;
-  }
-
-  const ktf = sections.kurstillfalle.find(
-    (k) => k.id === destination.kurstillfalle
-  );
-
-  if (ktf) {
-    if (ktf.utbildningsinstans === destination.utbildningsinstans) {
-      return `${ktf.courseCode} (${ktf.roundCode}) - Final grade`;
-    }
-
-    const mod = ktf.modules.find(
-      (m) => m.utbildningsinstans === destination.utbildningsinstans
-    );
-
-    if (mod) {
-      return `${ktf.courseCode} (${ktf.roundCode}) – ${mod.code}`;
-    }
-  }
-}
-
-function getDate(sections: Sections, destination: GradesDestination) {
-  if ("aktivitetstillfalle" in destination) {
-    const akt = sections.aktivitetstillfalle.find(
-      (a) => a.id === destination.aktivitetstillfalle
-    );
-
-    return akt?.date;
-  }
-}
-
-function AppWithSelector({
-  sections,
-  onSubmit,
-}: {
-  sections: Sections;
-  onSubmit(results: SendGradesInput): void;
-}) {
-  const [selection, setSelection] = React.useState<DestinationWithUrl>();
-
-  if (!selection) {
-    return <ModuleSelector sections={sections} onSelect={setSelection} />;
-  }
-
-  return (
-    <div className="Authenticated">
-      <header className="header">
-        <a
-          href=""
-          className="with-icon"
-          onClick={(e) => {
-            e.preventDefault();
-            setSelection(undefined);
-          }}
-        >
-          <ArrowLeft />
-          <span className="label">Back to module selection</span>
-        </a>
-      </header>
-      <Preview
-        ladokUrl={selection.url}
-        destination={selection.destination}
-        destinationName={getName(sections, selection.destination) || ""}
-        fixedExaminationDate={getDate(sections, selection.destination)}
-        onSubmit={onSubmit}
-      />
-    </div>
-  );
-}
-
-function AppWithoutSelector({
-  akt,
-  onSubmit,
-}: {
-  akt: AktivitetstillfalleSection;
-  onSubmit(results: SendGradesInput): void;
-}) {
-  return (
-    <Preview
-      ladokUrl={akt.url}
-      destination={{ aktivitetstillfalle: akt.id }}
-      destinationName={akt.name}
-      fixedExaminationDate={akt.date}
-      onSubmit={onSubmit}
-    />
-  );
-}
 
 export default function Authenticated({ sections }: { sections: Sections }) {
   const { aktivitetstillfalle, kurstillfalle } = sections;
   const sendGradesMutation = useSendGrades();
-  const [ladokUrl, setLadokUrl] = useState("");
-
-  function koooor(input: SendGradesInput) {
-    setLadokUrl(getLadokUrl(sections, input.destination));
-    sendGradesMutation.mutate(input);
-  }
+  const [selected, setSelected] = React.useState(false);
 
   if (sendGradesMutation.isLoading) {
     return <Loading>Transferring results to Ladok...</Loading>;
@@ -129,13 +23,7 @@ export default function Authenticated({ sections }: { sections: Sections }) {
   }
 
   if (sendGradesMutation.isSuccess) {
-    return (
-      <Done
-        ladokUrl={ladokUrl}
-        results={sendGradesMutation.data}
-        onStartOver={() => sendGradesMutation.reset()}
-      />
-    );
+    return <DoneStep />;
   }
 
   // If there are no aktivitetstillfälle or kurstillfälle, then
@@ -144,14 +32,11 @@ export default function Authenticated({ sections }: { sections: Sections }) {
     throw new InvalidCourseError();
   }
 
-  // If there is only one section and it is a aktivitetstillfälle,
-  // we don't show any selector
-  if (aktivitetstillfalle.length === 1 && kurstillfalle.length === 0) {
-    return (
-      <AppWithoutSelector akt={aktivitetstillfalle[0]} onSubmit={koooor} />
-    );
+  // Preview Step
+  if (selected) {
+    return <PreviewStep />;
   }
 
-  // Otherwise the user needs to choose a destination
-  return <AppWithSelector sections={sections} onSubmit={koooor} />;
+  // Selection Step
+  return <SelectionStep />;
 }
