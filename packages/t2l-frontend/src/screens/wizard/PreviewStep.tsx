@@ -1,5 +1,16 @@
 import React from "react";
 
-export default function PreviewStep() {
-  return <div>This is a preview</div>;
+interface PreviewStepProps {
+  onBack: () => void;
+  onSubmit: () => void;
+}
+
+export default function PreviewStep({ onBack, onSubmit }: PreviewStepProps) {
+  return (
+    <div>
+      This is a preview
+      <button onClick={onBack}>Back</button>
+      <button onClick={onSubmit}>Submit</button>
+    </div>
+  );
 }
