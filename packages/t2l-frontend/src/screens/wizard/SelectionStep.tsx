@@ -36,7 +36,7 @@ export default function SelectionStep({ onSubmit }: SelectionStepProps) {
       </p>
       <Select
         name="canvas-assignment"
-        value=""
+        value={selectedAssignment}
         onChange={(value) => setSelectedAssignment(value)}
         label="Select assignment"
         description="Only letter grades will be transferred to Ladok: A-F grades or P/F"
@@ -53,7 +53,7 @@ export default function SelectionStep({ onSubmit }: SelectionStepProps) {
       </Select>
       <Select
         name="ladok-module"
-        value="1"
+        value={selectedLadokModule}
         onChange={() => {}}
         label="Ladok module"
         description="To which module do you want the grades to be transferred"
