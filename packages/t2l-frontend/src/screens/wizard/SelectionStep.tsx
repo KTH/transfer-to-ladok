@@ -3,15 +3,15 @@ import React from "react";
 import { Select, Option, OptionGroup } from "@kth/style";
 import { useAssignments, useSections } from "../../hooks/apiClient";
 import Loading from "../../components/Loading";
-import { Sections } from "t2l-backend";
+import { GradesDestination, Sections } from "t2l-backend";
 
 interface SelectionStepProps {
   onSubmit: () => void;
 }
 
 interface LadokModulesSelectProps {
-  onChange: (value: string) => void;
-  value: string;
+  onChange: (value: GradesDestination | null) => void;
+  value: GradesDestination | null;
   ladokModules: Sections;
 }
 function LadokModuleSelect({
@@ -19,24 +19,63 @@ function LadokModuleSelect({
   value,
   ladokModules,
 }: LadokModulesSelectProps) {
+  const examinationLength = ladokModules.aktivitetstillfalle.length;
+  const firstExamination = ladokModules.aktivitetstillfalle[0].id;
+
+  React.useEffect(() => {
+    if (examinationLength === 1) {
+      onChange({
+        aktivitetstillfalle: firstExamination,
+      });
+    }
+  }, [examinationLength, firstExamination]);
+
   return (
     <Select
       name="ladok-module"
-      value={value}
-      onChange={onChange}
+      value={JSON.stringify(value)}
+      onChange={(value) => onChange(JSON.parse(value))}
       label="Ladok module"
       description="To which module do you want the grades to be transferred"
     >
+      <Option value="null">Select module</Option>
       {ladokModules.aktivitetstillfalle.map((a) => (
-        <Option value={a.id}>{a.name}</Option>
+        <Option
+          key={JSON.stringify({
+            aktivitetstillfalle: a.id,
+          })}
+          value={JSON.stringify({
+            aktivitetstillfalle: a.id,
+          })}
+        >
+          {a.name}
+        </Option>
       ))}
 
       {ladokModules.kurstillfalle.map((section) => (
         <OptionGroup label={`${section.courseCode} - (${section.roundCode})`}>
-          {section.modules.map((module) => (
-            <Option value={module.utbildningsinstans}>{module.name}</Option>
+          {section.modules.map((m) => (
+            <Option
+              key={JSON.stringify({
+                kurstillfalle: section.id,
+                utbildningsinstans: m.utbildningsinstans,
+              })}
+              value={JSON.stringify({
+                kurstillfalle: section.id,
+                utbildningsinstans: m.utbildningsinstans,
+              })}
+            >
+              {m.name}
+            </Option>
           ))}
-          <Option value={section.utbildningsinstans}>Final grade</Option>
+          <Option
+            value={JSON.stringify({
+              kurstillfalle: section.id,
+              utbildningsinstans: section.utbildningsinstans,
+            })}
+          >
+            Final grade
+          </Option>
         </OptionGroup>
       ))}
     </Select>
@@ -45,7 +84,8 @@ function LadokModuleSelect({
 
 export default function SelectionStep({ onSubmit }: SelectionStepProps) {
   const [selectedAssignment, setSelectedAssignment] = React.useState("");
-  const [selectedLadokModule, setSelectedLadokModule] = React.useState("");
+  const [selectedLadokDestination, setSelectedLadokDestination] =
+    React.useState<GradesDestination | null>(null);
 
   const ladokModulesQuery = useSections();
   const canvasAssignmentsQuery = useAssignments();
@@ -79,7 +119,9 @@ export default function SelectionStep({ onSubmit }: SelectionStepProps) {
         <Option value="">Select an assignment</Option>
         <OptionGroup label="Assignments">
           {canvasAssignmentsQuery.data.assignments.map((assignment) => (
-            <Option value={assignment.id}>{assignment.name}</Option>
+            <Option key={assignment.id} value={assignment.id}>
+              {assignment.name}
+            </Option>
           ))}
         </OptionGroup>
         <OptionGroup label="Other columns">
@@ -87,8 +129,8 @@ export default function SelectionStep({ onSubmit }: SelectionStepProps) {
         </OptionGroup>
       </Select>
       <LadokModuleSelect
-        onChange={(value) => setSelectedLadokModule(value)}
-        value={selectedLadokModule}
+        onChange={(value) => setSelectedLadokDestination(value)}
+        value={selectedLadokDestination}
         ladokModules={ladokModulesQuery.data}
       />
       <h2>Examination date</h2>
