@@ -3,9 +3,44 @@ import React from "react";
 import { Select, Option, OptionGroup } from "@kth/style";
 import { useAssignments, useSections } from "../../hooks/apiClient";
 import Loading from "../../components/Loading";
+import { Sections } from "t2l-backend";
 
 interface SelectionStepProps {
   onSubmit: () => void;
+}
+
+interface LadokModulesSelectProps {
+  onChange: (value: string) => void;
+  value: string;
+  ladokModules: Sections;
+}
+function LadokModuleSelect({
+  onChange,
+  value,
+  ladokModules,
+}: LadokModulesSelectProps) {
+  return (
+    <Select
+      name="ladok-module"
+      value={value}
+      onChange={onChange}
+      label="Ladok module"
+      description="To which module do you want the grades to be transferred"
+    >
+      {ladokModules.aktivitetstillfalle.map((a) => (
+        <Option value={a.id}>{a.name}</Option>
+      ))}
+
+      {ladokModules.kurstillfalle.map((section) => (
+        <OptionGroup label={`${section.courseCode} - (${section.roundCode})`}>
+          {section.modules.map((module) => (
+            <Option value={module.utbildningsinstans}>{module.name}</Option>
+          ))}
+          <Option value={section.utbildningsinstans}>Final grade</Option>
+        </OptionGroup>
+      ))}
+    </Select>
+  );
 }
 
 export default function SelectionStep({ onSubmit }: SelectionStepProps) {
@@ -51,23 +86,11 @@ export default function SelectionStep({ onSubmit }: SelectionStepProps) {
           <Option value="final-grade">Total column</Option>
         </OptionGroup>
       </Select>
-      <Select
-        name="ladok-module"
+      <LadokModuleSelect
+        onChange={(value) => setSelectedLadokModule(value)}
         value={selectedLadokModule}
-        onChange={() => {}}
-        label="Ladok module"
-        description="To which module do you want the grades to be transferred"
-      >
-        <Option value="">Select a Ladok module</Option>
-        {ladokModulesQuery.data.kurstillfalle.map((section) => (
-          <OptionGroup label={`${section.courseCode} - (${section.roundCode})`}>
-            {section.modules.map((module) => (
-              <Option value={module.utbildningsinstans}>{module.name}</Option>
-            ))}
-            <Option value={section.utbildningsinstans}>Final grade</Option>
-          </OptionGroup>
-        ))}
-      </Select>
+        ladokModules={ladokModulesQuery.data}
+      />
       <h2>Examination date</h2>
       <p>
         All affected grades will receive the same Examination Date. To set a
