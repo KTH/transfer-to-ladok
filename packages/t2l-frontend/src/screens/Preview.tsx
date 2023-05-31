@@ -15,7 +15,7 @@ import { ArrowRight, Warning } from "../utils/icons";
 import AssignmentSelector from "../components/AssignmentSelector";
 import ExaminationDateSelector, {
   ExaminationDate as ExaminationDateValues,
-} from "../components/ExaminationDateSelector";
+} from "../components/ExaminationDateSelect";
 import "./Preview.scss";
 import { SendGradesInput } from "../hooks/useSendGrades";
 
