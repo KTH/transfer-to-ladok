@@ -19,7 +19,9 @@
     "@parcel/transformer-css": "^2.8.3",
     "@parcel/transformer-sass": "^2.8.3",
     "@types/mdx": "^2.0.2",
+    "@types/react": "^18.2.7",
     "@types/react-datepicker": "^4.4.1",
+    "@types/react-dom": "^18.2.4",
     "http-proxy-middleware": "^2.0.6",
     "msw": "^0.42.1",
     "parcel": "^2.8.3",
@@ -27,7 +29,9 @@
   },
   "dependencies": {
     "@kth/style": "^0.0.6",
+    "react": "^18.2.0",
     "react-datepicker": "^4.12.0",
+    "react-dom": "^18.2.0",
     "react-error-boundary": "^3.1.4",
     "react-query": "^3.39.3"
   },

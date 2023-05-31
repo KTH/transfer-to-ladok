@@ -1,6 +1,6 @@
 import "./index.scss";
 import React from "react";
-import { render } from "react-dom";
+import { createRoot } from "react-dom/client";
 import App from "./App";
 
 // if (process.env.NODE_ENV === "development") {
@@ -12,4 +12,6 @@ import App from "./App";
 //   });
 // }
 
-render(<App />, document.getElementById("root"));
+const domNode = document.getElementById("root");
+const root = createRoot(domNode!);
+root.render(<App />);
