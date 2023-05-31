@@ -12,8 +12,9 @@ export default function ExaminationDateSelector({
 }) {
   return (
     <div className="t2l-datepicker">
-      <label htmlFor="manual-date">Manual</label>
+      <label htmlFor="examination-date">Examination date</label>
       <DatePicker
+        id="examination-date"
         dateFormat="yyyy-MM-dd"
         calendarStartDay={1}
         selected={value}
