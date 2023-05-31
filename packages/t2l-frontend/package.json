@@ -16,14 +16,10 @@
   "license": "ISC",
   "devDependencies": {
     "@faker-js/faker": "^7.3.0",
-    "@mdx-js/react": "^1.6.22",
     "@parcel/transformer-css": "^2.8.3",
-    "@parcel/transformer-mdx": "^2.8.3",
     "@parcel/transformer-sass": "^2.8.3",
     "@types/mdx": "^2.0.2",
-    "@types/react": "^17.0.47",
     "@types/react-datepicker": "^4.4.1",
-    "@types/react-dom": "^17.0.17",
     "http-proxy-middleware": "^2.0.6",
     "msw": "^0.42.1",
     "parcel": "^2.8.3",
@@ -31,11 +27,9 @@
   },
   "dependencies": {
     "@kth/style": "^0.0.6",
-    "react": "^17.0.2",
-    "react-datepicker": "^4.8.0",
-    "react-dom": "^17.0.2",
+    "react-datepicker": "^4.12.0",
     "react-error-boundary": "^3.1.4",
-    "react-query": "^3.38.0"
+    "react-query": "^3.39.3"
   },
   "msw": {
     "workerDirectory": "dist"
