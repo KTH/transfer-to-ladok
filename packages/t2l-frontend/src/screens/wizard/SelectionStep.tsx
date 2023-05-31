@@ -4,6 +4,7 @@ import { Select, Option, OptionGroup } from "@kth/style";
 import { useAssignments, useSections } from "../../hooks/apiClient";
 import Loading from "../../components/Loading";
 import { GradesDestination, Sections } from "t2l-backend";
+import ExaminationDateSelector from "../../components/ExaminationDateSelector";
 
 interface SelectionStepProps {
   onSubmit: () => void;
@@ -86,6 +87,7 @@ export default function SelectionStep({ onSubmit }: SelectionStepProps) {
   const [selectedAssignment, setSelectedAssignment] = React.useState("");
   const [selectedLadokDestination, setSelectedLadokDestination] =
     React.useState<GradesDestination | null>(null);
+  const [selectedDate, setSelectedDate] = React.useState<Date | null>(null);
 
   const ladokModulesQuery = useSections();
   const canvasAssignmentsQuery = useAssignments();
@@ -133,12 +135,10 @@ export default function SelectionStep({ onSubmit }: SelectionStepProps) {
         value={selectedLadokDestination}
         ladokModules={ladokModulesQuery.data}
       />
-      <h2>Examination date</h2>
-      <p>
-        All affected grades will receive the same Examination Date. To set a
-        different date on an individual level, change it in Ladok after
-        transferring.
-      </p>
+      <ExaminationDateSelector
+        onChange={setSelectedDate}
+        value={selectedDate}
+      />
       <button>Continue</button> (Nothing is transferred yet)
     </form>
   );
