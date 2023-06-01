@@ -10,6 +10,7 @@ export default function ExaminationDateSelector({
   value: Date | null;
   onChange(value: Date | null): void;
 }) {
+  // TODO: Style this component
   return (
     <div className="t2l-datepicker">
       <label htmlFor="examination-date">Examination date</label>
