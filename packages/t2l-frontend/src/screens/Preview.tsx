@@ -12,7 +12,7 @@ import {
 } from "../utils/getResultsToBeTransferred";
 import Loading from "../components/Loading";
 import { ArrowRight, Warning } from "../utils/icons";
-import AssignmentSelector from "../components/AssignmentSelector";
+import AssignmentSelector from "../components/AssignmentSelect";
 import ExaminationDateSelector, {
   ExaminationDate as ExaminationDateValues,
 } from "../components/ExaminationDateSelect";
