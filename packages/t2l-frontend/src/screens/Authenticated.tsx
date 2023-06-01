@@ -1,7 +1,7 @@
 import React from "react";
 import { Sections } from "t2l-backend";
 import { useSendGrades } from "../hooks/useSendGrades";
-import SelectionStep from "./wizard/SelectionStep";
+import SelectionStep, { UserSelection } from "./wizard/SelectionStep";
 import DoneStep from "./wizard/DoneStep";
 import PreviewStep from "./wizard/PreviewStep";
 
@@ -12,7 +12,8 @@ import Loading from "../components/Loading";
 export default function Authenticated({ sections }: { sections: Sections }) {
   const { aktivitetstillfalle, kurstillfalle } = sections;
   const sendGradesMutation = useSendGrades();
-  const [selected, setSelected] = React.useState(false);
+  const [userSelection, setUserSelection] =
+    React.useState<UserSelection | null>(null);
 
   if (sendGradesMutation.isLoading) {
     return <Loading>Transferring results to Ladok...</Loading>;
@@ -33,13 +34,13 @@ export default function Authenticated({ sections }: { sections: Sections }) {
   }
 
   // Preview Step
-  if (selected) {
+  if (userSelection) {
     return (
       // eslint-disable-next-line @typescript-eslint/no-empty-function
-      <PreviewStep onBack={() => setSelected(false)} onSubmit={() => {}} />
+      <PreviewStep onBack={() => setUserSelection(null)} onSubmit={() => {}} />
     );
   }
 
   // Selection Step
-  return <SelectionStep onSubmit={() => setSelected(true)} />;
+  return <SelectionStep onSubmit={setUserSelection} />;
 }

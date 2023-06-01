@@ -7,8 +7,14 @@ import ExaminationDateSelect from "../../components/ExaminationDateSelect";
 import LadokModuleSelect from "../../components/LadokModuleSelect";
 import AssignmentSelect from "../../components/AssignmentSelect";
 
+export interface UserSelection {
+  assignment: string;
+  destination: GradesDestination;
+  date: Date;
+}
+
 interface SelectionStepProps {
-  onSubmit: () => void;
+  onSubmit: (value: UserSelection) => void;
 }
 
 export default function SelectionStep({ onSubmit }: SelectionStepProps) {
@@ -19,6 +25,29 @@ export default function SelectionStep({ onSubmit }: SelectionStepProps) {
 
   const ladokModulesQuery = useSections();
   const canvasAssignmentsQuery = useAssignments();
+
+  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    // TODO: do not allow submission if any of the fields are empty
+    if (selectedAssignment === "") {
+      return;
+    }
+
+    if (selectedLadokDestination === null) {
+      return;
+    }
+
+    if (selectedDate === null) {
+      return;
+    }
+
+    onSubmit({
+      assignment: selectedAssignment,
+      destination: selectedLadokDestination,
+      date: selectedDate,
+    });
+  }
 
   if (ladokModulesQuery.isError) {
     throw ladokModulesQuery.error;
@@ -33,7 +62,7 @@ export default function SelectionStep({ onSubmit }: SelectionStepProps) {
   }
 
   return (
-    <form onSubmit={onSubmit}>
+    <form onSubmit={handleSubmit}>
       <h1>Select assignment and date</h1>
       <p>
         In this step you map a Canvas assignment to a Ladok module or
