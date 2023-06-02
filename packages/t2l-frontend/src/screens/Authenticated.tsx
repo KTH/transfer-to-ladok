@@ -37,7 +37,11 @@ export default function Authenticated({ sections }: { sections: Sections }) {
   if (userSelection) {
     return (
       // eslint-disable-next-line @typescript-eslint/no-empty-function
-      <PreviewStep onBack={() => setUserSelection(null)} onSubmit={() => {}} />
+      <PreviewStep
+        onBack={() => setUserSelection(null)}
+        onSubmit={() => {}}
+        userSelection={userSelection}
+      />
     );
   }
 

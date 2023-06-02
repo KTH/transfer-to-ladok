@@ -38,7 +38,7 @@ export default function AssignmentSelect({
         ))}
       </OptionGroup>
       <OptionGroup label="Other columns">
-        <Option value="final-grade">Total column</Option>
+        <Option value="total">Total column</Option>
       </OptionGroup>
     </Select>
   );
