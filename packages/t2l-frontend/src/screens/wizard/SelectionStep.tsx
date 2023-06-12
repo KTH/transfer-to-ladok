@@ -79,7 +79,8 @@ export default function SelectionStep({ onSubmit }: SelectionStepProps) {
         ladokModules={ladokModulesQuery.data}
       />
       <ExaminationDateSelect onChange={setSelectedDate} value={selectedDate} />
-      <button>Continue</button> (Nothing is transferred yet)
+      <button className="kth-button primary">Continue</button> (Nothing is
+      transferred yet)
     </form>
   );
 }
