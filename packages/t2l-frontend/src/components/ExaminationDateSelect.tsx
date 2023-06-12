@@ -37,7 +37,7 @@ export default function ExaminationDateSelector({
 
   // TODO: Style this component
   return (
-    <div className="t2l-datepicker">
+    <div className="kth-input">
       <label htmlFor="examination-date">Examination date</label>
       <DatePicker
         id="examination-date"
