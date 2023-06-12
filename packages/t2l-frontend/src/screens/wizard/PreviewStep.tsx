@@ -73,7 +73,7 @@ export default function PreviewStep({
             Assignment: <strong>{assignment}</strong>
           </li>
           <li>
-            Date: <strong>{date.toISOString()}</strong>
+            Date: <strong>{date}</strong>
           </li>
         </ul>
       </div>

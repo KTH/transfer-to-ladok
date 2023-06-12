@@ -37,7 +37,7 @@ type TG = TransferrableGrade | NonTransferrableGrade;
 export function mergeGradesLists(
   canvasGrades: CanvasGrades,
   ladokGradeableStudents: GradeableStudents,
-  examinationDate: Date
+  examinationDate: string
 ): TG[] {
   return canvasGrades.map<TG>((canvasGrade): TG => {
     const ladokGrade = ladokGradeableStudents.find(
@@ -119,7 +119,7 @@ export function mergeGradesLists(
       student,
       draft: {
         grade: canvasGrade.grade,
-        examinationDate: examinationDate.toISOString().split("T")[0],
+        examinationDate: examinationDate,
       },
     };
   });
