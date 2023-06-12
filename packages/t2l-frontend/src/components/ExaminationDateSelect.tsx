@@ -40,6 +40,7 @@ export default function ExaminationDateSelector({
     <div className="kth-input">
       <label htmlFor="examination-date">Examination date</label>
       <DatePicker
+        autoComplete="off"
         id="examination-date"
         dateFormat="yyyy-MM-dd"
         calendarStartDay={1}
