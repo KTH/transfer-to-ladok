@@ -10,7 +10,7 @@ import AssignmentSelect from "../../components/AssignmentSelect";
 export interface UserSelection {
   assignment: string;
   destination: GradesDestination;
-  date: Date;
+  date: string;
 }
 
 interface SelectionStepProps {
@@ -21,7 +21,7 @@ export default function SelectionStep({ onSubmit }: SelectionStepProps) {
   const [selectedAssignment, setSelectedAssignment] = React.useState("");
   const [selectedLadokDestination, setSelectedLadokDestination] =
     React.useState<GradesDestination | null>(null);
-  const [selectedDate, setSelectedDate] = React.useState<Date | null>(null);
+  const [selectedDate, setSelectedDate] = React.useState<string | null>(null);
 
   const ladokModulesQuery = useSections();
   const canvasAssignmentsQuery = useAssignments();
