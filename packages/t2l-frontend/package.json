@@ -22,7 +22,7 @@
     "@types/react-datepicker": "^4.4.1",
     "@types/react-dom": "^18.2.4",
     "http-proxy-middleware": "^2.0.6",
-    "msw": "^0.42.1",
+    "msw": "^1.2.2",
     "parcel": "^2.8.3",
     "process": "^0.11.10"
   },
