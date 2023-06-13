@@ -104,6 +104,7 @@ export const handlers = [
         ctx.json<SokResultat>({
           Resultat: STUDENTS.map((s, i) => ({
             Student: {
+              Personnummer: "199101010000",
               Efternamn: s.split(",")[0],
               Fornamn: s.split(",")[1].slice(1),
               Uid: STUDENTS_UID[i],
