@@ -94,7 +94,10 @@ export default function PreviewStep({
           {tgs.map((tg) => (
             <tr>
               <td>{tg.student.sortableName}</td>
-              <td>{tg.transferable && tg.draft.grade}</td>
+              <td>
+                {(tg.transferable && tg.draft.grade) ||
+                  (!tg.transferable && tg.canvasGrade)}
+              </td>
               <td>{tg.transferable && "Transferrable"}</td>
             </tr>
           ))}

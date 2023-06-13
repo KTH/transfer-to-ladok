@@ -21,6 +21,8 @@ export interface NonTransferrableGrade {
     sortableName: string;
   };
 
+  canvasGrade: string | null;
+
   cause: {
     code: string;
     message: string;
@@ -47,6 +49,7 @@ export function mergeGradesLists(
     if (!ladokGrade) {
       return {
         transferable: false,
+        canvasGrade: canvasGrade.grade,
         student: {
           id: canvasGrade.student.id,
           sortableName: canvasGrade.student.sortableName,
@@ -64,10 +67,24 @@ export function mergeGradesLists(
       sortableName: ladokGrade.student.sortableName,
     };
 
+    // The teacher has no permission in Ladok
+    if (!ladokGrade.hasPermission) {
+      return {
+        transferable: false,
+        canvasGrade: canvasGrade.grade,
+        student,
+        cause: {
+          code: "no_permission_in_ladok",
+          message: "You have no permission in Ladok",
+        },
+      };
+    }
+
     // The student has no grade in Canvas
     if (!canvasGrade.grade) {
       return {
         transferable: false,
+        canvasGrade: null,
         student,
         cause: {
           code: "no_grade_in_canvas",
@@ -79,6 +96,7 @@ export function mergeGradesLists(
     if (ladokGrade.draft?.grade === canvasGrade.grade) {
       return {
         transferable: false,
+        canvasGrade: canvasGrade.grade,
         student,
         cause: {
           code: "grade_already_in_ladok",
@@ -91,6 +109,7 @@ export function mergeGradesLists(
     if (canvasGrade.grade === "F" && ladokGrade.certified?.grade === "F") {
       return {
         transferable: false,
+        canvasGrade: canvasGrade.grade,
         student,
         cause: {
           code: "grade_f",
@@ -104,6 +123,7 @@ export function mergeGradesLists(
     if (!ladokGrade.scale.includes(canvasGrade.grade)) {
       return {
         transferable: false,
+        canvasGrade: canvasGrade.grade,
         student,
         cause: {
           code: "invalid_grade",
