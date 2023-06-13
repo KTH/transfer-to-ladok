@@ -1,5 +1,5 @@
 /** Hooks that call the API Client */
-import { QueryClient, useQuery } from "react-query";
+import { useQuery } from "react-query";
 import {
   Columns,
   CanvasGrades,

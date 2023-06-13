@@ -1,5 +1,5 @@
 import React from "react";
-import { PostLadokGradesInput, ResultInput, Sections } from "t2l-backend";
+import { Sections } from "t2l-backend";
 import { useTransfer } from "../hooks/useSendGrades";
 import SelectionStep, { UserSelection } from "./wizard/SelectionStep";
 import DoneStep from "./wizard/DoneStep";
