@@ -33,19 +33,6 @@ async function apiFetch(endpoint: string) {
   throw new ApiError(endpoint, response, body);
 }
 
-export async function prefetchAssignments(queryClient: QueryClient) {
-  try {
-    const courseId = getCourseId();
-    await queryClient.prefetchQuery(["columns", courseId], () =>
-      apiFetch(`/transfer-to-ladok/api/courses/${courseId}/columns`)
-    );
-
-    console.log("prefetch completed");
-  } catch (err) {
-    //
-  }
-}
-
 export function useSections() {
   const courseId = getCourseId();
 

@@ -1,7 +1,7 @@
 import * as React from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { QueryClient, QueryClientProvider, focusManager } from "react-query";
-import { prefetchAssignments, useSections } from "./hooks/apiClient";
+import { useSections } from "./hooks/apiClient";
 import { ApiError } from "./utils/errors";
 
 import FullPageError from "./screens/FullPageError";
@@ -16,8 +16,6 @@ focusManager.setEventListener(() => {
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   return () => {};
 });
-
-prefetchAssignments(queryClient);
 
 function Home() {
   const sectionsQuery = useSections();
