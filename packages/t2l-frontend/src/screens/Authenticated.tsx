@@ -46,11 +46,7 @@ export default function Authenticated({ sections }: { sections: Sections }) {
   }
 
   if (sendGradesMutation.isSuccess) {
-    // `variables` contains the input
-    // `data` contains the response
-    sendGradesMutation.variables;
-
-    return <DoneStep />;
+    return <DoneStep response={sendGradesMutation.data} />;
   }
 
   // If there are no aktivitetstillfälle or kurstillfälle, then
