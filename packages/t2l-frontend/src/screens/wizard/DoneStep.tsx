@@ -3,9 +3,10 @@ import { PostLadokGradesOutput } from "t2l-backend";
 
 interface DoneStepProps {
   response: PostLadokGradesOutput;
+  onRestart: () => void;
 }
 
-export default function DoneStep({ response }: DoneStepProps) {
+export default function DoneStep({ response, onRestart }: DoneStepProps) {
   return (
     <div>
       {response.summary.success === 0 && (
@@ -38,6 +39,7 @@ export default function DoneStep({ response }: DoneStepProps) {
           </table>
         </>
       )}
+      <button onClick={() => onRestart()}>Start over</button>
     </div>
   );
 }

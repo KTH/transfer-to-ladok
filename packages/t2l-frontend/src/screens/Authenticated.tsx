@@ -16,6 +16,11 @@ export default function Authenticated({ sections }: { sections: Sections }) {
   const [userSelection, setUserSelection] =
     React.useState<UserSelection | null>(null);
 
+  function handleRestart() {
+    sendGradesMutation.reset();
+    setUserSelection(null);
+  }
+
   function handleTransfer(resultsToBeTransferred: TG[]) {
     if (!userSelection) {
       return;
@@ -46,7 +51,9 @@ export default function Authenticated({ sections }: { sections: Sections }) {
   }
 
   if (sendGradesMutation.isSuccess) {
-    return <DoneStep response={sendGradesMutation.data} />;
+    return (
+      <DoneStep response={sendGradesMutation.data} onRestart={handleRestart} />
+    );
   }
 
   // If there are no aktivitetstillfälle or kurstillfälle, then
