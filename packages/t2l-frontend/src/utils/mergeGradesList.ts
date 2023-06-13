@@ -1,5 +1,5 @@
 import type { CanvasGrades, GradeableStudents } from "t2l-backend";
-interface TransferrableGrade {
+export interface TransferrableGrade {
   transferable: true;
 
   student: {
@@ -13,7 +13,7 @@ interface TransferrableGrade {
   };
 }
 
-interface NonTransferrableGrade {
+export interface NonTransferrableGrade {
   transferable: false;
 
   student: {

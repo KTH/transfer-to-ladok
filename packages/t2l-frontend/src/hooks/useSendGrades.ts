@@ -61,13 +61,7 @@ async function apiPostLadokGrades(
 }
 
 export function useTransferResults() {
-  return useMutation<RowAfter[], unknown, SendGradesInput>(
-    async ({ destination, results }) => {
-      const output = await apiPostLadokGrades(
-        convertToApiInput(destination, results)
-      );
-
-      return processApiOutput(results, output);
-    }
+  return useMutation<PostLadokGradesOutput, unknown, PostLadokGradesInput>(
+    (input) => apiPostLadokGrades(input)
   );
 }

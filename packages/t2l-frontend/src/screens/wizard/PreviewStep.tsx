@@ -2,12 +2,12 @@ import React from "react";
 import { UserSelection } from "./SelectionStep";
 import { useCanvasGrades, useGradeableStudents } from "../../hooks/apiClient";
 import Loading from "../../components/Loading";
-import { mergeGradesLists } from "../../utils/mergeGradesList";
+import { TG, mergeGradesLists } from "../../utils/mergeGradesList";
 
 interface PreviewStepProps {
   userSelection: UserSelection;
   onBack: () => void;
-  onSubmit: () => void;
+  onSubmit: (input: TG[]) => void;
 }
 
 export default function PreviewStep({
@@ -101,7 +101,7 @@ export default function PreviewStep({
         </tbody>
       </table>
       <button onClick={onBack}>Back</button>
-      <button onClick={onSubmit}>Submit</button>
+      <button onClick={() => onSubmit(tgs)}>Submit</button>
     </div>
   );
 }
