@@ -1,21 +1,6 @@
 import { useMutation } from "react-query";
-import {
-  GradesDestination,
-  PostLadokGradesInput,
-  PostLadokGradesOutput,
-} from "t2l-backend";
+import { PostLadokGradesInput, PostLadokGradesOutput } from "t2l-backend";
 import { ApiError } from "../utils/errors";
-import {
-  convertToApiInput,
-  RowBefore,
-  processApiOutput,
-  RowAfter,
-} from "../utils/getResultsToBeTransferred";
-
-export interface SendGradesInput {
-  results: RowBefore[];
-  destination: GradesDestination;
-}
 
 function getCourseId() {
   const courseId = new URLSearchParams(location.search).get("courseId");
