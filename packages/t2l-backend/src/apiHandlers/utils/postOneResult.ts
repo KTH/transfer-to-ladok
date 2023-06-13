@@ -56,12 +56,6 @@ function formatInputForLadok(
   };
 }
 
-export function getExistingDraft(gradingInformation: GradingInformation) {
-  return gradingInformation._obj.ResultatPaUtbildningar?.find(
-    (rpu) => rpu.Arbetsunderlag?.ProcessStatus === 1
-  )?.Arbetsunderlag;
-}
-
 export default async function postOneResult(
   resultInput: ResultInput,
   allGradingInformation: GradingInformation[]
@@ -79,10 +73,10 @@ export default async function postOneResult(
       );
     }
 
-    const draft = getExistingDraft(gradingInformation);
+    const draft = gradingInformation.draft();
 
     if (draft) {
-      await updateResult(draft.Uid, ladokInput, draft.SenasteResultatandring);
+      await updateResult(draft.id, ladokInput, draft.updatedAt);
       trackEvent({ name: "Update result" });
     } else {
       await createResult(
