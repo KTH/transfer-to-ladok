@@ -189,6 +189,9 @@ export type GradeableStudents = {
      * consistency with `CanvasGrades`
      */
     sortableName: string;
+
+    /** Student personal number. Only returned if the teacher has permissions to send grades to this student */
+    personalNumber?: string;
   };
 
   /** List of grades you can set */

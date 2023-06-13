@@ -74,6 +74,7 @@ export interface Studieresultat {
   Student: {
     Efternamn: string;
     Fornamn: string;
+    Personnummer: string;
 
     /** Use this ID to match the student in Ladok with same person in Canvas */
     Uid: string;

@@ -210,12 +210,20 @@ export default class GradingInformation {
     };
   }
 
+  /** Returns the personal number of a student */
+  private _personalNumber(): string | undefined {
+    if (this.hasPermission) {
+      return this._obj.Student.Personnummer;
+    }
+  }
+
   /** Returns a readable representation of a gradeable student */
   toObject(): GradeableStudents[number] {
     return {
       student: {
         id: this._obj.Student.Uid,
         sortableName: `${this._obj.Student.Efternamn}, ${this._obj.Student.Fornamn}`,
+        personalNumber: this._personalNumber(),
       },
       scale: getBetyg(this._obj.Rapporteringskontext.BetygsskalaID).map(
         (b) => b.Kod
