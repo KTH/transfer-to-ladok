@@ -1,6 +1,6 @@
 import React from "react";
 import { Sections } from "t2l-backend";
-import { useSendGrades } from "../hooks/useSendGrades";
+import { useTransferResults } from "../hooks/useSendGrades";
 import SelectionStep, { UserSelection } from "./wizard/SelectionStep";
 import DoneStep from "./wizard/DoneStep";
 import PreviewStep from "./wizard/PreviewStep";
@@ -8,12 +8,18 @@ import PreviewStep from "./wizard/PreviewStep";
 import "./Authenticated.scss";
 import { InvalidCourseError } from "../utils/errors";
 import Loading from "../components/Loading";
+import { TG } from "../utils/mergeGradesList";
 
 export default function Authenticated({ sections }: { sections: Sections }) {
   const { aktivitetstillfalle, kurstillfalle } = sections;
-  const sendGradesMutation = useSendGrades();
+  const sendGradesMutation = useTransferResults();
   const [userSelection, setUserSelection] =
     React.useState<UserSelection | null>(null);
+
+  function handleTransfer(results: TG[]) {
+    // Submit only transferrable grades
+    // Handle response
+  }
 
   if (sendGradesMutation.isLoading) {
     return <Loading>Transferring results to Ladok...</Loading>;
@@ -24,6 +30,10 @@ export default function Authenticated({ sections }: { sections: Sections }) {
   }
 
   if (sendGradesMutation.isSuccess) {
+    // `variables` contains the input
+    // `data` contains the response
+    sendGradesMutation.variables;
+
     return <DoneStep />;
   }
 

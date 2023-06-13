@@ -27,7 +27,7 @@ interface NonTransferrableGrade {
   };
 }
 
-type TG = TransferrableGrade | NonTransferrableGrade;
+export type TG = TransferrableGrade | NonTransferrableGrade;
 
 /**
  * Given a list of Canvas grades (in an assignment) and a list of

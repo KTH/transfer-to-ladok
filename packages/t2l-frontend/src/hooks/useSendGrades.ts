@@ -27,7 +27,14 @@ function getCourseId() {
   return courseId;
 }
 
-async function apiSendResults(input: PostLadokGradesInput) {
+/**
+ * Transfer grades to Ladok by performing a POST request to /ladok-grades endpoint
+ * @param input The grades to be transferred
+ * @returns the result of the transfer
+ */
+async function apiPostLadokGrades(
+  input: PostLadokGradesInput
+): Promise<PostLadokGradesOutput> {
   const courseId = getCourseId();
   const endpoint = `/transfer-to-ladok/api/courses/${courseId}/ladok-grades`;
 
@@ -53,10 +60,10 @@ async function apiSendResults(input: PostLadokGradesInput) {
   }
 }
 
-export function useSendGrades() {
+export function useTransferResults() {
   return useMutation<RowAfter[], unknown, SendGradesInput>(
     async ({ destination, results }) => {
-      const output = await apiSendResults(
+      const output = await apiPostLadokGrades(
         convertToApiInput(destination, results)
       );
 
