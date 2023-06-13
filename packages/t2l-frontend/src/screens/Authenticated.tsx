@@ -1,6 +1,6 @@
 import React from "react";
 import { PostLadokGradesInput, ResultInput, Sections } from "t2l-backend";
-import { useTransferResults } from "../hooks/useSendGrades";
+import { useTransfer } from "../hooks/useSendGrades";
 import SelectionStep, { UserSelection } from "./wizard/SelectionStep";
 import DoneStep from "./wizard/DoneStep";
 import PreviewStep from "./wizard/PreviewStep";
@@ -8,38 +8,25 @@ import PreviewStep from "./wizard/PreviewStep";
 import "./Authenticated.scss";
 import { InvalidCourseError } from "../utils/errors";
 import Loading from "../components/Loading";
-import { TG, TransferrableGrade } from "../utils/mergeGradesList";
+import { GradeWithStatus } from "../utils/mergeGradesList";
 
 export default function Authenticated({ sections }: { sections: Sections }) {
   const { aktivitetstillfalle, kurstillfalle } = sections;
-  const sendGradesMutation = useTransferResults();
   const [userSelection, setUserSelection] =
     React.useState<UserSelection | null>(null);
+  const sendGradesMutation = useTransfer(userSelection);
 
   function handleRestart() {
     sendGradesMutation.reset();
     setUserSelection(null);
   }
 
-  function handleTransfer(resultsToBeTransferred: TG[]) {
+  function handleTransfer(resultsToBeTransferred: GradeWithStatus[]) {
     if (!userSelection) {
       return;
     }
 
-    // Grades that will be transferred
-    const input: PostLadokGradesInput = {
-      destination: userSelection?.destination,
-      results: resultsToBeTransferred
-        .filter((r): r is TransferrableGrade => r.transferable)
-        .map<ResultInput>(
-          (r): ResultInput => ({
-            id: r.student.id,
-            draft: r.draft,
-          })
-        ),
-    };
-
-    sendGradesMutation.mutate(input);
+    sendGradesMutation.mutate(resultsToBeTransferred);
   }
 
   if (sendGradesMutation.isLoading) {

@@ -1,40 +1,43 @@
 import React from "react";
-import { PostLadokGradesOutput } from "t2l-backend";
+import { GradeWithStatus } from "../../utils/mergeGradesList";
 
 interface DoneStepProps {
-  response: PostLadokGradesOutput;
+  response: GradeWithStatus[];
   onRestart: () => void;
 }
 
 export default function DoneStep({ response, onRestart }: DoneStepProps) {
+  const successfulResults = response.filter((r) => r.status === "success");
+  const failedResults = response.filter((r) => r.status === "error");
+
   return (
     <div>
-      {response.summary.success === 0 && (
+      {successfulResults.length === 0 && (
         <h2>No results were transferred to Ladok</h2>
       )}
-      {response.summary.success > 0 && (
+      {successfulResults.length > 0 && (
         <h2>
-          {response.summary.success} results transferred successfully to Ladok
+          {successfulResults.length} results transferred successfully to Ladok
         </h2>
       )}
 
-      {response.summary.error > 0 && (
+      {failedResults.length > 0 && (
         <>
           <p>The following grades were not transferred</p>
           <table>
             <thead>
-              <th>Student</th>
+              <th>Student name</th>
+              <th>Personal number</th>
               <th>Reason</th>
             </thead>
             <tbody>
-              {response.results
-                .filter((r) => r.status === "error")
-                .map((r) => (
-                  <tr>
-                    <td>{r.id}</td>
-                    <td>{r.error?.message}</td>
-                  </tr>
-                ))}
+              {failedResults.map((r) => (
+                <tr>
+                  <td>{r.student.sortableName}</td>
+                  <td>{r.student.personalNumber}</td>
+                  <td>{r.cause?.message}</td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </>

@@ -1,6 +1,11 @@
 import { useMutation } from "react-query";
 import { PostLadokGradesInput, PostLadokGradesOutput } from "t2l-backend";
 import { ApiError } from "../utils/errors";
+import {
+  GradeWithStatus,
+  getTransferenceOutcome,
+} from "../utils/mergeGradesList";
+import { UserSelection } from "../screens/wizard/SelectionStep";
 
 function getCourseId() {
   const courseId = new URLSearchParams(location.search).get("courseId");
@@ -45,8 +50,29 @@ async function apiPostLadokGrades(
   }
 }
 
-export function useTransferResults() {
-  return useMutation<PostLadokGradesOutput, unknown, PostLadokGradesInput>(
-    (input) => apiPostLadokGrades(input)
+export function useTransfer(userSelection: UserSelection | null) {
+  return useMutation<GradeWithStatus[], unknown, GradeWithStatus[]>(
+    async (grades) => {
+      if (!userSelection || !userSelection.destination) {
+        return [];
+      }
+
+      const input: PostLadokGradesInput = {
+        destination: userSelection?.destination,
+        results: grades
+          .filter((g) => g.status === "ready")
+          .map((g) => ({
+            id: g.student.id,
+            draft: {
+              examinationDate: g.input?.examinationDate || "",
+              grade: g.input?.grade || "",
+            },
+          })),
+      };
+
+      const output = await apiPostLadokGrades(input);
+
+      return getTransferenceOutcome(grades, output);
+    }
   );
 }

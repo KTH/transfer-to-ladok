@@ -1,54 +1,64 @@
-import type { CanvasGrades, GradeableStudents } from "t2l-backend";
-export interface TransferrableGrade {
-  transferable: true;
+import type {
+  CanvasGrades,
+  GradeableStudents,
+  PostLadokGradesOutput,
+} from "t2l-backend";
 
+export interface GradeWithStatus {
+  /**
+   * This property indicates if the grade can be sent to Ladok or not.
+   *
+   * If the grade has not been sent then the possible values are:
+   * - `ready` - Grade can be sent
+   * - `not_transferable` - Grade cannot be sent
+   *
+   * If the grade has been try to send to Ladok:
+   * - `success` - The grade has been sent to Ladok
+   * - `error` - App tried to send the grade to Ladok but failed
+   */
+  status: "success" | "error" | "ready" | "not_transferable";
+
+  /** Grade in Canvas */
+  canvasGrade: string | null;
+
+  /** Student */
   student: {
     id: string;
     sortableName: string;
+    personalNumber?: string;
   };
 
-  draft: {
+  /** Information that will be sent to Ladok */
+  input?: {
     grade: string;
     examinationDate: string;
   };
-}
 
-export interface NonTransferrableGrade {
-  transferable: false;
-
-  student: {
-    id: string;
-    sortableName: string;
-  };
-
-  canvasGrade: string | null;
-
-  cause: {
+  /** Error cause. Only available if "status" is "error" or "not_transferable" */
+  cause?: {
     code: string;
     message: string;
   };
 }
-
-export type TG = TransferrableGrade | NonTransferrableGrade;
 
 /**
  * Given a list of Canvas grades (in an assignment) and a list of
  * "gradeable students" in Ladok, return a list of grades that
  * can be sent to Ladok.
  */
-export function mergeGradesLists(
+export function getTransferencePreview(
   canvasGrades: CanvasGrades,
   ladokGradeableStudents: GradeableStudents,
   examinationDate: string
-): TG[] {
-  return canvasGrades.map<TG>((canvasGrade): TG => {
+): GradeWithStatus[] {
+  return canvasGrades.map<GradeWithStatus>((canvasGrade): GradeWithStatus => {
     const ladokGrade = ladokGradeableStudents.find(
       (ladokGrade) => ladokGrade.student.id === canvasGrade.student.id
     );
 
     if (!ladokGrade) {
       return {
-        transferable: false,
+        status: "not_transferable",
         canvasGrade: canvasGrade.grade,
         student: {
           id: canvasGrade.student.id,
@@ -70,7 +80,7 @@ export function mergeGradesLists(
     // The teacher has no permission in Ladok
     if (!ladokGrade.hasPermission) {
       return {
-        transferable: false,
+        status: "not_transferable",
         canvasGrade: canvasGrade.grade,
         student,
         cause: {
@@ -83,7 +93,7 @@ export function mergeGradesLists(
     // The student has no grade in Canvas
     if (!canvasGrade.grade) {
       return {
-        transferable: false,
+        status: "not_transferable",
         canvasGrade: null,
         student,
         cause: {
@@ -95,7 +105,7 @@ export function mergeGradesLists(
 
     if (ladokGrade.draft?.grade === canvasGrade.grade) {
       return {
-        transferable: false,
+        status: "not_transferable",
         canvasGrade: canvasGrade.grade,
         student,
         cause: {
@@ -108,7 +118,7 @@ export function mergeGradesLists(
     // "F" grades
     if (canvasGrade.grade === "F" && ladokGrade.certified?.grade === "F") {
       return {
-        transferable: false,
+        status: "not_transferable",
         canvasGrade: canvasGrade.grade,
         student,
         cause: {
@@ -122,7 +132,7 @@ export function mergeGradesLists(
     // Invalid grade
     if (!ladokGrade.scale.includes(canvasGrade.grade)) {
       return {
-        transferable: false,
+        status: "not_transferable",
         canvasGrade: canvasGrade.grade,
         student,
         cause: {
@@ -135,12 +145,43 @@ export function mergeGradesLists(
     }
 
     return {
-      transferable: true,
+      status: "ready",
+      canvasGrade: canvasGrade.grade,
       student,
-      draft: {
+      input: {
         grade: canvasGrade.grade,
         examinationDate: examinationDate,
       },
+    };
+  });
+}
+
+/** Get the result of sending results to Ladok */
+export function getTransferenceOutcome(
+  inputs: GradeWithStatus[],
+  output: PostLadokGradesOutput
+): GradeWithStatus[] {
+  return inputs.map((input) => {
+    const ladokResponse = output.results.find((r) => r.id === input.student.id);
+
+    if (!ladokResponse) {
+      return input;
+    }
+
+    if (ladokResponse.error) {
+      return {
+        ...input,
+        status: "error",
+        cause: {
+          code: ladokResponse.error.code,
+          message: ladokResponse.error.message,
+        },
+      };
+    }
+
+    return {
+      ...input,
+      status: "success",
     };
   });
 }

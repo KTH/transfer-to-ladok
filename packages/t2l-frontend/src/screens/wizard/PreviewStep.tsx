@@ -2,12 +2,15 @@ import React from "react";
 import { UserSelection } from "./SelectionStep";
 import { useCanvasGrades, useGradeableStudents } from "../../hooks/apiClient";
 import Loading from "../../components/Loading";
-import { TG, mergeGradesLists } from "../../utils/mergeGradesList";
+import {
+  GradeWithStatus,
+  getTransferencePreview,
+} from "../../utils/mergeGradesList";
 
 interface PreviewStepProps {
   userSelection: UserSelection;
   onBack: () => void;
-  onSubmit: (input: TG[]) => void;
+  onSubmit: (input: GradeWithStatus[]) => void;
 }
 
 export default function PreviewStep({
@@ -54,7 +57,7 @@ export default function PreviewStep({
     return <Loading>Getting Canvas grades...</Loading>;
   }
 
-  const tgs = mergeGradesLists(
+  const gradesWithStatus = getTransferencePreview(
     canvasGradesQuery.data,
     ladokGradesQuery.data,
     date
@@ -63,6 +66,10 @@ export default function PreviewStep({
     .sort((a, b) =>
       a.student.sortableName.localeCompare(b.student.sortableName, "sv")
     );
+
+  const numberOfTransferrableGrades = gradesWithStatus.filter(
+    (t) => t.status === "ready"
+  ).length;
 
   return (
     <div>
@@ -79,7 +86,7 @@ export default function PreviewStep({
       </div>
       <h2>Preview</h2>
       <div>
-        {tgs.filter((t) => t.transferable).length}/{tgs.length} grades can be
+        {numberOfTransferrableGrades}/{gradesWithStatus.length} grades can be
         transferred
       </div>
       <table>
@@ -91,20 +98,17 @@ export default function PreviewStep({
           </tr>
         </thead>
         <tbody>
-          {tgs.map((tg) => (
+          {gradesWithStatus.map((tg) => (
             <tr>
               <td>{tg.student.sortableName}</td>
-              <td>
-                {(tg.transferable && tg.draft.grade) ||
-                  (!tg.transferable && tg.canvasGrade)}
-              </td>
-              <td>{tg.transferable && "Transferrable"}</td>
+              <td>{tg.canvasGrade}</td>
+              <td>{tg.status === "ready" && "Transferrable"}</td>
             </tr>
           ))}
         </tbody>
       </table>
       <button onClick={onBack}>Back</button>
-      <button onClick={() => onSubmit(tgs)}>Submit</button>
+      <button onClick={() => onSubmit(gradesWithStatus)}>Submit</button>
     </div>
   );
 }
