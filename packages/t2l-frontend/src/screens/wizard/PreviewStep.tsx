@@ -73,9 +73,7 @@ export default function PreviewStep({
   ).length;
 
   // TODO: mark transferable with green and a checkmark
-  // TOOD: show modal when clicking on submit.
-  // TODO: Style table
-  // TODO: button with position:fixed
+  // TODO: show modal when clicking on submit.
   return (
     <main className="preview-step">
       <div>
