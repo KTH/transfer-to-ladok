@@ -56,13 +56,13 @@ function validateLadokModule(
   }
 }
 
+function validateExaminationDate(date: string | null): string | undefined {
+  if (date === null) {
+    return "Required field";
+  }
+}
+
 export default function SelectionStep({ onSubmit }: SelectionStepProps) {
-  const [selectedDate, setSelectedDate] = React.useState<string | null>(null);
-
-  const [examinationDateError, setExaminationDateError] = React.useState<
-    string | undefined
-  >(undefined);
-
   const ladokModulesQuery = useSections();
   const canvasAssignmentsQuery = useAssignments();
 
@@ -70,18 +70,10 @@ export default function SelectionStep({ onSubmit }: SelectionStepProps) {
     useValidatedState("", (value) =>
       validateAssignment(canvasAssignmentsQuery.data, value)
     );
-
   const [selectedLadokModule, ladokModuleError, setSelectedLadokModule] =
     useValidatedState<GradesDestination | null>(null, validateLadokModule);
-
-  function handleExaminationDateChange(value: string | null) {
-    setSelectedDate(value);
-    if (value === null) {
-      setExaminationDateError("Required field");
-    } else {
-      setExaminationDateError(undefined);
-    }
-  }
+  const [selectedDate, examinationDateError, setSelectedDate] =
+    useValidatedState<string | null>(null, validateExaminationDate);
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -138,7 +130,7 @@ export default function SelectionStep({ onSubmit }: SelectionStepProps) {
         error={ladokModuleError}
       />
       <ExaminationDateSelect
-        onChange={handleExaminationDateChange}
+        onChange={setSelectedDate}
         error={examinationDateError}
         value={selectedDate}
       />
