@@ -22,7 +22,7 @@ export default function PreviewStep({
   const { assignment, destination, date } = userSelection;
 
   // Fetch submissions and gradeable students
-  const ladokGradesQuery = useGradeableStudents(destination);
+  const ladokGradesQuery = useGradeableStudents(destination.value);
   const canvasGradesQuery = useCanvasGrades(assignment.id);
 
   if (ladokGradesQuery.isError) {
@@ -72,11 +72,10 @@ export default function PreviewStep({
     (t) => t.status === "ready"
   ).length;
 
-  // TODO: show "from" (assignment name) and "to" (Ladok module)
   // TODO: mark transferable with green and a checkmark
   // TOOD: show modal when clicking on submit.
-  // TODO: change Submit text to "Transfer to ladok"
   // TODO: Style table
+  // TODO: button with position:fixed
   return (
     <main className="preview-step">
       <div>
@@ -91,7 +90,7 @@ export default function PreviewStep({
           </div>
           <div className="field">
             <dt>To (module in Ladok)</dt>
-            <dd>TODO: destination</dd>
+            <dd>{destination.name}</dd>
           </div>
           <div className="field">
             <dt>Examination date</dt>
@@ -122,7 +121,9 @@ export default function PreviewStep({
           ))}
         </tbody>
       </table>
-      <button onClick={() => onSubmit(gradesWithStatus)}>Submit</button>
+      <button onClick={() => onSubmit(gradesWithStatus)}>
+        Transfer to Ladok
+      </button>
     </main>
   );
 }

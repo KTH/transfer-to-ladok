@@ -2,7 +2,7 @@
 import React from "react";
 import { useAssignments, useSections } from "../../hooks/apiClient";
 import Loading from "../../components/Loading";
-import { GradesDestination, Columns } from "t2l-backend";
+import { GradesDestination, Columns, Sections } from "t2l-backend";
 import ExaminationDateSelect from "../../components/ExaminationDateSelect";
 import LadokModuleSelect from "../../components/LadokModuleSelect";
 import AssignmentSelect from "../../components/AssignmentSelect";
@@ -13,7 +13,10 @@ export interface UserSelection {
     id: string;
     name: string;
   };
-  destination: GradesDestination;
+  destination: {
+    name: string;
+    value: GradesDestination;
+  };
   date: string;
 }
 
@@ -62,6 +65,48 @@ function validateLadokModule(
 function validateExaminationDate(date: string | null): string | undefined {
   if (date === null) {
     return "Required field";
+  }
+}
+
+function getDestinationName(
+  allSections: Sections | undefined,
+  destination: GradesDestination
+): string {
+  if (!allSections) {
+    throw new Error("Sections are not loaded");
+  }
+  if ("aktivitetstillfalle" in destination) {
+    const name = allSections.aktivitetstillfalle.find(
+      (a) => a.id === destination.aktivitetstillfalle
+    )?.name;
+
+    if (!name) {
+      throw new Error("Could not find name for aktivitetstillfalle");
+    }
+
+    return name;
+  } else {
+    const round = allSections.kurstillfalle.find(
+      (a) => a.id === destination.kurstillfalle
+    );
+
+    if (!round) {
+      throw new Error("Could not find round for kurstillfalle");
+    }
+
+    if (round.utbildningsinstans === destination.utbildningsinstans) {
+      return `${round.courseCode} (${round.roundCode}) - Final grade`;
+    }
+
+    const module = round.modules.find(
+      (m) => m.utbildningsinstans === destination.utbildningsinstans
+    );
+
+    if (!module) {
+      throw new Error("Could not find module for kurstillfalle");
+    }
+
+    return `${round.courseCode} (${round.roundCode}) - ${module.code}`;
   }
 }
 
@@ -118,7 +163,10 @@ export default function SelectionStep({ onSubmit }: SelectionStepProps) {
 
     onSubmit({
       assignment: selectedAssignment,
-      destination: selectedLadokModule,
+      destination: {
+        value: selectedLadokModule,
+        name: getDestinationName(ladokModulesQuery.data, selectedLadokModule),
+      },
       date: selectedDate,
     });
   }

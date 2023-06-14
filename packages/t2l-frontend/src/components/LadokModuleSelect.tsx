@@ -8,6 +8,7 @@ interface LadokModulesSelectProps {
   error: string | undefined;
   ladokModules: Sections;
 }
+
 export default function LadokModuleSelect({
   onChange,
   value,
