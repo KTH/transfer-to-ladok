@@ -5,10 +5,12 @@ import { Columns } from "t2l-backend";
 export default function AssignmentSelect({
   columns,
   value,
+  error,
   onChange,
 }: {
   columns: Columns;
   value: string;
+  error: string | undefined;
   onChange: (value: string) => void;
 }) {
   const sortedAssignments = columns.assignments.slice().sort((a, b) => {
@@ -28,6 +30,7 @@ export default function AssignmentSelect({
       onChange={(value) => onChange(value)}
       label="Select assignment"
       description="Only letter grades will be transferred to Ladok: A-F grades or P/F"
+      error={error}
     >
       <Option value="">Select an assignment</Option>
       <OptionGroup label="Assignments">

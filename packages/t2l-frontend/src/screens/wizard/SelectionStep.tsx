@@ -23,10 +23,53 @@ export default function SelectionStep({ onSubmit }: SelectionStepProps) {
     React.useState<GradesDestination | null>(null);
   const [selectedDate, setSelectedDate] = React.useState<string | null>(null);
 
+  const [assignmentError, setAssignmentError] = React.useState<
+    string | undefined
+  >(undefined);
+  const [ladokModuleError, setLadokModuleError] = React.useState<
+    string | undefined
+  >(undefined);
+  const [examinationDateError, setExaminationDateError] = React.useState<
+    string | undefined
+  >(undefined);
+
   const ladokModulesQuery = useSections();
   const canvasAssignmentsQuery = useAssignments();
 
-  // TODO: show error messages on blur for each field
+  function handleAssignmentChange(value: string) {
+    setSelectedAssignment(value);
+
+    if (value === "") {
+      setAssignmentError("");
+      return;
+    } else if (value === "total") {
+      if (canvasAssignmentsQuery.data?.finalGrades.hasLetterGrade) {
+        setAssignmentError(
+          "The total column in this course does not have letter grades. Choose a different assignment or go to Canvas to configure letter grades for the course"
+        );
+      } else {
+        setAssignmentError(undefined);
+      }
+    } else if (value !== "total") {
+      const assignment = canvasAssignmentsQuery.data?.assignments.find(
+        (assignment) => assignment.id === value
+      );
+
+      if (assignment?.gradingType !== "letter_grade") {
+        setAssignmentError(
+          "This assignment does not have letter grades. Choose a different assignment or go to Canvas to configure letter grades for the assignment"
+        );
+      } else {
+        setAssignmentError(undefined);
+      }
+    } else {
+      setAssignmentError("Invalid assignment");
+    }
+  }
+
+  function handleLadokModuleChange() {}
+
+  function handleExaminationDateChange() {}
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -73,7 +116,8 @@ export default function SelectionStep({ onSubmit }: SelectionStepProps) {
       <AssignmentSelect
         columns={canvasAssignmentsQuery.data}
         value={selectedAssignment}
-        onChange={setSelectedAssignment}
+        onChange={handleAssignmentChange}
+        error={assignmentError}
       />
       <LadokModuleSelect
         onChange={(value) => setSelectedLadokDestination(value)}
