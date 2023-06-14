@@ -1,4 +1,3 @@
-import log from "skog";
 import { Router } from "express";
 import sectionsHandler from "./apiHandlers/sections";
 import columnsHandler from "./apiHandlers/columns";
@@ -8,43 +7,12 @@ import {
 } from "./apiHandlers/canvasGrades";
 import { getGradesHandler, postGradesHandler } from "./apiHandlers/ladokGrades";
 import auth from "./otherHandlers/auth";
-import { buildInfo } from "./config/info";
-import { getAutentiserad } from "./externalApis/ladokApi";
+import { monitor, about } from "./otherHandlers/system";
 
 const router = Router();
 
-router.get("/_monitor", async (req, res) => {
-  res.set("Content-type", "text/plain");
-
-  try {
-    const { Anvandarnamn } = await getAutentiserad();
-
-    res.send(`
-APPLICATION_STATUS: OK
-----------------------
-- Ladok User: ${Anvandarnamn}
-    `);
-  } catch (error) {
-    log.error(error as Error, "Error. Ladok might be down");
-
-    res.send("APPLICATION_STATUS: ERROR");
-  }
-});
-
-router.get("/_about", (req, res) => {
-  res.set("Content-type", "text/plain");
-  res.send(`
-Transfer to Ladok
------------------
-- Build date: ${buildInfo.buildDate}
-
-- Docker image:   ${buildInfo.dockerImage}
-- Docker version: ${buildInfo.dockerVersion}
-
-- Git branch: ${buildInfo.gitBranch}
-- Git commit: ${buildInfo.gitCommit}
-`);
-});
+router.get("/_monitor", monitor);
+router.get("/_about", about);
 
 // This endpoint is where the user lands after clicking "Transfer to Ladok"
 // from the left-side menu
