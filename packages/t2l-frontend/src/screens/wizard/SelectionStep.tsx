@@ -9,7 +9,10 @@ import AssignmentSelect from "../../components/AssignmentSelect";
 import { useValidatedState } from "../../hooks/utils";
 
 export interface UserSelection {
-  assignment: string;
+  assignment: {
+    id: string;
+    name: string;
+  };
   destination: GradesDestination;
   date: string;
 }
@@ -66,7 +69,7 @@ export default function SelectionStep({ onSubmit }: SelectionStepProps) {
   const ladokModulesQuery = useSections();
   const canvasAssignmentsQuery = useAssignments();
 
-  const [selectedAssignment, assignmentError, setSelectedAssignment] =
+  const [selectedAssignmentId, assignmentError, setSelectedAssignment] =
     useValidatedState("", (value) =>
       validateAssignment(canvasAssignmentsQuery.data, value)
     );
@@ -79,13 +82,13 @@ export default function SelectionStep({ onSubmit }: SelectionStepProps) {
     event.preventDefault();
 
     // Force validation
-    setSelectedAssignment(selectedAssignment);
+    setSelectedAssignment(selectedAssignmentId);
     setSelectedLadokModule(selectedLadokModule);
     setSelectedDate(selectedDate);
 
     // Validate everything
     if (
-      validateAssignment(canvasAssignmentsQuery.data, selectedAssignment) !==
+      validateAssignment(canvasAssignmentsQuery.data, selectedAssignmentId) !==
         undefined ||
       validateLadokModule(selectedLadokModule) !== undefined ||
       validateExaminationDate(selectedDate) !== undefined
@@ -93,12 +96,24 @@ export default function SelectionStep({ onSubmit }: SelectionStepProps) {
       return;
     }
 
+    const selectedAssignment =
+      selectedAssignmentId === "total"
+        ? {
+            id: "total",
+            name: "Total column",
+          }
+        : canvasAssignmentsQuery.data?.assignments.find(
+            (a) => a.id === selectedAssignmentId
+          );
+
     if (selectedLadokModule === null) {
       throw new Error("Ladok module is null and validation didn't catch it");
     } else if (selectedDate === null) {
       throw new Error(
         "Examination date is null and validation didn't catch it"
       );
+    } else if (selectedAssignment === undefined) {
+      throw new Error("Assignment is not found and validation didn't catch it");
     }
 
     onSubmit({
@@ -129,7 +144,7 @@ export default function SelectionStep({ onSubmit }: SelectionStepProps) {
       </p>
       <AssignmentSelect
         columns={canvasAssignmentsQuery.data}
-        value={selectedAssignment}
+        value={selectedAssignmentId}
         onChange={setSelectedAssignment}
         error={assignmentError}
       />

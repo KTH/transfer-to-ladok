@@ -22,7 +22,7 @@ export default function PreviewStep({
 
   // Fetch submissions and gradeable students
   const ladokGradesQuery = useGradeableStudents(destination);
-  const canvasGradesQuery = useCanvasGrades(assignment);
+  const canvasGradesQuery = useCanvasGrades(assignment.id);
 
   if (ladokGradesQuery.isError) {
     throw ladokGradesQuery.error;
@@ -71,7 +71,6 @@ export default function PreviewStep({
     (t) => t.status === "ready"
   ).length;
 
-  // TODO: assignment name
   // TODO: show "from" (assignment name) and "to" (Ladok module)
   // TODO: mark transferable with green and a checkmark
   // TODO: "move back" up
@@ -84,7 +83,7 @@ export default function PreviewStep({
         Your selection.
         <ul>
           <li>
-            Assignment: <strong>{assignment}</strong>
+            Assignment: <strong>{assignment.name}</strong>
           </li>
           <li>
             Date: <strong>{date}</strong>
