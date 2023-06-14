@@ -6,6 +6,7 @@ import { GradesDestination, Columns } from "t2l-backend";
 import ExaminationDateSelect from "../../components/ExaminationDateSelect";
 import LadokModuleSelect from "../../components/LadokModuleSelect";
 import AssignmentSelect from "../../components/AssignmentSelect";
+import { useValidatedState } from "../../hooks/utils";
 
 export interface UserSelection {
   assignment: string;
@@ -47,36 +48,17 @@ function validateAssignment(
   }
 }
 
-function useValidatedState<T>(
-  initialValue: T,
-  validator: (value: T) => string | undefined
-): [T, string | undefined, (value: T) => void] {
-  const [valueAndError, setValueAndError] = React.useState<{
-    value: T;
-    error: string | undefined;
-  }>({
-    value: initialValue,
-    error: undefined,
-  });
-
-  function setAndValidateValue(value: T) {
-    setValueAndError({
-      value,
-      error: validator(value),
-    });
+function validateLadokModule(
+  ladokModule: GradesDestination | null
+): string | undefined {
+  if (ladokModule === null) {
+    return "Required field";
   }
-
-  return [valueAndError.value, valueAndError.error, setAndValidateValue];
 }
 
 export default function SelectionStep({ onSubmit }: SelectionStepProps) {
-  const [selectedLadokDestination, setSelectedLadokDestination] =
-    React.useState<GradesDestination | null>(null);
   const [selectedDate, setSelectedDate] = React.useState<string | null>(null);
 
-  const [ladokModuleError, setLadokModuleError] = React.useState<
-    string | undefined
-  >(undefined);
   const [examinationDateError, setExaminationDateError] = React.useState<
     string | undefined
   >(undefined);
@@ -89,14 +71,8 @@ export default function SelectionStep({ onSubmit }: SelectionStepProps) {
       validateAssignment(canvasAssignmentsQuery.data, value)
     );
 
-  function handleLadokModuleChange(value: GradesDestination | null) {
-    setSelectedLadokDestination(value);
-    if (value === null) {
-      setLadokModuleError("Required field");
-    } else {
-      setLadokModuleError(undefined);
-    }
-  }
+  const [selectedLadokModule, ladokModuleError, setSelectedLadokModule] =
+    useValidatedState<GradesDestination | null>(null, validateLadokModule);
 
   function handleExaminationDateChange(value: string | null) {
     setSelectedDate(value);
@@ -115,7 +91,7 @@ export default function SelectionStep({ onSubmit }: SelectionStepProps) {
       return;
     }
 
-    if (selectedLadokDestination === null) {
+    if (selectedLadokModule === null) {
       return;
     }
 
@@ -125,7 +101,7 @@ export default function SelectionStep({ onSubmit }: SelectionStepProps) {
 
     onSubmit({
       assignment: selectedAssignment,
-      destination: selectedLadokDestination,
+      destination: selectedLadokModule,
       date: selectedDate,
     });
   }
@@ -156,8 +132,8 @@ export default function SelectionStep({ onSubmit }: SelectionStepProps) {
         error={assignmentError}
       />
       <LadokModuleSelect
-        onChange={handleLadokModuleChange}
-        value={selectedLadokDestination}
+        onChange={setSelectedLadokModule}
+        value={selectedLadokModule}
         ladokModules={ladokModulesQuery.data}
         error={ladokModuleError}
       />
