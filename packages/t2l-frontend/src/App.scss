@@ -135,3 +135,22 @@ dl {
     margin: 0;
   }
 }
+
+table {
+  width: 100%;
+  margin: 1rem 0;
+  border-collapse: collapse;
+
+  thead th {
+    text-align: left;
+    padding: 0.5rem;
+  }
+
+  tbody {
+    td {
+      border-bottom: 1px solid gray;
+      border-top: 1px solid gray;
+      padding: 0.25rem 0.5rem;
+    }
+  }
+}
