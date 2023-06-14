@@ -58,7 +58,7 @@ export function useTransfer(userSelection: UserSelection | null) {
       }
 
       const input: PostLadokGradesInput = {
-        destination: userSelection?.destination,
+        destination: userSelection?.destination.value,
         results: grades
           .filter((g) => g.status === "ready")
           .map((g) => ({
