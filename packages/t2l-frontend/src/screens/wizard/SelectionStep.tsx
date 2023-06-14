@@ -2,7 +2,7 @@
 import React from "react";
 import { useAssignments, useSections } from "../../hooks/apiClient";
 import Loading from "../../components/Loading";
-import { GradesDestination } from "t2l-backend";
+import { GradesDestination, Columns } from "t2l-backend";
 import ExaminationDateSelect from "../../components/ExaminationDateSelect";
 import LadokModuleSelect from "../../components/LadokModuleSelect";
 import AssignmentSelect from "../../components/AssignmentSelect";
@@ -17,15 +17,63 @@ interface SelectionStepProps {
   onSubmit: (value: UserSelection) => void;
 }
 
+function validateAssignment(
+  allColumns: Columns | undefined,
+  assignmentId: string
+): string | undefined {
+  console.log("validate assignment");
+  if (!allColumns) {
+    return "Assignments are not loaded";
+  }
+
+  if (assignmentId === "") {
+    return "Required field";
+  }
+
+  if (assignmentId === "total") {
+    return allColumns.finalGrades.hasLetterGrade
+      ? "The total column in this course does not have letter grades. Choose a different assignment or go to Canvas to configure letter grades for the course"
+      : undefined;
+  }
+
+  const assignment = allColumns.assignments.find((a) => a.id === assignmentId);
+
+  if (!assignment) {
+    return "Assignment not found";
+  }
+
+  if (assignment.gradingType !== "letter_grade") {
+    return "This assignment does not have letter grades. Choose a different assignment or go to Canvas to configure letter grades for the assignment";
+  }
+}
+
+function useValidatedState<T>(
+  initialValue: T,
+  validator: (value: T) => string | undefined
+): [T, string | undefined, (value: T) => void] {
+  const [valueAndError, setValueAndError] = React.useState<{
+    value: T;
+    error: string | undefined;
+  }>({
+    value: initialValue,
+    error: undefined,
+  });
+
+  function setAndValidateValue(value: T) {
+    setValueAndError({
+      value,
+      error: validator(value),
+    });
+  }
+
+  return [valueAndError.value, valueAndError.error, setAndValidateValue];
+}
+
 export default function SelectionStep({ onSubmit }: SelectionStepProps) {
-  const [selectedAssignment, setSelectedAssignment] = React.useState("");
   const [selectedLadokDestination, setSelectedLadokDestination] =
     React.useState<GradesDestination | null>(null);
   const [selectedDate, setSelectedDate] = React.useState<string | null>(null);
 
-  const [assignmentError, setAssignmentError] = React.useState<
-    string | undefined
-  >(undefined);
   const [ladokModuleError, setLadokModuleError] = React.useState<
     string | undefined
   >(undefined);
@@ -36,36 +84,10 @@ export default function SelectionStep({ onSubmit }: SelectionStepProps) {
   const ladokModulesQuery = useSections();
   const canvasAssignmentsQuery = useAssignments();
 
-  function handleAssignmentChange(value: string) {
-    setSelectedAssignment(value);
-
-    if (value === "") {
-      setAssignmentError("Required field");
-      return;
-    } else if (value === "total") {
-      if (canvasAssignmentsQuery.data?.finalGrades.hasLetterGrade) {
-        setAssignmentError(
-          "The total column in this course does not have letter grades. Choose a different assignment or go to Canvas to configure letter grades for the course"
-        );
-      } else {
-        setAssignmentError(undefined);
-      }
-    } else if (value !== "total") {
-      const assignment = canvasAssignmentsQuery.data?.assignments.find(
-        (assignment) => assignment.id === value
-      );
-
-      if (assignment?.gradingType !== "letter_grade") {
-        setAssignmentError(
-          "This assignment does not have letter grades. Choose a different assignment or go to Canvas to configure letter grades for the assignment"
-        );
-      } else {
-        setAssignmentError(undefined);
-      }
-    } else {
-      setAssignmentError("Invalid assignment");
-    }
-  }
+  const [selectedAssignment, assignmentError, setSelectedAssignment] =
+    useValidatedState("", (value) =>
+      validateAssignment(canvasAssignmentsQuery.data, value)
+    );
 
   function handleLadokModuleChange(value: GradesDestination | null) {
     setSelectedLadokDestination(value);
@@ -130,7 +152,7 @@ export default function SelectionStep({ onSubmit }: SelectionStepProps) {
       <AssignmentSelect
         columns={canvasAssignmentsQuery.data}
         value={selectedAssignment}
-        onChange={handleAssignmentChange}
+        onChange={setSelectedAssignment}
         error={assignmentError}
       />
       <LadokModuleSelect
