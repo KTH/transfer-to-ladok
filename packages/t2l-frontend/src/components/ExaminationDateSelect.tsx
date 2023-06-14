@@ -18,11 +18,12 @@ export function parseDate(str: string): Date {
 export default function ExaminationDateSelector({
   value,
   onChange,
+  error,
 }: {
-  fixedOption?: string;
   /** YY-MM-DDDD representation of the date */
   value: string | null;
   onChange(value: string | null): void;
+  error: string | undefined;
 }) {
   // Convert date to string and vice-versa
   const dateValue = value ? parseDate(value) : null;
@@ -39,6 +40,7 @@ export default function ExaminationDateSelector({
     <div className="kth-input">
       <label htmlFor="examination-date">Examination date</label>
       <DatePicker
+        ariaInvalid={error ? "true" : "false"}
         autoComplete="off"
         id="examination-date"
         dateFormat="yyyy-MM-dd"
@@ -46,6 +48,7 @@ export default function ExaminationDateSelector({
         selected={dateValue}
         onChange={handleChange}
       />
+      {error && <p className="kth-input__error">{error}</p>}
     </div>
   );
 }

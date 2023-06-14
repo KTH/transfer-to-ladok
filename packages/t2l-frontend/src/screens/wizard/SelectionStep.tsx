@@ -76,7 +76,14 @@ export default function SelectionStep({ onSubmit }: SelectionStepProps) {
     }
   }
 
-  function handleExaminationDateChange() {}
+  function handleExaminationDateChange(value: string | null) {
+    setSelectedDate(value);
+    if (value === null) {
+      setExaminationDateError("Required field");
+    } else {
+      setExaminationDateError(undefined);
+    }
+  }
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -132,7 +139,11 @@ export default function SelectionStep({ onSubmit }: SelectionStepProps) {
         ladokModules={ladokModulesQuery.data}
         error={ladokModuleError}
       />
-      <ExaminationDateSelect onChange={setSelectedDate} value={selectedDate} />
+      <ExaminationDateSelect
+        onChange={handleExaminationDateChange}
+        error={examinationDateError}
+        value={selectedDate}
+      />
       <button className="kth-button primary">Continue</button> (Nothing is
       transferred yet)
     </form>
