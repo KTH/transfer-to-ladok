@@ -71,6 +71,13 @@ export default function PreviewStep({
     (t) => t.status === "ready"
   ).length;
 
+  // TODO: assignment name
+  // TODO: show "from" (assignment name) and "to" (Ladok module)
+  // TODO: mark transferable with green and a checkmark
+  // TODO: "move back" up
+  // TOOD: show modal when clicking on submit.
+  // TODO: change Submit text to "Transfer to ladok"
+  // TODO: Style table
   return (
     <div>
       <div>

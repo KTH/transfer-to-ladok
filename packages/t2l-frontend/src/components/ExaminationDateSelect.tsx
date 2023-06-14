@@ -35,7 +35,6 @@ export default function ExaminationDateSelector({
     }
   }
 
-  // TODO: Style this component
   return (
     <div className="kth-input">
       <label htmlFor="examination-date">Examination date</label>

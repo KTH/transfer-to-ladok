@@ -26,10 +26,12 @@ export default function SelectionStep({ onSubmit }: SelectionStepProps) {
   const ladokModulesQuery = useSections();
   const canvasAssignmentsQuery = useAssignments();
 
+  // TODO: show error messages on blur for each field
+
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    // TODO: do not allow submission if any of the fields are empty
+    // TODO: show error messages when the submission is not valid
     if (selectedAssignment === "") {
       return;
     }
