@@ -121,9 +121,14 @@ export default function PreviewStep({
           ))}
         </tbody>
       </table>
-      <button onClick={() => onSubmit(gradesWithStatus)}>
-        Transfer to Ladok
-      </button>
+      <footer>
+        <button
+          className="btn-primary"
+          onClick={() => onSubmit(gradesWithStatus)}
+        >
+          Transfer to Ladok
+        </button>
+      </footer>
     </main>
   );
 }
