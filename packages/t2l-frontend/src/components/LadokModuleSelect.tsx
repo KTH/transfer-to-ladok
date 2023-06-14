@@ -5,11 +5,13 @@ import { Select, Option, OptionGroup } from "@kth/style";
 interface LadokModulesSelectProps {
   onChange: (value: GradesDestination | null) => void;
   value: GradesDestination | null;
+  error: string | undefined;
   ladokModules: Sections;
 }
 export default function LadokModuleSelect({
   onChange,
   value,
+  error,
   ladokModules,
 }: LadokModulesSelectProps) {
   const examinationLength = ladokModules.aktivitetstillfalle.length;
@@ -28,6 +30,7 @@ export default function LadokModuleSelect({
       name="ladok-module"
       value={JSON.stringify(value)}
       onChange={(value) => onChange(JSON.parse(value))}
+      error={error}
       label="Ladok module"
       description="To which module do you want the grades to be transferred"
     >

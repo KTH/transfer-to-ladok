@@ -40,7 +40,7 @@ export default function SelectionStep({ onSubmit }: SelectionStepProps) {
     setSelectedAssignment(value);
 
     if (value === "") {
-      setAssignmentError("");
+      setAssignmentError("Required field");
       return;
     } else if (value === "total") {
       if (canvasAssignmentsQuery.data?.finalGrades.hasLetterGrade) {
@@ -67,7 +67,14 @@ export default function SelectionStep({ onSubmit }: SelectionStepProps) {
     }
   }
 
-  function handleLadokModuleChange() {}
+  function handleLadokModuleChange(value: GradesDestination | null) {
+    setSelectedLadokDestination(value);
+    if (value === null) {
+      setLadokModuleError("Required field");
+    } else {
+      setLadokModuleError(undefined);
+    }
+  }
 
   function handleExaminationDateChange() {}
 
@@ -120,9 +127,10 @@ export default function SelectionStep({ onSubmit }: SelectionStepProps) {
         error={assignmentError}
       />
       <LadokModuleSelect
-        onChange={(value) => setSelectedLadokDestination(value)}
+        onChange={handleLadokModuleChange}
         value={selectedLadokDestination}
         ladokModules={ladokModulesQuery.data}
+        error={ladokModuleError}
       />
       <ExaminationDateSelect onChange={setSelectedDate} value={selectedDate} />
       <button className="kth-button primary">Continue</button> (Nothing is
