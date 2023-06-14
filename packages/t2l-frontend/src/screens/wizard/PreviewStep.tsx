@@ -6,6 +6,7 @@ import {
   GradeWithStatus,
   getTransferencePreview,
 } from "../../utils/mergeGradesList";
+import { ArrowLeft } from "../../utils/icons";
 
 interface PreviewStepProps {
   userSelection: UserSelection;
@@ -73,22 +74,30 @@ export default function PreviewStep({
 
   // TODO: show "from" (assignment name) and "to" (Ladok module)
   // TODO: mark transferable with green and a checkmark
-  // TODO: "move back" up
   // TOOD: show modal when clicking on submit.
   // TODO: change Submit text to "Transfer to ladok"
   // TODO: Style table
   return (
-    <div>
+    <main className="preview-step">
       <div>
-        Your selection.
-        <ul>
-          <li>
-            Assignment: <strong>{assignment.name}</strong>
-          </li>
-          <li>
-            Date: <strong>{date}</strong>
-          </li>
-        </ul>
+        <button className="with-icon" onClick={onBack}>
+          <ArrowLeft />
+          <span className="label">Back to selection</span>
+        </button>
+        <dl>
+          <div className="field">
+            <dt>From (assignment in Canvas)</dt>
+            <dd>{assignment.name}</dd>
+          </div>
+          <div className="field">
+            <dt>To (module in Ladok)</dt>
+            <dd>TODO: destination</dd>
+          </div>
+          <div className="field">
+            <dt>Examination date</dt>
+            <dd>{date}</dd>
+          </div>
+        </dl>
       </div>
       <h2>Preview</h2>
       <div>
@@ -113,8 +122,7 @@ export default function PreviewStep({
           ))}
         </tbody>
       </table>
-      <button onClick={onBack}>Back</button>
       <button onClick={() => onSubmit(gradesWithStatus)}>Submit</button>
-    </div>
+    </main>
   );
 }

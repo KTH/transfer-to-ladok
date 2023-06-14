@@ -85,6 +85,12 @@ button.btn-secondary {
 }
 
 button.with-icon {
+  font-size: 1rem;
+  padding: 0.25rem 0;
+  border: none;
+  background: none;
+  color: $color-blue-700;
+
   svg {
     height: 1.5rem;
     vertical-align: middle;
@@ -94,6 +100,10 @@ button.with-icon {
     margin: 0 0.5rem;
     display: inline-block;
     vertical-align: middle;
+  }
+
+  &:hover .label {
+    text-decoration: underline;
   }
 }
 
@@ -110,5 +120,18 @@ a.with-icon {
   }
   &:hover .label {
     text-decoration: underline;
+  }
+}
+
+dl {
+  display: flex;
+  gap: 1rem;
+
+  dt {
+    margin: 0;
+    font-weight: 600;
+  }
+  dd {
+    margin: 0;
   }
 }
