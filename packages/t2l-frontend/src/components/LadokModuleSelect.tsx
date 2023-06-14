@@ -13,7 +13,7 @@ export default function LadokModuleSelect({
   ladokModules,
 }: LadokModulesSelectProps) {
   const examinationLength = ladokModules.aktivitetstillfalle.length;
-  const firstExamination = ladokModules.aktivitetstillfalle[0].id;
+  const firstExamination = ladokModules.aktivitetstillfalle[0]?.id;
 
   React.useEffect(() => {
     if (examinationLength === 1) {
