@@ -78,17 +78,27 @@ export default function SelectionStep({ onSubmit }: SelectionStepProps) {
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    // TODO: show error messages when the submission is not valid
-    if (selectedAssignment === "") {
+    // Force validation
+    setSelectedAssignment(selectedAssignment);
+    setSelectedLadokModule(selectedLadokModule);
+    setSelectedDate(selectedDate);
+
+    // Validate everything
+    if (
+      validateAssignment(canvasAssignmentsQuery.data, selectedAssignment) !==
+        undefined ||
+      validateLadokModule(selectedLadokModule) !== undefined ||
+      validateExaminationDate(selectedDate) !== undefined
+    ) {
       return;
     }
 
     if (selectedLadokModule === null) {
-      return;
-    }
-
-    if (selectedDate === null) {
-      return;
+      throw new Error("Ladok module is null and validation didn't catch it");
+    } else if (selectedDate === null) {
+      throw new Error(
+        "Examination date is null and validation didn't catch it"
+      );
     }
 
     onSubmit({
