@@ -14,6 +14,11 @@ export default function Authenticated({ sections }: { sections: Sections }) {
   const { aktivitetstillfalle, kurstillfalle } = sections;
   const [userSelection, setUserSelection] =
     React.useState<UserSelection | null>(null);
+
+  // This is the "mutation" object that is used to transfer results to Ladok.
+  // Depending on the state of the mutation, we render different steps.
+  // - If the mutation is "Done", we show the "Done" step.
+  // - If the mutatton is "Idle" (i.e. not started), we show the "Selection" step.
   const sendGradesMutation = useTransfer(userSelection);
 
   function handleRestart() {
@@ -21,6 +26,7 @@ export default function Authenticated({ sections }: { sections: Sections }) {
     setUserSelection(null);
   }
 
+  // This function is called when the user clicks the "Transfer" button
   function handleTransfer(resultsToBeTransferred: GradeWithStatus[]) {
     if (!userSelection) {
       return;
@@ -42,6 +48,8 @@ export default function Authenticated({ sections }: { sections: Sections }) {
       <DoneStep response={sendGradesMutation.data} onRestart={handleRestart} />
     );
   }
+
+  // From here, we know that the mutation is "Idle" (i.e. not started).
 
   // If there are no aktivitetstillfälle or kurstillfälle, then
   // this course cannot be used with Transfer to Ladok
