@@ -1,4 +1,4 @@
-# Transfer to Ladok
+# Transfer to Ladok v1.1
 
 Application to read grades from Canvas and write them to Ladok
 
