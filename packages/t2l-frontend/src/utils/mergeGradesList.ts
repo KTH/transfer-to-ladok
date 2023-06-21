@@ -117,16 +117,20 @@ export function getTransferencePreview(
 
     // "F" grades
     if (canvasGrade.grade === "F" && ladokGrade.certified?.grade === "F") {
-      return {
-        status: "not_transferable",
-        canvasGrade: canvasGrade.grade,
-        student,
-        cause: {
-          code: "grade_f",
-          message:
-            "The student has a certified F in Ladok and cannot be given another F",
-        },
-      };
+      console.log(
+        "This student has certified grades in Ladok",
+        student.sortableName
+      );
+      // return {
+      //   status: "not_transferable",
+      //   canvasGrade: canvasGrade.grade,
+      //   student,
+      //   cause: {
+      //     code: "grade_f",
+      //     message:
+      //       "The student has a certified F in Ladok and cannot be given another F",
+      //   },
+      // };
     }
 
     // Invalid grade
