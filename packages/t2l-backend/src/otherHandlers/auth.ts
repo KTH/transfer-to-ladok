@@ -1,7 +1,7 @@
 /** This module contains all the endpoints related to oauth handling */
 import { Router } from "express";
-import { Issuer, generators } from "openid-client";
-import assert from "assert";
+import { Issuer, generators, errors } from "openid-client";
+import log from "skog";
 
 declare module "openid-client" {
   interface TokenSet {
@@ -54,8 +54,11 @@ const router = Router();
 router.get("/", (req, res) => {
   const courseId = req.query.courseId;
 
-  // TODO: error handling
-  assert(typeof courseId === "string", "!!!");
+  if (typeof courseId !== "string") {
+    log.error("No courseId in query string");
+    res.redirect("/transfer-to-ladok/");
+    return;
+  }
 
   const state = generators.state();
 
@@ -66,18 +69,37 @@ router.get("/", (req, res) => {
 });
 router.get("/callback", async (req, res) => {
   // TODO: error handling
-  const tokenSet = await client.oauthCallback(oauthRedirectUrl, req.query, {
-    state: req.session.tmpState,
-  });
-  const courseId = req.session.tmpCourseId || "";
+  try {
+    const tokenSet = await client.oauthCallback(oauthRedirectUrl, req.query, {
+      state: req.session.tmpState,
+    });
+    const courseId = req.session.tmpCourseId || "";
 
-  req.session.tmpCourseId = undefined;
-  req.session.tmpState = undefined;
-  req.session.accessToken = tokenSet.access_token;
-  req.session.refreshToken = tokenSet.refresh_token;
-  req.session.userId = tokenSet.user.id;
+    req.session.tmpCourseId = undefined;
+    req.session.tmpState = undefined;
+    req.session.accessToken = tokenSet.access_token;
+    req.session.refreshToken = tokenSet.refresh_token;
+    req.session.userId = tokenSet.user.id;
 
-  res.redirect(`/transfer-to-ladok/?courseId=${courseId}`);
+    res.redirect(`/transfer-to-ladok/?courseId=${courseId}`);
+  } catch (err) {
+    if (err instanceof errors.OPError && err.message === "access_denied") {
+      // The user has not accepted the oauth request
+      log.warn("User has not accepted the oauth request");
+      res.redirect("/transfer-to-ladok/?error=access_denied");
+      return;
+    }
+    if (err instanceof Error) {
+      log.error(err, "Error in oauth callback");
+      res.redirect("/transfer-to-ladok/");
+      return;
+    }
+
+    log.error(
+      "Unknown error in oauth callback. The object thrown is not an Error instance"
+    );
+    res.redirect("/transfer-to-ladok/");
+  }
 });
 
 export default router;
