@@ -72,8 +72,20 @@ export default function PreviewStep({
     (t) => t.status === "ready"
   ).length;
 
-  // TODO: mark transferable with green and a checkmark
-  // TODO: show modal when clicking on submit.
+  function handleSubmit(grades: GradeWithStatus[]) {
+    if (
+      window.confirm(
+        "You are about to Transfer grades for:\n" +
+          `- Assignment: ${userSelection.assignment.name}\n` +
+          `- Ladok module: ${userSelection.destination.name}\n` +
+          `- Examination date: ${userSelection.date}\n\n` +
+          `${numberOfTransferrableGrades} results will be sent to Ladok`
+      )
+    ) {
+      onSubmit(grades);
+    }
+  }
+
   return (
     <main className="preview-step">
       <div>
@@ -122,7 +134,7 @@ export default function PreviewStep({
       <footer>
         <button
           className="btn-primary"
-          onClick={() => onSubmit(gradesWithStatus)}
+          onClick={() => handleSubmit(gradesWithStatus)}
         >
           Transfer to Ladok
         </button>
