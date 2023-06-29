@@ -1,3 +1,13 @@
+export class NotAuthorizeError extends Error {
+  details: string;
+
+  constructor() {
+    super();
+    this.name = "NotAuthorize";
+    this.message = "You must authorize to use Transfer to Ladok";
+    this.details = "Click 'Authorize' when prompted to use Transfer to Ladok";
+  }
+}
 /**
  * This error is thrown when the user access to a course that cannot be used
  * in Transfer to Ladok

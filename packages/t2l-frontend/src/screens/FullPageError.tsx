@@ -1,9 +1,29 @@
 import React from "react";
 import { FallbackProps } from "react-error-boundary";
-import { ApiError, InvalidCourseError } from "../utils/errors";
+import {
+  ApiError,
+  InvalidCourseError,
+  NotAuthorizeError,
+} from "../utils/errors";
 import "./FullPageError.scss";
 
 export default function FullPageError({ error }: FallbackProps) {
+  if (error instanceof NotAuthorizeError) {
+    return (
+      <div className="FullPageError">
+        <header>
+          <h1>{error.message}</h1>
+          <main>
+            <p>{error.details}</p>
+            <p className="small">
+              Contact IT-support if you need more help:{" "}
+              <a href="mailto:it-support@kth.se">it-support@kth.se</a>
+            </p>
+          </main>
+        </header>
+      </div>
+    );
+  }
   if (error instanceof InvalidCourseError) {
     return (
       <div className="FullPageError">

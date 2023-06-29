@@ -7,9 +7,15 @@ import {
   GradesDestination,
   Sections,
 } from "t2l-backend";
-import { ApiError } from "../utils/errors";
+import { ApiError, NotAuthorizeError } from "../utils/errors";
 
 function getCourseId() {
+  const error = new URLSearchParams(location.search).get("error");
+
+  if (error === "access_denied") {
+    throw new NotAuthorizeError();
+  }
+
   const courseId = new URLSearchParams(location.search).get("courseId");
 
   if (!courseId) {
