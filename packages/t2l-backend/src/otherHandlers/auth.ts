@@ -68,7 +68,6 @@ router.get("/", (req, res) => {
   res.redirect(client.authorizationUrl({ state }));
 });
 router.get("/callback", async (req, res) => {
-  // TODO: error handling
   try {
     const tokenSet = await client.oauthCallback(oauthRedirectUrl, req.query, {
       state: req.session.tmpState,
