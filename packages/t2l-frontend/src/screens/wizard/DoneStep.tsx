@@ -1,5 +1,6 @@
 import React from "react";
 import { GradeWithStatus } from "../../utils/mergeGradesList";
+import { Button } from "@kth/style";
 
 interface DoneStepProps {
   response: GradeWithStatus[];
@@ -42,7 +43,9 @@ export default function DoneStep({ response, onRestart }: DoneStepProps) {
           </table>
         </>
       )}
-      <button onClick={() => onRestart()}>Start over</button>
+      <Button appearance="secondary" onClick={() => onRestart()}>
+        Start over
+      </Button>
     </div>
   );
 }

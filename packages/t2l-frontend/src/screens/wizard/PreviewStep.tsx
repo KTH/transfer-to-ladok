@@ -6,7 +6,7 @@ import {
   GradeWithStatus,
   getTransferencePreview,
 } from "../../utils/mergeGradesList";
-import { ArrowLeft } from "../../utils/icons";
+import { BackButton } from "@kth/style";
 
 interface PreviewStepProps {
   userSelection: UserSelection;
@@ -89,10 +89,7 @@ export default function PreviewStep({
   return (
     <main className="preview-step">
       <div>
-        <button className="with-icon" onClick={onBack}>
-          <ArrowLeft />
-          <span className="label">Back to selection</span>
-        </button>
+        <BackButton onClick={onBack}>Back to selection</BackButton>
         <dl>
           <div className="field">
             <dt>From (assignment in Canvas)</dt>
@@ -132,6 +129,7 @@ export default function PreviewStep({
         </tbody>
       </table>
       <footer>
+        <BackButton onClick={onBack}>Back to selection</BackButton>
         <button
           className="btn-primary"
           onClick={() => handleSubmit(gradesWithStatus)}

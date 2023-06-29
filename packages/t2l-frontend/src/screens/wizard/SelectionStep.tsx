@@ -7,6 +7,7 @@ import ExaminationDateSelect from "../../components/ExaminationDateSelect";
 import LadokModuleSelect from "../../components/LadokModuleSelect";
 import AssignmentSelect from "../../components/AssignmentSelect";
 import { useValidatedState } from "../../hooks/utils";
+import { ForwardButton } from "@kth/style";
 
 export interface UserSelection {
   assignment: {
@@ -123,9 +124,7 @@ export default function SelectionStep({ onSubmit }: SelectionStepProps) {
   const [selectedDate, examinationDateError, setSelectedDate] =
     useValidatedState<string | null>(null, validateExaminationDate);
 
-  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-
+  function handleSubmit() {
     // Force validation
     setSelectedAssignment(selectedAssignmentId);
     setSelectedLadokModule(selectedLadokModule);
@@ -184,7 +183,12 @@ export default function SelectionStep({ onSubmit }: SelectionStepProps) {
   }
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form
+      onSubmit={(event) => {
+        event.preventDefault();
+        handleSubmit();
+      }}
+    >
       <h1>Select assignment and date</h1>
       <p>
         In this step you map a Canvas assignment to a Ladok module or
@@ -207,7 +211,7 @@ export default function SelectionStep({ onSubmit }: SelectionStepProps) {
         error={examinationDateError}
         value={selectedDate}
       />
-      <button className="kth-button primary">Preview students</button>
+      <ForwardButton>Preview students</ForwardButton>
       <p>(Nothing is transferred yet)</p>
     </form>
   );
