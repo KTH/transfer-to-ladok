@@ -123,7 +123,7 @@ export default function PreviewStep({
         </thead>
         <tbody>
           {gradesWithStatus.map((tg) => (
-            <tr>
+            <tr className={tg.status === "ready" ? "do-export-row" : ""}>
               <td>{tg.student.sortableName}</td>
               <td>{tg.canvasGrade}</td>
               <td>{tg.status === "ready" && "Transferrable"}</td>
