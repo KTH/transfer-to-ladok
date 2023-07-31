@@ -11,7 +11,7 @@ export default function DoneStep({ response, onRestart }: DoneStepProps) {
   const failedResults = response.filter((r) => r.status === "error");
 
   return (
-    <div>
+    <div className="alert alert-success" role="alert">
       {successfulResults.length === 0 && (
         <h2>No results were transferred to Ladok</h2>
       )}
