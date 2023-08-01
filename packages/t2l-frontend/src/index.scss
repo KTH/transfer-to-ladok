@@ -1,6 +1,94 @@
+@import "../node_modules/kth-style/public/sass/kth-bootstrap";
+@import "~react-datepicker/src/stylesheets/datepicker";
+
+html {
+  font-family: $sansSerif;
+  height: 100%;
+}
+
+body {
+  background: $white;
+  color: $black;
+  height: 100%;
+}
+
+@media (min-width: 992px) {
+  body header .container-fluid .container {
+    padding-bottom: 20px;
+  }
+}
+
+.c2l2 {
+  padding: 20px 15px 0;
+}
+
+.start_c2l2_form {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Button placement */
+.start_C2L2_button {
+  align-self: flex-end;
+}
+
+.button-section {
+  margin-top: 2em;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  justify-content: space-between;
+
+  @media print {
+    display: none;
+  }
+}
+
+.button-section-container {
+  width: 100%;
+  padding-bottom: 2em;
+  box-sizing: border-box;
+  background: $white;
+}
+
+.grid-col-1 {
+  grid-column: 1;
+  place-self: flex-start;
+}
+
+.grid-col-2 {
+  grid-column: 2;
+  place-self: center;
+}
+
+.grid-col-3 {
+  grid-column: 3;
+  place-self: flex-end;
+}
+
 #root {
-  max-width: 960px;
-  margin: 0 auto;
+  display: flex;
+  flex-flow: column;
+  height: 100%;
+  max-height: 100%;
+}
+
+#root > .form {
+  flex-grow: 1;
+  display: flex;
+  flex-flow: column;
+  height: 100%;
+  max-height: 100%;
+}
+
+.table-container {
+  overflow: hidden;
+  padding-bottom: 10em;
+}
+
+table caption {
+  font-size: 1rem;
+  text-align: center;
+  font-weight: 400;
 }
 
 table thead tr th,
@@ -8,75 +96,99 @@ table tbody tr td {
   padding: 4px 8px;
 }
 
+h2 {
+  margin: 0px;
+}
+
+.alert,
+.alert-success {
+  flex: 0 0 auto;
+  font-size: 1em;
+}
+
+.success-h2 {
+  margin-top: 1em;
+}
+
+.select-wrapper {
+  margin-bottom: 2em;
+}
+
 .do-export-row {
   > td {
-    background-color: #dff0d8; // TODO: use variable from KTH Style once this has been imported properly
+    background-color: $infoGreen;
   }
 }
 
-table thead tr th {
-  color: #fff;
-  background-color: #65656c; // TODO: use variable from KTH Style once this has been imported properly
-
-  font-weight: 500;
-  border-right: 1px solid #fff;
-  border-bottom: 1px solid #fff;
+.table-col-1 {
+  width: 50%;
 }
 
-.alert.alert-success,
-.alert.alert-danger,
-.alert.alert-info {
-  width: 100%;
-  margin: 0 0 50px;
-  font-size: 1rem;
-  border: none;
-  padding: 20px 20px 20px 60px;
-  min-height: 0;
-  color: #000;
-  overflow: auto;
-}
-.alert.alert-success:before,
-.alert.alert-danger:before,
-.alert.alert-info:before {
-  width: 1em;
-  top: 15px;
-  left: 20px;
+.table-col-2 {
+  width: 25%;
 }
 
-.alert-success {
-  color: #000;
-  font-size: 1.2rem;
-  min-height: 4.4rem;
-  border-radius: 0.15rem;
+.table-col-3 {
+  width: 25%;
+}
+
+/* Loading Spinner, courtesy of lukehaas (https://github.com/lukehaas/css-loaders) */
+.loader,
+.loader:after {
+  border-radius: 50%;
+  width: 10em;
+  height: 10em;
+}
+
+.loader {
+  overflow: hidden;
+  margin: 16px auto;
+  font-size: 10px;
   position: relative;
-  padding: 1.2rem 2.2rem 1rem 5.4rem;
-  background-color: #dff0d8;
+  text-indent: -9999em;
+  border-top: 1.1em solid rgba(0, 0, 0, 0.2);
+  border-right: 1.1em solid rgba(0, 0, 0, 0.2);
+  border-bottom: 1.1em solid rgba(0, 0, 0, 0.2);
+  border-left: 1.1em solid #000000;
+  transform: translateZ(0);
+  animation: load8 1.1s infinite linear;
+  &-text {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+  }
 }
 
-.alert-success::before {
-  font-size: 1.8rem;
-  position: absolute;
-  top: 0.2em;
-  left: 0.2em;
-  width: 2em;
-  content: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiB2aWV3Qm94PSIwIDAgODYgODYiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiPgogIDxnIGZpbGw9Im5vbmUiIGZpbGwtcnVsZT0iZXZlbm9kZCI+CiAgICA8cGF0aCBkPSJNNDMgODZjMjMuNzQ4MiAwIDQzLTE5LjI1MTggNDMtNDNTNjYuNzQ4MiAwIDQzIDAgMCAxOS4yNTE4IDAgNDNzMTkuMjUxOCA0MyA0MyA0M3oiIGZpbGw9IiM2MjkyMkUiLz4KICAgIDxpbWFnZSB4PSIyOCIgeT0iMjQuNTU4MSIgd2lkdGg9IjMzIiBoZWlnaHQ9IjM0Ljc5MDciIHhsaW5rOmhyZWY9ImRhdGE6aW1hZ2UvcG5nO2Jhc2U2NCxpVkJPUncwS0dnb0FBQUFOU1VoRVVnQUFBQ01BQUFBa0NBWUFBQUFEM0lQaEFBQUFBWE5TUjBJQXJzNGM2UUFBQWtaSlJFRlVXQW05bUVsTEF6RVV4d2UvZ0NkUGZoTnZYcng0MEtzSHo0SUlQWGdRUWFTQzZFVVVMeXBJeFJXTDRJNFhsNnBZY2FPbDFicldzWXV0YlYxYUZ5eDJqZk9FRE5PYXpNSmtKcVVrazZSNXYzbEovM2tKeDVtY3BuZjcwUE43R1Axa3Y0VnZHa1ZlL2NpMjFZMU14dUE0QUNrV0M2Zzg1UXM1MUx2UWJCNVE2MWdOK2t3bnl6bkU1OHZRa1hrd0xuNUhORXdxSkZJaGMyQ0dWdHRRZ1RBOVVpalRZSjdmSTFLN3hMSTNjSUFxakY3RmpuTTdxcXFzbGpXVHpXZTRsWk1SMlQ2Nkc5c242bEFtOTBQMGhMUnl5ek5uL0hyaFkrZFNtOFJ5M0l5Rk83UFhqNHJDUnk2QjVneXZXNHoxaXBLbVlFQVg3ekFXQkJhYWtxWUFEQWdnUU90ZW1ISURxTkVVbUQ2N2M5QllFSUNNcDRKNEZxajUvWlBIZUpCdDd6d1ZBRGZBWDcxcnR0RllHS2Fhc253OGlrQVhnb2tyQk5MY09kMmdpWjZacHR4RjNkaUxZaTVJdEdvTllLWXBFOXRXWXNBRFZPbk1sNktIbUdyS3ZtOVI5QWFwRUgzalphZUxxYWFvbWV0VC95WVJpTG1tN1B1V1NBNHBxYU9KRkhOTmdVQTRsOCtXR0NjOWdENzAySnRFRHhtbUtldG5OcEw5ZjNVdkg5RS9HS2FhUXRwYkxvS0gvNHlUS3R6OExycCtQQ1UxbGRUcGpsUGd6VmtrSm5GS3gxUzlxakJSQ1poWm5BSmJPK25VcHdTQTI1bkhLV3FFREJ1WDVqUUpJSzFSVFhXeFpFQnFSMVZaYjV4Q1BUY05yTFJ3d2kyQjZoZUFzOCtrdzZxNnYrYU9jR3VnZEN6RkxqUGw3T084WHNQMnFMbHVUZEhpcHZETExSV0VpYVpvZ2JHTTExTHZWbzV1TnNUOVNzdVl1dm9DVUN6NUlKNFM0UW9NcGxEWG9HVS8vZ1hlVXZBd05Ia0Z1Z0FBQUFCSlJVNUVya0pnZ2c9PSIvPgogIDwvZz4KPC9zdmc+Cg==);
+.react-datepicker {
+  &__input-container {
+    input {
+      &::-moz-placeholder {
+        color: #4e555c;
+        opacity: 1;
+      }
+    }
+  }
 }
 
-.alert-info::before {
-  font-size: 1.8rem;
-  position: absolute;
-  top: 0.2em;
-  left: 0.2em;
-  width: 2em;
-  content: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiB2aWV3Qm94PSIwIDAgODYgODYiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGcgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIj48cGF0aCBkPSJNNDMgODZjMjMuNzQ4IDAgNDMtMTkuMjUyIDQzLTQzUzY2Ljc0OCAwIDQzIDAgMCAxOS4yNTIgMCA0M3MxOS4yNTIgNDMgNDMgNDN6IiBmaWxsPSIjRkFCOTE5Ii8+PHBhdGggZD0iTTQ0Ljk3NyAyNS43MzVjLTEuMjA3IDAtMi4xNjctLjMwMS0yLjg4MS0uOTA0LS43MTUtLjYwMy0xLjA3Mi0xLjQxOS0xLjA3Mi0yLjQ0NiAwLTEuMzg1LjUzNS0yLjU2OCAxLjYwOC0zLjU1IDEuMDcyLS45ODQgMi4zNDQtMS40NzUgMy44MTktMS40NzUgMS4yOTUgMCAyLjIzMy4zOTEgMi44MTMgMS4xNzMuNTgxLjc4MS44NzEgMS41NzQuODcxIDIuMzc4IDAgMS40My0uNTAyIDIuNTktMS41MDcgMy40ODQtMS4wMDUuODkzLTIuMjIyIDEuMzQtMy42NTEgMS4zNHptLTEuNjA4IDI5LjA3OGMtLjEzNS41MzYtLjIwMi45MzgtLjIwMiAxLjIwNiAwIC40MDIuMjAxLjYwMy42MDMuNjAzLjI2OSAwIC41OTItLjA3OC45NzItLjIzNC4zOC0uMTU3Ljc0OC0uMzM1IDEuMTA1LS41MzYuMzU4LS4yMDEuNjkzLS4zOCAxLjAwNS0uNTM2LjMxMy0uMTU3LjU1OS0uMjM1LjczOC0uMjM1LjM1NyAwIC42MzYuMTkuODM3LjU3LjIwMS4zOC4zMjQuNzQ4LjM2OCAxLjEwNWE1MS42NjYgNTEuNjY2IDAgMCAxLTIuNTEyIDEuNjA4Yy0uOTYuNTgtMS45NDMgMS4xMTctMi45NDggMS42MDhhMjYuODkzIDI2Ljg5MyAwIDAgMS0yLjk0OCAxLjI0Yy0uOTYuMzM1LTEuNzk4LjUwMi0yLjUxMy41MDItLjc1OSAwLTEuMzk1LS4xNTYtMS45MDktLjQ2OS0uNTE0LS4zMTMtLjc3LS44NDktLjc3LTEuNjA4IDAtLjI2OC4wMjItLjUyNS4wNjYtLjc3LjA0NS0uMjQ2LjA5LS40NTguMTM0LS42MzdsNC4yODgtMjAuNDM1Yy4xMzUtLjY3LjAyMy0xLjAwNS0uMzM0LTEuMDA1LS4xMzUgMC0uMzM1LjA1Ni0uNjAzLjE2OC0uMjY5LjExMS0uNTcuMjM0LS45MDUuMzY4LS4zMzUuMTM0LS42Ny4yNTctMS4wMDUuMzY5LS4zMzUuMTExLS42MTQuMTY3LS44MzcuMTY3LS40MDMgMC0uNzA0LS4yLS45MDUtLjYwM2E1LjYxMyA1LjYxMyAwIDAgMS0uNDM2LTEuMTM5Yy44NS0uNDQ3IDEuODY1LS45NiAzLjA0OS0xLjU0YTU4LjQ0NyA1OC40NDcgMCAwIDEgMy40ODQtMS41NzUgNzAuODAyIDcwLjgwMiAwIDAgMSAzLjExNS0xLjIwNmMuOTM5LS4zMzUgMS42MDgtLjUwMyAyLjAxLS41MDMuMzU4IDAgLjY5My4wOSAxLjAwNS4yNjguMzEzLjE3OS40Ny40OTEuNDcuOTM4YTYuOTMxIDYuOTMxIDAgMCAxLS4xMzQgMS4yMDZsLTQuMjg4IDIxLjEwNXoiIHN0cm9rZT0iI0ZGRiIgZmlsbD0iI0ZGRiIvPjwvZz48L3N2Zz4=);
+@keyframes load8 {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
-.alert-info {
-  color: #000;
-  font-size: 1.2rem;
-  min-height: 4.4rem;
-  border-radius: 0.15rem;
-  position: relative;
-  padding: 1.2rem 2.2rem 1rem 5.4rem;
-  background-color: #fcf8e3;
+@keyframes fadein {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.fadein {
+  animation: fadein 2s;
 }
