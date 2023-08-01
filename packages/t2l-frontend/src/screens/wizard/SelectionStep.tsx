@@ -184,7 +184,7 @@ export default function SelectionStep({ onSubmit }: SelectionStepProps) {
   }
 
   return (
-    <form className="form-select" onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit}>
       <h1>Select assignment and date</h1>
       <p>
         In this step you map a Canvas assignment to a Ladok module or
@@ -207,9 +207,7 @@ export default function SelectionStep({ onSubmit }: SelectionStepProps) {
         error={examinationDateError}
         value={selectedDate}
       />
-      <button className="kth-button primary btn btn-next btn-success grid-col-3">
-        Preview students
-      </button>
+      <button className="kth-button primary">Preview students</button>
       <p>(Nothing is transferred yet)</p>
     </form>
   );

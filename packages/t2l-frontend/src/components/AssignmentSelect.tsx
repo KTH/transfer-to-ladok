@@ -24,29 +24,26 @@ export default function AssignmentSelect({
   });
 
   return (
-    <div>
-      <div className="select-wrapper">
-        <select
-          className="custom-select"
-          value={value}
-          name="canvas_assignment"
-          onChange={(event) => onChange(event.target.value)}
-        >
-          <option value={-1} disabled>
-            Select assignment
-          </option>
-          <option value="total">Total column</option>
-          {
-            // sort letter grade first, then the rest grouped by grading type
-            sortedAssignments.map((assignment) => (
-              <option key={assignment.id} value={assignment.id}>
-                {assignment.name}:{assignment.gradingType.replace("_", " ")}
-              </option>
-            ))
-          }
-        </select>
-      </div>
-      {/*assignmentWarning*/}
-    </div>
+    <Select
+      className="select-wrapper"
+      name="canvas-assignment"
+      value={value}
+      onChange={(value) => onChange(value)}
+      label="Select assignment"
+      description="Only letter grades will be transferred to Ladok: A-F grades or P/F"
+      error={error}
+    >
+      <Option value="">Select an assignment</Option>
+      <OptionGroup label="Assignments">
+        {sortedAssignments.map((assignment) => (
+          <Option key={assignment.id} value={assignment.id}>
+            {assignment.name}
+          </Option>
+        ))}
+      </OptionGroup>
+      <OptionGroup label="Other columns">
+        <Option value="total">Total column</Option>
+      </OptionGroup>
+    </Select>
   );
 }
