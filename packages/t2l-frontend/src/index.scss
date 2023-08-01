@@ -78,3 +78,41 @@
   position: relative;
   text-align: left;
 }
+
+#examination-date {
+  border: 1px solid #d4d4d4;
+  background-color: #f6f6f6;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  font-family: "Open Sans";
+  height: 44px;
+  padding: 6px 10px;
+}
+
+.react-datepicker {
+  &__input-container {
+    input {
+      &::-moz-placeholder {
+        color: #4e555c;
+        opacity: 1;
+      }
+    }
+  }
+}
+
+.react-datepicker {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 0.8rem;
+  color: #000;
+}
+
+input[type="date"] {
+  border: 1px solid #d4d4d4;
+  background-color: #f6f6f6;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  font-family: "Open Sans";
+  height: 44px;
+  width: 100%;
+  padding: 6px 10px;
+}

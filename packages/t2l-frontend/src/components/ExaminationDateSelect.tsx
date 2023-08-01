@@ -44,6 +44,7 @@ export default function ExaminationDateSelector({
         autoComplete="off"
         id="examination-date"
         dateFormat="yyyy-MM-dd"
+        placeholderText="YYYY-MM-DD"
         calendarStartDay={1}
         selected={dateValue}
         onChange={handleChange}
