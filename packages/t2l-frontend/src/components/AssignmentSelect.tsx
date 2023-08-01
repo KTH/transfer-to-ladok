@@ -32,7 +32,7 @@ export default function AssignmentSelect({
           name="canvas_assignment"
           onChange={(event) => onChange(parseInt(event.target.value, 10))}
         >
-          <option value={-1} disabled hidden>
+          <option value={-1} disabled>
             Select assignment
           </option>
           {

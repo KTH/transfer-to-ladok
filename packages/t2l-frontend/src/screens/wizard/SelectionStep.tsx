@@ -184,7 +184,7 @@ export default function SelectionStep({ onSubmit }: SelectionStepProps) {
   }
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form className="form-select" onSubmit={handleSubmit}>
       <h1>Select assignment and date</h1>
       <p>
         In this step you map a Canvas assignment to a Ladok module or
