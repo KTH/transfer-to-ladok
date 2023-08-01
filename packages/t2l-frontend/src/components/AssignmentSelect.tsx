@@ -30,11 +30,12 @@ export default function AssignmentSelect({
           className="custom-select"
           value={value}
           name="canvas_assignment"
-          onChange={(event) => onChange(parseInt(event.target.value, 10))}
+          onChange={(event) => onChange(event.target.value)}
         >
           <option value={-1} disabled>
             Select assignment
           </option>
+          <option value="total">Total column</option>
           {
             // sort letter grade first, then the rest grouped by grading type
             sortedAssignments.map((assignment) => (

@@ -207,7 +207,9 @@ export default function SelectionStep({ onSubmit }: SelectionStepProps) {
         error={examinationDateError}
         value={selectedDate}
       />
-      <button className="kth-button primary">Preview students</button>
+      <button className="kth-button primary btn btn-next btn-success grid-col-3">
+        Preview students
+      </button>
       <p>(Nothing is transferred yet)</p>
     </form>
   );
