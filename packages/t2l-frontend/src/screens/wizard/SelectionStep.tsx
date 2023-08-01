@@ -190,12 +190,14 @@ export default function SelectionStep({ onSubmit }: SelectionStepProps) {
         In this step you map a Canvas assignment to a Ladok module or
         examination.
       </p>
-      <AssignmentSelect
-        columns={canvasAssignmentsQuery.data}
-        value={selectedAssignmentId}
-        onChange={setSelectedAssignment}
-        error={assignmentError}
-      />
+      <div className="select-wrapper">
+        <AssignmentSelect
+          columns={canvasAssignmentsQuery.data}
+          value={selectedAssignmentId}
+          onChange={setSelectedAssignment}
+          error={assignmentError}
+        />
+      </div>
       <LadokModuleSelect
         onChange={setSelectedLadokModule}
         value={selectedLadokModule}
