@@ -121,3 +121,55 @@ input[type="date"] {
 .do-export-row > td {
   background-color: #dff0d8;
 }
+
+table {
+  width: 100%;
+}
+table caption {
+  caption-side: top;
+  color: #000;
+  font-size: 1rem;
+  font-style: italic;
+}
+table thead tr th {
+  color: #fff;
+  background-color: #65656c;
+  font-weight: 500;
+  border-right: 1px solid #fff;
+  border-bottom: 1px solid #fff;
+}
+table tbody tr th {
+  color: #fff;
+  background-color: #65656c;
+  font-weight: 500;
+  border-right: 1px solid #fff;
+}
+table tbody tr th[scope="row"] {
+  vertical-align: middle;
+  border-top: 1px solid #fff;
+  border-right: 0;
+}
+table tbody tr:first-child th {
+  border-top: 1px solid #fff;
+}
+table tbody tr td {
+  background-color: #f6f6f6;
+  border-top: 1px solid #fff;
+}
+table tbody tr td p {
+  font-family: "Open Sans", Arial, "Helvetica Neue", helvetica, sans-serif;
+}
+table th {
+  border-top: 0;
+}
+.table thead th {
+  border-bottom: 1px solid #fff;
+  border-top: 0;
+}
+.table thead th:first-of-type {
+  border-top: 0;
+}
+.table tr td {
+  background-color: #f6f6f6;
+  border-top: 1px solid #fff;
+}
