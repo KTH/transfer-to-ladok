@@ -51,7 +51,10 @@ export default function DoneStep({ response, onRestart }: DoneStepProps) {
             </table>
           </>
         )}
-        <button onClick={() => onRestart()}>Start over</button>
+
+        <button className="btn btn-primary" onClick={() => onRestart()}>
+          Start over
+        </button>
       </div>
     </div>
   );
