@@ -35,9 +35,11 @@ export default function DoneStep({ response, onRestart }: DoneStepProps) {
             <p>The following grades were not transferred</p>
             <table>
               <thead>
-                <th>Student name</th>
-                {/* <th>Personal number</th> */}
-                <th>Reason</th>
+                <tr>
+                  <th>Student name</th>
+                  {/* <th>Personal number</th> */}
+                  <th>Reason</th>
+                </tr>
               </thead>
               <tbody>
                 {failedResults.map((r) => (
