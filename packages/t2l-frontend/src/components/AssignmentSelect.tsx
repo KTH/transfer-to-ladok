@@ -25,7 +25,6 @@ export default function AssignmentSelect({
 
   return (
     <Select
-      className="select-wrapper"
       name="canvas-assignment"
       value={value}
       onChange={(value) => onChange(value)}
