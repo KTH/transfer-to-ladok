@@ -163,3 +163,7 @@ footer {
   display: flex;
   justify-content: space-between;
 }
+
+.do-export-row > td {
+  background-color: $color-green;
+}
