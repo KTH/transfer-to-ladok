@@ -3,6 +3,15 @@ export interface AutentiseradAnvandare {
   Anvandarnamn: string;
 }
 
+/** Represents the "Anvandarbehorighet" that a user has */
+export interface AnvandarBehorighet {
+  Anvandarbehorighet: {
+    BehorighetsprofilRef: {
+      Uid: string;
+    };
+  }[];
+}
+
 /** Represents an aktivitetstillfälle in Ladok */
 export interface Aktivitetstillfalle {
   Aktiviteter: {

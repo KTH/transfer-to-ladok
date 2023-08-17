@@ -7,6 +7,7 @@
   "scripts": {
     "dev": "ts-node-dev --respawn src/index.ts | pino-pretty -e options,response -o '{msg}' --ignore options,pid,hostname --singleLine --translateTime 'HH:MM:ss.l'",
     "start": "ts-node --transpile-only src/index.ts",
+    "start:check": "ts-node --transpile-only src/check-certificate.ts | pino-pretty -o '{msg}' --ignore options,pid,hostname,app --singleLine --translateTime 'HH:MM:ss.l'",
     "test": "npm run test:tsc && npm run test:lint && npm run test:unit",
     "test:tsc": "tsc --noEmit",
     "test:lint": "prettier --check . && eslint src/",

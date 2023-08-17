@@ -6,17 +6,18 @@
  * @see {@link https://www.integrationstest.ladok.se/restdoc/resultat.html}
  */
 import got from "got";
-import type {
-  Aktivitetstillfalle,
-  AutentiseradAnvandare,
-  Behorighetsprofil,
-  Betygsgrad,
-  Kurstillfalle,
-  RapporteringsMojlighetInput,
-  RapporteringsMojlighetOutput,
-  Resultat,
-  SkaFinnasStudenter,
-  SokResultat,
+import {
+  type AnvandarBehorighet,
+  type Aktivitetstillfalle,
+  type AutentiseradAnvandare,
+  type Behorighetsprofil,
+  type Betygsgrad,
+  type Kurstillfalle,
+  type RapporteringsMojlighetInput,
+  type RapporteringsMojlighetOutput,
+  type Resultat,
+  type SkaFinnasStudenter,
+  type SokResultat,
 } from "./types";
 export * from "./types";
 
@@ -52,6 +53,12 @@ const gotClientKatalog = got.extend({
 export async function getAutentiserad() {
   return gotClientKatalog
     .get<AutentiseradAnvandare>(`kataloginformation/anvandare/autentiserad`)
+    .then((response) => response.body);
+}
+
+export async function getOwnAnvandarBehorighet() {
+  return gotClientKatalog
+    .get<AnvandarBehorighet>(`kataloginformation/anvandarbehorighet/egna`)
     .then((response) => response.body);
 }
 
