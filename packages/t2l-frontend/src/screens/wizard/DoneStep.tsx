@@ -28,14 +28,14 @@ export default function DoneStep({ response, onRestart }: DoneStepProps) {
           <table>
             <thead>
               <th>Student name</th>
-              <th>Personal number</th>
+              {/* <th>Personal number</th> */}
               <th>Reason</th>
             </thead>
             <tbody>
               {failedResults.map((r) => (
                 <tr>
                   <td>{r.student.sortableName}</td>
-                  <td>{r.student.personalNumber}</td>
+                  {/* <td>{r.student.personalNumber}</td> */}
                   <td>{r.cause?.message}</td>
                 </tr>
               ))}
