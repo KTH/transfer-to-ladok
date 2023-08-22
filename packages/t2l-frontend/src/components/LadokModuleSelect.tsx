@@ -62,17 +62,19 @@ export default function LadokModuleSelect({
                 utbildningsinstans: m.utbildningsinstans,
               })}
             >
-              {m.name}
+              {m.code} - {m.name}
             </Option>
           ))}
-          <Option
+          {/*
+              This option, to report the final grades on the course, is not tested yet and should not be released until tested. Hide this option until it is tested and verified that it works as intended.
+              <Option
             value={JSON.stringify({
               kurstillfalle: section.id,
               utbildningsinstans: section.utbildningsinstans,
             })}
           >
             Final grade
-          </Option>
+          </Option>*/}
         </OptionGroup>
       ))}
     </Select>

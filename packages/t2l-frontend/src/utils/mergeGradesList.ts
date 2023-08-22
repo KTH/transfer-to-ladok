@@ -75,6 +75,7 @@ export function getTransferencePreview(
     const student = {
       id: ladokGrade.student.id,
       sortableName: ladokGrade.student.sortableName,
+      personalNumber: ladokGrade.student.personalNumber
     };
 
     // The teacher has no permission in Ladok

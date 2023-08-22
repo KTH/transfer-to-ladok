@@ -28,7 +28,7 @@ export default function DoneStep({ response, onRestart }: DoneStepProps) {
           <table>
             <thead>
               <th>Student name</th>
-              <th>Personal number</th>
+              <th>Personal number</th> 
               <th>Reason</th>
             </thead>
             <tbody>
