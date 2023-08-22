@@ -40,8 +40,8 @@ function validateAssignment(
 
   if (assignmentId === "total") {
     return allColumns.finalGrades.hasLetterGrade
-      ? "The total column in this course does not have letter grades. Choose a different assignment or go to Canvas to configure letter grades for the course"
-      : undefined;
+      ? undefined
+      : "The total column in this course does not have letter grades. Choose a different assignment or go to Canvas to configure letter grades for the course";
   }
 
   const assignment = allColumns.assignments.find((a) => a.id === assignmentId);
