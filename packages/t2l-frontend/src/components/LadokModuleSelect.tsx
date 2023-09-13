@@ -62,7 +62,7 @@ export default function LadokModuleSelect({
                 utbildningsinstans: m.utbildningsinstans,
               })}
             >
-              {m.code} - {m.name}
+              {m.code + " - " + m.name}
             </Option>
           ))}
           {/*
