@@ -2,6 +2,7 @@ import { CanvasSection } from "../../externalApis/canvasApi";
 import { getBehorighetsprofil } from "../../externalApis/ladokApi";
 import assert from "node:assert/strict";
 import { ForbiddenError } from "../error";
+import log from "skog";
 
 /**
  * Given a list of {@link CanvasSection}, identifies which ones are linked to
@@ -42,6 +43,12 @@ export async function checkPermissionProfile(email: string) {
     (profile) =>
       profile.Anvandare.filter((a) => a.Anvandarnamn === email).length > 0
   );
+
+  if (!hasProfile) {
+    log.info(
+      `The user ${email} doesn't have the correct behörighetsprofil in Ladok`
+    );
+  }
 
   assert(
     hasProfile,
