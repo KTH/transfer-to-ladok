@@ -35,7 +35,11 @@ export default function AssignmentSelect({
       <Option value="">Select an assignment</Option>
       <OptionGroup label="Assignments">
         {sortedAssignments.map((assignment) => (
-          <Option key={assignment.id} value={assignment.id}>
+          <Option
+            key={assignment.id}
+            value={assignment.id}
+            disabled={!assignment.published}
+          >
             {assignment.name + ":" + assignment.gradingType.replace("_", " ")}
           </Option>
         ))}
