@@ -93,6 +93,8 @@ export interface Assignment {
   lockAt: string | null;
 
   hasSubmissions: boolean;
+
+  published: boolean;
 }
 
 /**

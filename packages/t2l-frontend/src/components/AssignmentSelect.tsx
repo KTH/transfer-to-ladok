@@ -34,15 +34,13 @@ export default function AssignmentSelect({
     >
       <Option value="">Select an assignment</Option>
       <OptionGroup label="Assignments">
-        {sortedAssignments.map((assignment) => (
-          <Option
-            key={assignment.id}
-            value={assignment.id}
-            disabled={!assignment.published}
-          >
-            {assignment.name + ":" + assignment.gradingType.replace("_", " ")}
-          </Option>
-        ))}
+        {sortedAssignments
+          .filter((assignment) => assignment.published)
+          .map((assignment) => (
+            <Option key={assignment.id} value={assignment.id}>
+              {assignment.name + ":" + assignment.gradingType.replace("_", " ")}
+            </Option>
+          ))}
       </OptionGroup>
       <OptionGroup label="Other columns">
         <Option value="total">Total column</Option>
