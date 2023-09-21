@@ -4,10 +4,17 @@ import { Button } from "@kth/style";
 
 interface DoneStepProps {
   response: GradeWithStatus[];
+  assignment: any;
+  destination: any;
   onRestart: () => void;
 }
 
-export default function DoneStep({ response, onRestart }: DoneStepProps) {
+export default function DoneStep({
+  response,
+  onRestart,
+  assignment,
+  destination,
+}: DoneStepProps) {
   const successfulResults = response.filter((r) => r.status === "success");
   const failedResults = response.filter((r) => r.status === "error");
 
@@ -18,7 +25,10 @@ export default function DoneStep({ response, onRestart }: DoneStepProps) {
       )}
       {successfulResults.length > 0 && (
         <h2>
-          {successfulResults.length} results transferred successfully to Ladok
+          <p>
+            {successfulResults.length} results transferred successfully to Ladok
+          </p>
+          <p></p>
         </h2>
       )}
 

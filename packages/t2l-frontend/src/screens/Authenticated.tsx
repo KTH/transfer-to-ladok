@@ -45,7 +45,12 @@ export default function Authenticated({ sections }: { sections: Sections }) {
 
   if (sendGradesMutation.isSuccess) {
     return (
-      <DoneStep response={sendGradesMutation.data} onRestart={handleRestart} />
+      <DoneStep
+        assignment={userSelection?.assignment}
+        destination={userSelection?.destination}
+        response={sendGradesMutation.data}
+        onRestart={handleRestart}
+      />
     );
   }
 
