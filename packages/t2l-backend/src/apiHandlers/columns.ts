@@ -27,6 +27,7 @@ export default async function columnsHandler(
       gradingType: assignment.grading_type,
       dueAt: assignment.due_at,
       unlockAt: assignment.unlock_at,
+      published: assignment.published,
       lockAt: assignment.lock_at,
       hasSubmissions: assignment.has_submitted_submissions,
     })),

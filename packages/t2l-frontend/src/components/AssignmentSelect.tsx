@@ -32,16 +32,24 @@ export default function AssignmentSelect({
       description="Only letter grades will be transferred to Ladok: A-F grades or P/F"
       error={error}
     >
-      <Option value="">Select an assignment</Option>
+      <Option value="" disabled={true}>
+        Select an assignment
+      </Option>
       <OptionGroup label="Assignments">
         {sortedAssignments.map((assignment) => (
-          <Option key={assignment.id} value={assignment.id}>
+          <Option
+            key={assignment.id}
+            value={assignment.id}
+            disabled={!assignment.published}
+          >
             {assignment.name + ":" + assignment.gradingType.replace("_", " ")}
           </Option>
         ))}
       </OptionGroup>
       <OptionGroup label="Other columns">
-        <Option value="total">Total column</Option>
+        <Option value="total" disabled={false}>
+          Total column
+        </Option>
       </OptionGroup>
     </Select>
   );

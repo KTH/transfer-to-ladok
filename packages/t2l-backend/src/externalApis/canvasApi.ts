@@ -25,6 +25,7 @@ export interface Assignment {
   due_at: string | null;
   unlock_at: string | null;
   lock_at: string | null;
+  published: boolean;
 
   /**
    * Indicates if there is at least one submission submitted by anyone.

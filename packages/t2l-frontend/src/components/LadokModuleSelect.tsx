@@ -35,9 +35,12 @@ export default function LadokModuleSelect({
       label="Ladok module"
       description="To which module do you want the grades to be transferred"
     >
-      <Option value="null">Select module</Option>
+      <Option value="null" disabled={true}>
+        Select module
+      </Option>
       {ladokModules.aktivitetstillfalle.map((a) => (
         <Option
+          disabled={false}
           key={JSON.stringify({
             aktivitetstillfalle: a.id,
           })}
@@ -53,6 +56,7 @@ export default function LadokModuleSelect({
         <OptionGroup label={`${section.courseCode} - (${section.roundCode})`}>
           {section.modules.map((m) => (
             <Option
+              disabled={false}
               key={JSON.stringify({
                 kurstillfalle: section.id,
                 utbildningsinstans: m.utbildningsinstans,
@@ -68,6 +72,7 @@ export default function LadokModuleSelect({
           {/*
               This option, to report the final grades on the course, is not tested yet and should not be released until tested. Hide this option until it is tested and verified that it works as intended.
               <Option
+              disabled={false}
             value={JSON.stringify({
               kurstillfalle: section.id,
               utbildningsinstans: section.utbildningsinstans,
