@@ -6,6 +6,7 @@ interface DoneStepProps {
   response: GradeWithStatus[];
   assignment: any;
   destination: any;
+  examinationDate: string;
   onRestart: () => void;
 }
 
@@ -13,6 +14,7 @@ export default function DoneStep({
   response,
   onRestart,
   assignment,
+  examinationDate,
   destination,
 }: DoneStepProps) {
   const successfulResults = response.filter((r) => r.status === "success");
@@ -28,10 +30,12 @@ export default function DoneStep({
           <p>
             {successfulResults.length} results transferred successfully to Ladok
           </p>
-          <p></p>
         </h2>
       )}
 
+      <p>From: {assignment.name}</p>
+      <p>To: {destination.name}</p>
+      <p>Examination date: {examinationDate}</p>
       {failedResults.length > 0 && (
         <>
           <p>The following grades were not transferred</p>
@@ -53,6 +57,7 @@ export default function DoneStep({
           </table>
         </>
       )}
+
       <Button appearance="secondary" onClick={() => onRestart()}>
         Start over
       </Button>

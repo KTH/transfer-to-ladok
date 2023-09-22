@@ -48,6 +48,7 @@ export default function Authenticated({ sections }: { sections: Sections }) {
       <DoneStep
         assignment={userSelection?.assignment}
         destination={userSelection?.destination}
+        examinationDate={userSelection?.date}
         response={sendGradesMutation.data}
         onRestart={handleRestart}
       />
