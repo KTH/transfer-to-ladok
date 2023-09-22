@@ -43,7 +43,7 @@ export default function Authenticated({ sections }: { sections: Sections }) {
     throw sendGradesMutation.error;
   }
 
-  if (sendGradesMutation.isSuccess && userSelection) {
+  if (sendGradesMutation.isSuccess) {
     return (
       <DoneStep
         userSelection={userSelection}
@@ -51,8 +51,6 @@ export default function Authenticated({ sections }: { sections: Sections }) {
         onRestart={handleRestart}
       />
     );
-  } else {
-    // TODO: what to do here? Why is userSelection nullable?
   }
 
   // From here, we know that the mutation is "Idle" (i.e. not started).

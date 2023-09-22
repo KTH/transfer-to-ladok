@@ -5,7 +5,7 @@ import { UserSelection } from "./SelectionStep";
 
 interface DoneStepProps {
   response: GradeWithStatus[];
-  userSelection: UserSelection;
+  userSelection: UserSelection | null;
   onRestart: () => void;
 }
 
