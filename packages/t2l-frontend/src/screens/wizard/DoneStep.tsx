@@ -4,9 +4,9 @@ import { Button } from "@kth/style";
 
 interface DoneStepProps {
   response: GradeWithStatus[];
-  assignment: { name: string } | undefined;
-  destination: { name: string } | undefined;
-  examinationDate: string | undefined;
+  assignment: { name: string };
+  destination: { name: string };
+  examinationDate: string;
   onRestart: () => void;
 }
 

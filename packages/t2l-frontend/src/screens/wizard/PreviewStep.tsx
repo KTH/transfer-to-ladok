@@ -82,7 +82,7 @@ export default function PreviewStep({
           `${numberOfTransferrableGrades} results will be sent to Ladok`
       )
     ) {
-      onSubmit(grades, userSelection.assignment, userSelection.destination);
+      onSubmit(grades);
     }
   }
 
