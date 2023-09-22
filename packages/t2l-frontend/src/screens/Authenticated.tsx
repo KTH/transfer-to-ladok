@@ -46,9 +46,7 @@ export default function Authenticated({ sections }: { sections: Sections }) {
   if (sendGradesMutation.isSuccess && userSelection) {
     return (
       <DoneStep
-        assignment={userSelection.assignment}
-        destination={userSelection.destination}
-        examinationDate={userSelection.date}
+        userSelection={userSelection}
         response={sendGradesMutation.data}
         onRestart={handleRestart}
       />

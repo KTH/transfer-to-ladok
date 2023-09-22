@@ -1,21 +1,18 @@
 import React from "react";
 import { GradeWithStatus } from "../../utils/mergeGradesList";
 import { Button } from "@kth/style";
+import { UserSelection } from "./SelectionStep";
 
 interface DoneStepProps {
   response: GradeWithStatus[];
-  assignment: { name: string };
-  destination: { name: string };
-  examinationDate: string;
+  userSelection: UserSelection;
   onRestart: () => void;
 }
 
 export default function DoneStep({
   response,
   onRestart,
-  assignment,
-  examinationDate,
-  destination,
+  userSelection,
 }: DoneStepProps) {
   const successfulResults = response.filter((r) => r.status === "success");
   const failedResults = response.filter((r) => r.status === "error");
@@ -33,9 +30,9 @@ export default function DoneStep({
         </h2>
       )}
 
-      <p>From: {assignment?.name}</p>
-      <p>To: {destination?.name}</p>
-      <p>Examination date: {examinationDate}</p>
+      <p>From: {userSelection?.assignment.name}</p>
+      <p>To: {userSelection?.destination.name}</p>
+      <p>Examination date: {userSelection?.date}</p>
       {failedResults.length > 0 && (
         <>
           <p>The following grades were not transferred</p>
