@@ -4,9 +4,9 @@ import { Button } from "@kth/style";
 
 interface DoneStepProps {
   response: GradeWithStatus[];
-  assignment: any;
-  destination: any;
-  examinationDate: string;
+  assignment: { name: string } | undefined;
+  destination: { name: string } | undefined;
+  examinationDate: string | undefined;
   onRestart: () => void;
 }
 
@@ -33,8 +33,8 @@ export default function DoneStep({
         </h2>
       )}
 
-      <p>From: {assignment.name}</p>
-      <p>To: {destination.name}</p>
+      <p>From: {assignment?.name}</p>
+      <p>To: {destination?.name}</p>
       <p>Examination date: {examinationDate}</p>
       {failedResults.length > 0 && (
         <>
