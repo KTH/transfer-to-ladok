@@ -17,7 +17,7 @@ const app = express();
 const store = new MongoDbStore({
   uri: process.env.MONGODB_CONNECTION_STRING || "",
   databaseName: "transfer-to-ladok",
-  collection: "sessions3",
+  collection: "sessions",
 
   // Azure Cosmos MongoDB requires an index called "_ts".
   // Read more: https://github.com/mongodb-js/connect-mongodb-session#azure-cosmos-mongodb-support
