@@ -19,7 +19,9 @@ router.get("/_about", about);
 // from the left-side menu
 router.post("/", (req, res) => {
   const courseId = req.body.custom_courseid;
-  logger.info(`The app launched in canvas course ${courseId}`);
+  logger.info(
+    `The app launched in canvas course ${courseId}, ${req.body.context_title}, by user ${req.body.custom_canvas_user_id}`
+  );
 
   res.redirect(`/transfer-to-ladok/?courseId=${courseId}`);
 });

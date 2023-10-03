@@ -1,6 +1,7 @@
 /** This module contains all the endpoints related to oauth handling */
 import { Router } from "express";
 import { Issuer, generators, errors } from "openid-client";
+import logger from "skog";
 import log from "skog";
 
 declare module "openid-client" {
