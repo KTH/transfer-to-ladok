@@ -8,6 +8,7 @@ import {
 import { getGradesHandler, postGradesHandler } from "./apiHandlers/ladokGrades";
 import auth from "./otherHandlers/auth";
 import { monitor, about } from "./otherHandlers/system";
+import logger from "skog";
 
 const router = Router();
 
@@ -18,6 +19,7 @@ router.get("/_about", about);
 // from the left-side menu
 router.post("/", (req, res) => {
   const courseId = req.body.custom_courseid;
+  logger.info(`The app launched in canvas course ${courseId}`);
 
   res.redirect(`/transfer-to-ladok/?courseId=${courseId}`);
 });
