@@ -267,7 +267,7 @@ export interface Transference {
     error: number;
   };
   _id?: any;
-  // TODO: add timestamp!
+  createdAt: Date;
 }
 
 /** Error response of any endpoint */

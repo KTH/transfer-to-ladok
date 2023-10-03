@@ -149,7 +149,7 @@ export async function postGradesHandler(
       success: 0,
       error: 0,
     },
-    //timestamp: new Date(),
+    createdAt: new Date(),
   };
 
   for (const resultInput of req.body.results) {
