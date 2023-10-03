@@ -1,4 +1,5 @@
 import { MongoClient } from "mongodb";
+import logger from "skog";
 import { Transference } from "../apiHandlers/utils/types";
 
 const client = new MongoClient(process.env.MONGODB_CONNECTION_STRING || "");
@@ -16,5 +17,9 @@ export async function insertTransference(transference: Transference) {
     .db("transfer-to-ladok")
     .collection<Transference>("transfers");
 
-  return collection.insertOne(transference);
+  const result = collection.insertOne(transference);
+  logger.info(
+    `inserted the following document into the DB for traceability: {_id: new ObjectId("${transference._id}")}`
+  );
+  return result;
 }

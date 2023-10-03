@@ -266,6 +266,8 @@ export interface Transference {
     success: number;
     error: number;
   };
+  _id?: any;
+  // TODO: add timestamp!
 }
 
 /** Error response of any endpoint */
