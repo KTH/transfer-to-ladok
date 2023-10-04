@@ -9,7 +9,6 @@ import { getGradesHandler, postGradesHandler } from "./apiHandlers/ladokGrades";
 import auth from "./otherHandlers/auth";
 import { monitor, about } from "./otherHandlers/system";
 import logger from "skog";
-
 const router = Router();
 
 router.get("/_monitor", monitor);
