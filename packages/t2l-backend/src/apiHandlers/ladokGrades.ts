@@ -135,6 +135,7 @@ export async function postGradesHandler(
   );
 
   const output: ResultOutput[] = [];
+  const randomHash = () => Math.round(Math.random() * 100000);
   const transference: Transference = {
     parameters: {
       courseId,
@@ -150,6 +151,7 @@ export async function postGradesHandler(
       error: 0,
     },
     createdAt: new Date(),
+    _id: `${new Date().toISOString()}_courseId:${courseId}_${randomHash()}`,
   };
 
   for (const resultInput of req.body.results) {

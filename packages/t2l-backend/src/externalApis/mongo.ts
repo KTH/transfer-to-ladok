@@ -19,7 +19,7 @@ export async function insertTransference(transference: Transference) {
 
   const result = collection.insertOne(transference);
   logger.info(
-    `inserted the following document into the DB for traceability: {_id: new ObjectId("${transference._id}")}`
+    `inserted the following document into the DB for traceability: {_id: "${transference._id}"}`
   );
   return result;
 }
