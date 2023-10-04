@@ -8,7 +8,7 @@ import {
 import { getGradesHandler, postGradesHandler } from "./apiHandlers/ladokGrades";
 import auth from "./otherHandlers/auth";
 import { monitor, about } from "./otherHandlers/system";
-import logger from "skog";
+import log from "skog";
 const router = Router();
 
 router.get("/_monitor", monitor);
@@ -18,7 +18,7 @@ router.get("/_about", about);
 // from the left-side menu
 router.post("/", (req, res) => {
   const courseId = req.body.custom_courseid;
-  logger.info(
+  log.info(
     `The app launched in canvas course ${courseId}, ${req?.body?.context_title}, by user ${req?.body?.custom_canvas_user_id}`
   );
 
