@@ -266,6 +266,8 @@ export interface Transference {
     success: number;
     error: number;
   };
+  _id: string;
+  createdAt: Date;
 }
 
 /** Error response of any endpoint */

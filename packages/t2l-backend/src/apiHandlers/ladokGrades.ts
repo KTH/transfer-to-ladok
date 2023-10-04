@@ -21,6 +21,7 @@ import postOneResult from "./utils/postOneResult";
 import { getKurstillfalleStructure } from "../externalApis/ladokApi";
 import { insertTransference } from "../externalApis/mongo";
 import { getGradingInformation } from "./utils/GradingInformation";
+import log from "skog";
 
 /** Checks if the given `utbildningsinstans` belongs to the given `kurstillfalle` */
 async function checkUtbildningsinstansInKurstillfalle(
@@ -114,6 +115,9 @@ export async function postGradesHandler(
   res: Response<PostLadokGradesOutput>
 ) {
   assertPostLadokGradesInput(req.body);
+  log.info(
+    `Transferring ${req.body?.results?.length} grades from canvas course ${req?.params?.courseId}`
+  );
 
   const courseId = req.params.courseId;
   const canvasClient = new CanvasClient(req);
@@ -131,6 +135,7 @@ export async function postGradesHandler(
   );
 
   const output: ResultOutput[] = [];
+  const randomHash = () => Math.round(Math.random() * 100000);
   const transference: Transference = {
     parameters: {
       courseId,
@@ -145,6 +150,8 @@ export async function postGradesHandler(
       success: 0,
       error: 0,
     },
+    createdAt: new Date(),
+    _id: `${new Date().toISOString()}_courseId:${courseId}_${randomHash()}`,
   };
 
   for (const resultInput of req.body.results) {
