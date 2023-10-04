@@ -116,7 +116,7 @@ export async function postGradesHandler(
 ) {
   assertPostLadokGradesInput(req.body);
   logger.info(
-    `Transferring ${req.body.results.length} grades from canvas course ${req.params.courseId}`
+    `Transferring ${req.body?.results?.length} grades from canvas course ${req?.params?.courseId}`
   );
 
   const courseId = req.params.courseId;
