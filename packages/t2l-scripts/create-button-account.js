@@ -153,7 +153,7 @@ async function start() {
 
     if (!proceed) return;
 
-    await canvas.requestUrl(
+    await canvas.request(
       `accounts/${accountId}/external_tools`,
       "POST",
       body
@@ -179,7 +179,7 @@ async function start() {
 
     if (!proceed) return;
 
-    await canvas.requestUrl(
+    await canvas.request(
       `accounts/${accountId}/external_tools/${buttonId}`,
       "PUT",
       body
