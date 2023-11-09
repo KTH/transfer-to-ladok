@@ -4,7 +4,7 @@
 
 #
 # First, we build the frontend in /usr/src/app/t2l-frontend
-FROM node:16 AS frontend
+FROM node:20 AS frontend
 
 # Install dependencies
 # 1. Copy only package.json so dependencies can be cached
@@ -23,7 +23,7 @@ RUN npm run build
 
 #
 # Second, we install backend dependencies
-FROM node:16 AS backend
+FROM node:20 AS backend
 COPY ["package.json", "package.json"]
 COPY ["package-lock.json", "package-lock.json"]
 COPY ["packages/t2l-backend/package.json", "packages/t2l-backend/package.json"]
@@ -32,7 +32,7 @@ RUN npm ci --omit=dev --unsafe-perm
 
 #
 # Third, build the production image with a minimal node (alpine)
-FROM node:16-alpine AS production
+FROM node:20-alpine AS production
 COPY --from=backend node_modules node_modules
 COPY --from=frontend packages/t2l-frontend/dist packages/t2l-frontend/dist
 COPY --from=backend packages/t2l-backend/node_modules packages/t2l-backend/node_modules
