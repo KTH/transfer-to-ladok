@@ -11,7 +11,8 @@
   "license": "ISC",
   "dependencies": {
     "@kth/canvas-api": "^4.2.0",
-    "inquirer": "^8.2.2"
+    "inquirer": "^8.2.2",
+    "mongodb": "^6.2.0"
   },
   "devDependencies": {
     "@types/inquirer": "^8.2.6"
