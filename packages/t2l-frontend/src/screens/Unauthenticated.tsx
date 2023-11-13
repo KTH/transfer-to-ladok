@@ -22,7 +22,7 @@ export default function Unauthenticated() {
         If you have not used this application before, please read the
         instructions for this application in{" "}
         <a
-          href="https://intra.kth.se/en/utbildning/systemstod/canvas/guider/omdomen/overfora-till-ladok-1.1035780"
+          href="https://intra.kth.se/en/utbildning/systemstod/examination/transfer-to-ladok/anvanda-t2l-1.1219549"
           target="_blank"
           rel="noreferrer noopener"
         >
