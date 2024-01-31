@@ -69,7 +69,7 @@ export function handleError(err: unknown): ApiError<LadokApiErrorCodes> {
     log.error(err, "Unknown Error from Ladok API");
     return {
       code: "unknown_error",
-      message: `Unknown Error: ${err.message}. Please contact IT-support`,
+      message: `Unknown Error: ${err.message}. This might be a temporary problem, please try again. If that doesn't work, please contact IT-support`,
     };
   }
 
