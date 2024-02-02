@@ -100,6 +100,18 @@ export async function getGradesHandler(
   await checkPermissionProfile(email);
 
   const gradingInformation = await getGradingInformation(destination, email);
+
+  // We do a small runtime control to check that the data is correct
+  const uniqueStudents = new Set(
+    gradingInformation.map((g) => g.toObject().student.id)
+  );
+
+  if (uniqueStudents.size !== gradingInformation.length) {
+    log.error(
+      `Ladok returned duplicated students. [courseId=${courseId}] [total length: ${gradingInformation.length}] [unique students: ${uniqueStudents.size}]`
+    );
+  }
+
   res.json(gradingInformation.map((g) => g.toObject()));
 }
 
