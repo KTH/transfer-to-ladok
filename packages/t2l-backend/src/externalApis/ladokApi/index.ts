@@ -113,7 +113,7 @@ export function searchStudieresultat(
         // NOTE: OrderBy MUST be included always.
         // Otherwise the pagination will be broken because Ladok does not sort
         // things consistently by default
-        OrderBy: ["PERSONNUMMER_ASC"],
+        OrderBy: ["PERSONNUMMER_ASC", "ANONYMKOD_ASC"],
         Page: page,
       },
     })
