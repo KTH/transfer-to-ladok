@@ -50,8 +50,23 @@ async function apiPostLadokGrades(
   }
 }
 
-function splitInput(input: PostLadokGradesInput): PostLadokGradesInput[] {
+function createPaginatedInputs(
+  userSelection: UserSelection,
+  grades: GradeWithStatus[]
+): PostLadokGradesInput[] {
   // TODO: implement split
+  const input: PostLadokGradesInput = {
+    destination: userSelection?.destination.value,
+    results: grades
+      .filter((g) => g.status === "ready")
+      .map((g) => ({
+        id: g.student.id,
+        draft: {
+          examinationDate: g.input?.examinationDate || "",
+          grade: g.input?.grade || "",
+        },
+      })),
+  };
   return [input];
 }
 
@@ -62,21 +77,14 @@ export function useTransfer(userSelection: UserSelection | null) {
         return [];
       }
 
-      const input: PostLadokGradesInput = {
-        destination: userSelection?.destination.value,
-        results: grades
-          .filter((g) => g.status === "ready")
-          .map((g) => ({
-            id: g.student.id,
-            draft: {
-              examinationDate: g.input?.examinationDate || "",
-              grade: g.input?.grade || "",
-            },
-          })),
-      };
+      const outputs = await Promise.all(
+        createPaginatedInputs(userSelection, grades).map((input) =>
+          apiPostLadokGrades(input)
+        )
+      );
 
-      const output = await apiPostLadokGrades(input);
-
+      // TODO: join the outputs into one output
+      const output = outputs[0] as PostLadokGradesOutput;
       return getTransferenceOutcome(grades, output);
     }
   );
