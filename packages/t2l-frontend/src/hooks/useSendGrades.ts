@@ -50,6 +50,11 @@ async function apiPostLadokGrades(
   }
 }
 
+function splitInput(input: PostLadokGradesInput): PostLadokGradesInput[] {
+  // TODO: implement split
+  return [input];
+}
+
 export function useTransfer(userSelection: UserSelection | null) {
   return useMutation<GradeWithStatus[], unknown, GradeWithStatus[]>(
     async (grades) => {
