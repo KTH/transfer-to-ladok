@@ -57,7 +57,7 @@ async function apiPostLadokGrades(
 function createPaginatedInputs(
   userSelection: UserSelection,
   grades: GradeWithStatus[],
-  numberOfItemsPerPage = 10
+  numberOfItemsPerPage = 100
 ): PostLadokGradesInput[] {
   const gradesToSend = grades.filter((g) => g.status === "ready");
 
@@ -65,8 +65,6 @@ function createPaginatedInputs(
   for (let i = 0; i < gradesToSend.length; i += numberOfItemsPerPage) {
     chunks.push(gradesToSend.slice(i, i + numberOfItemsPerPage));
   }
-
-  debugger;
 
   return chunks.map(
     (chunkOfGrades) =>
@@ -114,7 +112,6 @@ export function useTransfer(userSelection: UserSelection | null) {
         ),
       };
 
-      debugger;
       return getTransferenceOutcome(grades, output);
     }
   );
