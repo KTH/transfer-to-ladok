@@ -1,5 +1,9 @@
 import { useMutation } from "react-query";
-import { PostLadokGradesInput, PostLadokGradesOutput } from "t2l-backend";
+import {
+  PostLadokGradesInput,
+  PostLadokGradesOutput,
+  ResultOutput,
+} from "t2l-backend";
 import { ApiError } from "../utils/errors";
 import {
   GradeWithStatus,
@@ -97,12 +101,11 @@ export function useTransfer(userSelection: UserSelection | null) {
         },
         results: outputs.reduce(
           (accumulator, output) => [...accumulator, ...output.results],
-          []
+          [] as ResultOutput[]
         ),
       };
 
       debugger;
-      // const output = outputs[0] as PostLadokGradesOutput;
       return getTransferenceOutcome(grades, output);
     }
   );
