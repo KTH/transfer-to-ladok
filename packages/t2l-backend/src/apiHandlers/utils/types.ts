@@ -233,6 +233,7 @@ export type GradeableStudents = {
  */
 export interface PostLadokGradesInput {
   destination: GradesDestination;
+  actionIdentifier: string; // Used to group paginated requests together
   results: ResultInput[];
 }
 
@@ -267,6 +268,7 @@ export interface Transference {
     error: number;
   };
   _id: string;
+  actionIdentifier: string;
   createdAt: Date;
 }
 

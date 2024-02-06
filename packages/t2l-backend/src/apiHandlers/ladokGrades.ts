@@ -162,6 +162,7 @@ export async function postGradesHandler(
       success: 0,
       error: 0,
     },
+    actionIdentifier: req.body.actionIdentifier,
     createdAt: new Date(),
     _id: `${new Date().toISOString()}_courseId:${courseId}_${randomHash()}`,
   };
