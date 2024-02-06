@@ -15,7 +15,7 @@ export async function insertTransference(transference: Transference) {
 
   const collection = client
     .db("transfer-to-ladok")
-    .collection<Transference>("transfers_1.2");
+    .collection<Transference>("transfers_1.1");
 
   const result = collection.insertOne(transference);
   log.info(
