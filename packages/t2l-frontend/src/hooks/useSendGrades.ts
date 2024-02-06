@@ -56,22 +56,31 @@ async function apiPostLadokGrades(
 
 function createPaginatedInputs(
   userSelection: UserSelection,
-  grades: GradeWithStatus[]
+  grades: GradeWithStatus[],
+  numberOfItemsPerPage = 10
 ): PostLadokGradesInput[] {
-  // TODO: implement split
-  const input: PostLadokGradesInput = {
-    destination: userSelection?.destination.value,
-    results: grades
-      .filter((g) => g.status === "ready")
-      .map((g) => ({
-        id: g.student.id,
-        draft: {
-          examinationDate: g.input?.examinationDate || "",
-          grade: g.input?.grade || "",
-        },
-      })),
-  };
-  return [input];
+  const gradesToSend = grades.filter((g) => g.status === "ready");
+
+  const chunks = [];
+  for (let i = 0; i < gradesToSend.length; i += numberOfItemsPerPage) {
+    chunks.push(gradesToSend.slice(i, i + numberOfItemsPerPage));
+  }
+
+  debugger;
+
+  return chunks.map(
+    (chunkOfGrades) =>
+      ({
+        destination: userSelection?.destination.value,
+        results: chunkOfGrades.map((g) => ({
+          id: g.student.id,
+          draft: {
+            examinationDate: g.input?.examinationDate || "",
+            grade: g.input?.grade || "",
+          },
+        })),
+      } as PostLadokGradesInput)
+  );
 }
 
 export function useTransfer(userSelection: UserSelection | null) {
