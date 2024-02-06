@@ -83,8 +83,26 @@ export function useTransfer(userSelection: UserSelection | null) {
         )
       );
 
-      // TODO: join the outputs into one output
-      const output = outputs[0] as PostLadokGradesOutput;
+      // join the outputs into one output
+      const output = {
+        summary: {
+          success: outputs.reduce(
+            (accumulator, output) => accumulator + output.summary.success,
+            0
+          ),
+          error: outputs.reduce(
+            (accumulator, output) => accumulator + output.summary.error,
+            0
+          ),
+        },
+        results: outputs.reduce(
+          (accumulator, output) => [...accumulator, ...output.results],
+          []
+        ),
+      };
+
+      debugger;
+      // const output = outputs[0] as PostLadokGradesOutput;
       return getTransferenceOutcome(grades, output);
     }
   );
