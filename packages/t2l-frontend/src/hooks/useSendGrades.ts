@@ -54,31 +54,15 @@ async function apiPostLadokGrades(
   }
 }
 
-function createPaginatedInputs(
-  userSelection: UserSelection,
+function splitIntoChunks(
   grades: GradeWithStatus[],
-  numberOfItemsPerPage = 100
-): PostLadokGradesInput[] {
-  const gradesToSend = grades.filter((g) => g.status === "ready");
-
+  numberOfItemsPerChunk = 100
+): GradeWithStatus[][] {
   const chunks = [];
-  for (let i = 0; i < gradesToSend.length; i += numberOfItemsPerPage) {
-    chunks.push(gradesToSend.slice(i, i + numberOfItemsPerPage));
+  for (let i = 0; i < grades.length; i += numberOfItemsPerChunk) {
+    chunks.push(grades.slice(i, i + numberOfItemsPerChunk));
   }
-
-  return chunks.map(
-    (chunkOfGrades) =>
-      ({
-        destination: userSelection?.destination.value,
-        results: chunkOfGrades.map((g) => ({
-          id: g.student.id,
-          draft: {
-            examinationDate: g.input?.examinationDate || "",
-            grade: g.input?.grade || "",
-          },
-        })),
-      } as PostLadokGradesInput)
-  );
+  return chunks;
 }
 
 export function useTransfer(userSelection: UserSelection | null) {
@@ -88,10 +72,23 @@ export function useTransfer(userSelection: UserSelection | null) {
         return [];
       }
 
+      const chunkOfGrades = splitIntoChunks(
+        grades.filter((g) => g.status === "ready")
+      );
+
+      const inputs: PostLadokGradesInput[] = chunkOfGrades.map((grades) => ({
+        destination: userSelection?.destination.value,
+        results: grades.map((g) => ({
+          id: g.student.id,
+          draft: {
+            examinationDate: g.input?.examinationDate || "",
+            grade: g.input?.grade || "",
+          },
+        })),
+      }));
+
       const outputs = await Promise.all(
-        createPaginatedInputs(userSelection, grades).map((input) =>
-          apiPostLadokGrades(input)
-        )
+        inputs.map((input) => apiPostLadokGrades(input))
       );
 
       // join the outputs into one output
