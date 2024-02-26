@@ -1,5 +1,9 @@
 import { useMutation } from "react-query";
-import { PostLadokGradesInput, PostLadokGradesOutput } from "t2l-backend";
+import {
+  PostLadokGradesInput,
+  PostLadokGradesOutput,
+  ResultOutput,
+} from "t2l-backend";
 import { ApiError } from "../utils/errors";
 import {
   GradeWithStatus,
@@ -50,6 +54,17 @@ async function apiPostLadokGrades(
   }
 }
 
+function splitIntoChunks(
+  grades: GradeWithStatus[],
+  numberOfItemsPerChunk = 100
+): GradeWithStatus[][] {
+  const chunks = [];
+  for (let i = 0; i < grades.length; i += numberOfItemsPerChunk) {
+    chunks.push(grades.slice(i, i + numberOfItemsPerChunk));
+  }
+  return chunks;
+}
+
 export function useTransfer(userSelection: UserSelection | null) {
   return useMutation<GradeWithStatus[], unknown, GradeWithStatus[]>(
     async (grades) => {
@@ -57,20 +72,42 @@ export function useTransfer(userSelection: UserSelection | null) {
         return [];
       }
 
-      const input: PostLadokGradesInput = {
-        destination: userSelection?.destination.value,
-        results: grades
-          .filter((g) => g.status === "ready")
-          .map((g) => ({
-            id: g.student.id,
-            draft: {
-              examinationDate: g.input?.examinationDate || "",
-              grade: g.input?.grade || "",
-            },
-          })),
-      };
+      const chunkOfGrades = splitIntoChunks(
+        grades.filter((g) => g.status === "ready")
+      );
 
-      const output = await apiPostLadokGrades(input);
+      const inputs: PostLadokGradesInput[] = chunkOfGrades.map((grades) => ({
+        destination: userSelection?.destination.value,
+        results: grades.map((g) => ({
+          id: g.student.id,
+          draft: {
+            examinationDate: g.input?.examinationDate || "",
+            grade: g.input?.grade || "",
+          },
+        })),
+      }));
+
+      const outputs = await Promise.all(
+        inputs.map((input) => apiPostLadokGrades(input))
+      );
+
+      // join the outputs into one output
+      const output = {
+        summary: {
+          success: outputs.reduce(
+            (accumulator, output) => accumulator + output.summary.success,
+            0
+          ),
+          error: outputs.reduce(
+            (accumulator, output) => accumulator + output.summary.error,
+            0
+          ),
+        },
+        results: outputs.reduce(
+          (accumulator, output) => [...accumulator, ...output.results],
+          [] as ResultOutput[]
+        ),
+      };
 
       return getTransferenceOutcome(grades, output);
     }
