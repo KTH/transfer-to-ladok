@@ -10,6 +10,16 @@ import {
   Studieresultat,
 } from "../../externalApis/ladokApi/types";
 
+// 30 minutes cache
+const CACHE_DURATION = 1000 * 60 * 30;
+const cachedGradingInformation = new Map<
+  string,
+  {
+    timestamp: number;
+    data: GradingInformation[];
+  }
+>();
+
 /**
  * Calls {@link searchStudieresultat} and fetches all pages of results.
  */
@@ -86,7 +96,7 @@ export async function _getAllStudieresultat(
  * Given a destination ({@link GradesDestination}), get a list of all
  * {@link GradingInformation} in that destination
  */
-export async function getGradingInformation(
+async function _getGradingInformation(
   destination: GradesDestination,
   teacherEmail: string
 ) {
@@ -99,6 +109,51 @@ export async function getGradingInformation(
   return allStudieresultat.map(
     (s) => new GradingInformation(s, allPermissions)
   );
+}
+
+/**
+ * Deletes all cached values that are older than CACHE_DURATION
+ */
+function purgeCache() {
+  const now = Date.now();
+  for (const [key, value] of cachedGradingInformation) {
+    if (value.timestamp < now - CACHE_DURATION) {
+      cachedGradingInformation.delete(key);
+    }
+  }
+}
+
+/**
+ * Get a list of all {@link GradingInformation} in a given destination.
+ *
+ * @param {boolean} options.useCache if true, the function returns an existing
+ * cached value. Note: the function will always _save_ the retrieved value in
+ * the cache regardless of this flag.
+ */
+export async function getGradingInformation(
+  destination: GradesDestination,
+  teacherEmail: string,
+  options?: { useCache: boolean }
+) {
+  purgeCache();
+  const key = JSON.stringify({ destination, teacherEmail });
+
+  if (options?.useCache) {
+    const cached = cachedGradingInformation.get(key);
+
+    if (cached) {
+      return cached.data;
+    }
+  }
+
+  const result = await _getGradingInformation(destination, teacherEmail);
+
+  cachedGradingInformation.set(key, {
+    timestamp: Date.now(),
+    data: result,
+  });
+
+  return result;
 }
 
 /**
