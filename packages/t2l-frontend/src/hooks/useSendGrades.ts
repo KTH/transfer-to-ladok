@@ -87,9 +87,11 @@ export function useTransfer(userSelection: UserSelection | null) {
         })),
       }));
 
-      const outputs = await Promise.all(
-        inputs.map((input) => apiPostLadokGrades(input))
-      );
+      const outputs: PostLadokGradesOutput[] = [];
+      for (const input of inputs) {
+        const response = await apiPostLadokGrades(input);
+        outputs.push(response);
+      }
 
       // join the outputs into one output
       const output = {
