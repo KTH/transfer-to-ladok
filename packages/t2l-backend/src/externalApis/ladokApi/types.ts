@@ -60,7 +60,7 @@ export interface Kurstillfalle {
 }
 
 export interface SkaFinnasStudenter {
-  Utbildningstillfalle: {
+  Utbildningstillfalle?: {
     /** Here is the Kurstillfalle UID */
     Uid: string;
   }[];

@@ -64,9 +64,18 @@ export async function _getAllStudieresultat(
 ): Promise<Studieresultat[]> {
   if ("aktivitetstillfalle" in destination) {
     // We use this function only to get all Kurstillfälle that are linked with a given aktivitetstillfälle.
-    const kurstillfalleUID = await getSkaFinnasStudenter(
+
+    const skafinnasstudenter = await getSkaFinnasStudenter(
       destination.aktivitetstillfalle
-    ).then((s) => s.Utbildningstillfalle.map((u) => u.Uid));
+    );
+    // If the response from getSkaFinnasStudenter is an empty object (which can happen if there are no students for instance), we can return an empty result
+    if (!skafinnasstudenter.Utbildningstillfalle) {
+      return [];
+    }
+
+    const kurstillfalleUID = skafinnasstudenter.Utbildningstillfalle.map(
+      (u) => u.Uid
+    );
 
     return _searchAllStudieresultat(
       "aktivitetstillfalle",
