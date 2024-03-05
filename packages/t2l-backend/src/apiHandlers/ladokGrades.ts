@@ -137,7 +137,6 @@ export async function getGradesHandler(
   res: Response<GradeableStudents>
 ) {
   const destination = req.query;
-  req.session.gradingInformation;
   assertGradesDestination(destination);
 
   const courseId = req.params.courseId;
