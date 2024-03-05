@@ -41,7 +41,7 @@ export async function _searchAllStudieresultat(
  * Given a list of {@link Studieresultat}, get a list of which ones the user
  * has permissions to send grades to.
  */
-export async function _getAllPermissions(
+export async function getAllPermissions(
   allStudieresultat: Studieresultat[],
   email: string
 ) {
@@ -59,7 +59,7 @@ export async function _getAllPermissions(
  * Given a destination ({@link GradesDestination}), get a list of all
  * {@link Studieresultat} in that destination
  */
-export async function _getAllStudieresultat(
+export async function getAllStudieresultat(
   destination: GradesDestination
 ): Promise<Studieresultat[]> {
   if ("aktivitetstillfalle" in destination) {
@@ -80,25 +80,6 @@ export async function _getAllStudieresultat(
       [destination.kurstillfalle]
     );
   }
-}
-
-/**
- * Given a destination ({@link GradesDestination}), get a list of all
- * {@link GradingInformation} in that destination
- */
-export async function getGradingInformation(
-  destination: GradesDestination,
-  teacherEmail: string
-) {
-  const allStudieresultat = await _getAllStudieresultat(destination);
-  const allPermissions = await _getAllPermissions(
-    allStudieresultat,
-    teacherEmail
-  );
-
-  return allStudieresultat.map(
-    (s) => new GradingInformation(s, allPermissions)
-  );
 }
 
 /**

@@ -18,10 +18,60 @@ import {
   assertPostLadokGradesInput,
 } from "./utils/asserts";
 import postOneResult from "./utils/postOneResult";
-import { getKurstillfalleStructure } from "../externalApis/ladokApi";
+import {
+  RapporteringsMojlighetOutput,
+  Studieresultat,
+  getKurstillfalleStructure,
+} from "../externalApis/ladokApi";
 import { insertTransference } from "../externalApis/mongo";
-import { getGradingInformation } from "./utils/GradingInformation";
 import log from "skog";
+import GradingInformation, {
+  getAllPermissions,
+  getAllStudieresultat,
+} from "./utils/GradingInformation";
+import { SessionData } from "express-session";
+
+declare module "express-session" {
+  interface SessionData {
+    gradingInformation: Record<
+      string,
+      {
+        allStudieresultat: Studieresultat[];
+        allPermissions: RapporteringsMojlighetOutput;
+      }
+    >;
+  }
+}
+
+async function getGradingInformation(
+  destination: GradesDestination,
+  teacherEmail: string,
+  {
+    useCache,
+    session,
+  }: {
+    useCache: boolean;
+    session: Partial<SessionData>;
+  }
+) {
+  const key = JSON.stringify(destination);
+  session.gradingInformation = session.gradingInformation || {};
+
+  if (!useCache || !session.gradingInformation[key]) {
+    const allStudieresultat = await getAllStudieresultat(destination);
+    const allPermissions = await getAllPermissions(
+      allStudieresultat,
+      teacherEmail
+    );
+    session.gradingInformation[key] = { allPermissions, allStudieresultat };
+  }
+
+  const { allStudieresultat, allPermissions } = session.gradingInformation[key];
+
+  return allStudieresultat.map(
+    (s) => new GradingInformation(s, allPermissions)
+  );
+}
 
 /** Checks if the given `utbildningsinstans` belongs to the given `kurstillfalle` */
 async function checkUtbildningsinstansInKurstillfalle(
@@ -87,6 +137,7 @@ export async function getGradesHandler(
   res: Response<GradeableStudents>
 ) {
   const destination = req.query;
+  req.session.gradingInformation;
   assertGradesDestination(destination);
 
   const courseId = req.params.courseId;
@@ -99,7 +150,10 @@ export async function getGradesHandler(
   const email = await canvasAdminClient.getUserLoginId(userId);
   await checkPermissionProfile(email);
 
-  const gradingInformation = await getGradingInformation(destination, email);
+  const gradingInformation = await getGradingInformation(destination, email, {
+    useCache: false,
+    session: req.session,
+  });
 
   // We do a small runtime control to check that the data is correct
   const uniqueStudents = new Set(
@@ -143,7 +197,11 @@ export async function postGradesHandler(
 
   const gradingInformation = await getGradingInformation(
     req.body.destination,
-    email
+    email,
+    {
+      useCache: true,
+      session: req.session,
+    }
   );
 
   const output: ResultOutput[] = [];
