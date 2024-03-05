@@ -143,8 +143,7 @@ export async function postGradesHandler(
 
   const gradingInformation = await getGradingInformation(
     req.body.destination,
-    email,
-    { useCache: true }
+    email
   );
 
   const output: ResultOutput[] = [];
