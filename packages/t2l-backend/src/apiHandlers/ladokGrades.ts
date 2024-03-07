@@ -18,11 +18,7 @@ import {
   assertPostLadokGradesInput,
 } from "./utils/asserts";
 import postOneResult from "./utils/postOneResult";
-import {
-  RapporteringsMojlighetOutput,
-  Studieresultat,
-  getKurstillfalleStructure,
-} from "../externalApis/ladokApi";
+import { getKurstillfalleStructure } from "../externalApis/ladokApi";
 import { insertTransference } from "../externalApis/mongo";
 import log from "skog";
 import GradingInformation, {
@@ -30,18 +26,6 @@ import GradingInformation, {
   getAllStudieresultat,
 } from "./utils/GradingInformation";
 import { SessionData } from "express-session";
-
-declare module "express-session" {
-  interface SessionData {
-    gradingInformation: Record<
-      string,
-      {
-        allStudieresultat: Studieresultat[];
-        allPermissions: RapporteringsMojlighetOutput;
-      }
-    >;
-  }
-}
 
 async function getGradingInformation(
   destination: GradesDestination,
