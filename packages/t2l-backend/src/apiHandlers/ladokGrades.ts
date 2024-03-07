@@ -31,17 +31,18 @@ async function getGradingInformation(
   destination: GradesDestination,
   teacherEmail: string,
   {
-    useCache,
+    readFromCache,
     session,
   }: {
-    useCache: boolean;
+    readFromCache: boolean;
     session: Partial<SessionData>;
   }
 ) {
   const key = JSON.stringify(destination);
   session.gradingInformation = session.gradingInformation || {};
 
-  if (!useCache || !session.gradingInformation[key]) {
+  // NOTE: the cache is updated regardless of the `readFromCache` flag
+  if (!readFromCache || !session.gradingInformation[key]) {
     const allStudieresultat = await getAllStudieresultat(destination);
     const allPermissions = await getAllPermissions(
       allStudieresultat,
@@ -134,7 +135,7 @@ export async function getGradesHandler(
   await checkPermissionProfile(email);
 
   const gradingInformation = await getGradingInformation(destination, email, {
-    useCache: false,
+    readFromCache: false,
     session: req.session,
   });
 
@@ -182,7 +183,7 @@ export async function postGradesHandler(
     req.body.destination,
     email,
     {
-      useCache: true,
+      readFromCache: true,
       session: req.session,
     }
   );
