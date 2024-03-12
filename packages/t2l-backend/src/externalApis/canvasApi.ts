@@ -1,3 +1,5 @@
+// eslint-disable-next-line @typescript-eslint/triple-slash-reference
+/// <reference path="../env.d.ts" />
 /**
  * This module contains functions to call Canvas API.
  * Functions do not contain any logic
