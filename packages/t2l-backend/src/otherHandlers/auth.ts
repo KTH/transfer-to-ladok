@@ -3,24 +3,6 @@ import { Router } from "express";
 import { Issuer, generators, errors } from "openid-client";
 import log from "skog";
 
-declare module "openid-client" {
-  interface TokenSet {
-    user: {
-      id: number;
-    };
-  }
-}
-
-declare module "express-session" {
-  interface SessionData {
-    tmpState: string;
-    tmpCourseId: string;
-    accessToken: string;
-    refreshToken: string;
-    userId: number;
-  }
-}
-
 // Assuming that this router is going to be in
 // https://localdev.kth.se:4443/transfer-to-ladok/auth
 const oauthRedirectUrl = new URL(

@@ -20,8 +20,43 @@ import {
 import postOneResult from "./utils/postOneResult";
 import { getKurstillfalleStructure } from "../externalApis/ladokApi";
 import { insertTransference } from "../externalApis/mongo";
-import { getGradingInformation } from "./utils/GradingInformation";
 import log from "skog";
+import GradingInformation, {
+  getAllPermissions,
+  getAllStudieresultat,
+} from "./utils/GradingInformation";
+import { SessionData } from "express-session";
+
+async function getGradingInformation(
+  destination: GradesDestination,
+  teacherEmail: string,
+  {
+    readFromCache,
+    session,
+  }: {
+    readFromCache: boolean;
+    session: Partial<SessionData>;
+  }
+) {
+  const key = JSON.stringify(destination);
+  session.gradingInformation = session.gradingInformation || {};
+
+  // NOTE: the cache is updated regardless of the `readFromCache` flag
+  if (!readFromCache || !session.gradingInformation[key]) {
+    const allStudieresultat = await getAllStudieresultat(destination);
+    const allPermissions = await getAllPermissions(
+      allStudieresultat,
+      teacherEmail
+    );
+    session.gradingInformation[key] = { allPermissions, allStudieresultat };
+  }
+
+  const { allStudieresultat, allPermissions } = session.gradingInformation[key];
+
+  return allStudieresultat.map(
+    (s) => new GradingInformation(s, allPermissions)
+  );
+}
 
 /** Checks if the given `utbildningsinstans` belongs to the given `kurstillfalle` */
 async function checkUtbildningsinstansInKurstillfalle(
@@ -99,7 +134,10 @@ export async function getGradesHandler(
   const email = await canvasAdminClient.getUserLoginId(userId);
   await checkPermissionProfile(email);
 
-  const gradingInformation = await getGradingInformation(destination, email);
+  const gradingInformation = await getGradingInformation(destination, email, {
+    readFromCache: false,
+    session: req.session,
+  });
 
   // We do a small runtime control to check that the data is correct
   const uniqueStudents = new Set(
@@ -143,7 +181,11 @@ export async function postGradesHandler(
 
   const gradingInformation = await getGradingInformation(
     req.body.destination,
-    email
+    email,
+    {
+      readFromCache: true,
+      session: req.session,
+    }
   );
 
   const output: ResultOutput[] = [];
