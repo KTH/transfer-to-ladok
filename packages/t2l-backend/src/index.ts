@@ -9,6 +9,5 @@ const port = 3000;
 // mockedServices.listen({ onUnhandledRequest: "bypass" });
 appInsights.setup();
 app.listen(port, () => {
-  log.error("Provoking an error. Remove this code line after deploy to stage.");
   log.info(`Listening to port ${port}`);
 });
