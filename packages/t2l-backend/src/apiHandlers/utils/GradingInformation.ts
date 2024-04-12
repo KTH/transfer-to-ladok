@@ -10,6 +10,67 @@ import {
   Studieresultat,
 } from "../../externalApis/ladokApi/types";
 
+const CACHE_DURATION = 1000 * 60 * 30;
+const cachedGradingInformation = new Map<
+  string,
+  {
+    timestamp: number;
+    data: {
+      allPermissions: RapporteringsMojlighetOutput;
+      allStudieresultat: Studieresultat[];
+    };
+  }
+>();
+
+/**
+ * NOTE: we are using in memory for the cache. The reason why we don't want to use the session for this
+ * is that MongoDB has a limit for 2MB for json documents, and these documents is sometimes bigger then that.
+ * Deletes all cached values that are older than CACHE_DURATION
+ */
+function purgeCache() {
+  const now = Date.now();
+  for (const [key, value] of cachedGradingInformation) {
+    if (value.timestamp < now - CACHE_DURATION) {
+      cachedGradingInformation.delete(key);
+    }
+  }
+}
+
+export async function getGradingInformation(
+  destination: GradesDestination,
+  teacherEmail: string,
+  {
+    readFromCache,
+  }: {
+    readFromCache: boolean;
+  }
+) {
+  purgeCache();
+  const key = JSON.stringify(destination);
+
+  // NOTE: the cache is updated regardless of the `readFromCache` flag
+  let tmp = cachedGradingInformation.get(key);
+
+  if (!readFromCache || !tmp) {
+    const allStudieresultat = await getAllStudieresultat(destination);
+    const allPermissions = await getAllPermissions(
+      allStudieresultat,
+      teacherEmail
+    );
+    tmp = {
+      timestamp: Date.now(),
+      data: { allPermissions, allStudieresultat },
+    };
+    cachedGradingInformation.set(key, tmp);
+  }
+
+  const { allStudieresultat, allPermissions } = tmp.data;
+
+  return allStudieresultat.map(
+    (s) => new GradingInformation(s, allPermissions)
+  );
+}
+
 /**
  * Calls {@link searchStudieresultat} and fetches all pages of results.
  */
