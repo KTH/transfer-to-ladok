@@ -23,6 +23,8 @@ const cachedGradingInformation = new Map<
 >();
 
 /**
+ * NOTE: we are using in memory for the cache. The reason why we don't want to use the session for this
+ * is that MongoDB has a limit for 2MB for json documents, and these documents is sometimes bigger then that.
  * Deletes all cached values that are older than CACHE_DURATION
  */
 function purgeCache() {
