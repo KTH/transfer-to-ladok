@@ -31,8 +31,8 @@ async function checkUtbildningsinstansInKurstillfalle(
   const ladokKurstillfalle = await getKurstillfalleStructure(kurstillfalleUID);
 
   const isFinalGrade =
-    ladokKurstillfalle.UtbildningsinstansUID === utbildningsinstansUID;
-  const isModule = ladokKurstillfalle.IngaendeMoment.some(
+    ladokKurstillfalle?.UtbildningsinstansUID === utbildningsinstansUID;
+  const isModule = ladokKurstillfalle?.IngaendeMoment.some(
     (m) => m.UtbildningsinstansUID === utbildningsinstansUID
   );
 
