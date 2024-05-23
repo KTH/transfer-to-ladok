@@ -105,13 +105,13 @@ export default async function sectionsHandler(
     })
   );
 
-  const kurstillfalle = await Promise.all(
-    kurstillfalleIds.map(async (id) => {
-      const k = await getKurstillfalleStructure(id);
-
-      return formatKurstillfalle(id, k);
-    })
-  );
+  const kurstillfalle = [];
+  for (const id of kurstillfalleIds) {
+    const k = await getKurstillfalleStructure(id);
+    if (k) {
+      kurstillfalle.push(formatKurstillfalle(id, k));
+    }
+  }
 
   res.json({
     aktivitetstillfalle,

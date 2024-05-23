@@ -44,6 +44,7 @@ export interface Kurstillfalle {
   UtbildningsinstansUID: string;
   Utbildningskod: string;
   Versionsnummer: number;
+  Installt?: boolean;
 
   IngaendeMoment: Array<{
     Benamning: {

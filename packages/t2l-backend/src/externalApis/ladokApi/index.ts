@@ -85,10 +85,22 @@ export function getSkaFinnasStudenter(aktivitetstillfalleUID: string) {
  * Get the structure of a course round (kurstillfälle)
  * @see {@link https://www.integrationstest.ladok.se/restdoc/resultat.html#h%C3%A4mtaIng%C3%A5endeMomentF%C3%B6rKurstillf%C3%A4lle}
  */
-export function getKurstillfalleStructure(kurstillfalleUID: string) {
+export async function getKurstillfalleStructure(kurstillfalleUID: string) {
   return gotClient
     .get<Kurstillfalle>(`resultat/kurstillfalle/${kurstillfalleUID}/moment`)
-    .then((response) => response.body);
+    .then((response) => response.body)
+    .catch((e) => {
+      const errorBody = e.response.body;
+      if (
+        errorBody.Detaljkod === "resultat.fel.detaljkod.utbildningstillfalle" &&
+        errorBody.Felgrupp === "commons.fel.grupp.obligatoriskt_varde_saknas"
+      ) {
+        // This looks like the course round doesn't exist in Ladok. Ignore it.
+        return null;
+      } else {
+        throw e;
+      }
+    });
 }
 
 /**
