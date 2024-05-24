@@ -13,6 +13,7 @@ import {
   Kurstillfalle,
 } from "../externalApis/ladokApi";
 import CanvasAdminClient from "../externalApis/canvasAdminApi";
+import logger from "skog";
 
 // Maps between possible "LADOK_API_BASE_URL" and Ladok root URL (frontend).
 const ALL_LADOK_ROOTS: Record<string, string> = {
@@ -105,13 +106,15 @@ export default async function sectionsHandler(
     })
   );
 
-  const kurstillfalle = await Promise.all(
-    kurstillfalleIds.map(async (id) => {
-      const k = await getKurstillfalleStructure(id);
-
-      return formatKurstillfalle(id, k);
-    })
-  );
+  const kurstillfalle = [];
+  for (const id of kurstillfalleIds) {
+    const k = await getKurstillfalleStructure(id);
+    if (k) {
+      kurstillfalle.push(formatKurstillfalle(id, k));
+    } else {
+      logger.warn(`Kurstillfalle with id ${id} does not exist in Ladok`);
+    }
+  }
 
   res.json({
     aktivitetstillfalle,

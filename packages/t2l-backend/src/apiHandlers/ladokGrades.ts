@@ -29,6 +29,12 @@ async function checkUtbildningsinstansInKurstillfalle(
   kurstillfalleUID: string
 ) {
   const ladokKurstillfalle = await getKurstillfalleStructure(kurstillfalleUID);
+  assert(
+    ladokKurstillfalle,
+    new UnprocessableEntityError(
+      `Kurstillfalle don't exist in Ladok: [${kurstillfalleUID}]`
+    )
+  );
 
   const isFinalGrade =
     ladokKurstillfalle.UtbildningsinstansUID === utbildningsinstansUID;
