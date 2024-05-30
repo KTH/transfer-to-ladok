@@ -66,7 +66,7 @@ router.get("/callback", async (req, res) => {
   } catch (err) {
     if (err instanceof errors.OPError && err.message === "access_denied") {
       // The user has not accepted the oauth request
-      log.warn("User has not accepted the oauth request");
+      log.info("User has not accepted the oauth request");
       res.redirect("/transfer-to-ladok/?error=access_denied");
       return;
     }
