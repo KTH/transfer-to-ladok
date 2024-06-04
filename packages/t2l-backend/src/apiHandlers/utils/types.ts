@@ -198,6 +198,7 @@ export type GradeableStudents = {
     personalNumber?: string;
   };
 
+  anonymousCode?: string;
   /** List of grades you can set */
   scale: string[];
 
