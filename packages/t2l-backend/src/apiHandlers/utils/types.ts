@@ -95,6 +95,8 @@ export interface Assignment {
   hasSubmissions: boolean;
 
   published: boolean;
+
+  postedGrades: boolean;
 }
 
 /**
