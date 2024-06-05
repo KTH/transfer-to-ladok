@@ -41,12 +41,13 @@ export function formatAktivitetstillfalle(
   const date = ladokAkt.Datumperiod.Startdatum;
   const name = codes.join(" & ") + " - " + date;
   const url = `${LADOK_ROOT}/gui/app/gui/#/studiedokumentation/aktivitetstillfalleshantering/${uid}/rapportering`;
-
+  const anonymous = ladokAkt.Anonymt;
   return {
     id: uid,
     name,
     date,
     url,
+    anonymous,
   };
 }
 
