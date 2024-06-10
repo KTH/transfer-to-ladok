@@ -79,6 +79,7 @@ export default function PreviewStep({
     .slice()
     .sort(comparator);
   
+  const isAnonymous = gradesWithStatus.some((s) => s.student.anonymousCode);
 
   const numberOfTransferrableGrades = gradesWithStatus.filter(
     (t) => t.status === "ready"
@@ -126,7 +127,7 @@ export default function PreviewStep({
         <thead>
           <tr>
             <th>Student</th>
-            <th>Anonymous code</th>
+            {isAnonymous && <th>Anonymous code</th>}
             <th>Canvas grade</th>
             <th>Transferrable</th>
           </tr>
@@ -135,7 +136,7 @@ export default function PreviewStep({
           {gradesWithStatus.map((tg) => (
             <tr className={tg.status === "ready" ? "do-export-row" : ""}>
               <td>{tg.student.sortableName}</td>
-              <td>{tg.student.anonymousCode}</td>
+              {isAnonymous && <td>{tg.student.anonymousCode}</td>}
               <td>{tg.canvasGrade}</td>
               <td>{tg.status === "ready" && "Transferrable"}</td>
             </tr>
