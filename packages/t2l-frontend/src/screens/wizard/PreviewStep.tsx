@@ -114,6 +114,7 @@ export default function PreviewStep({
         <thead>
           <tr>
             <th>Student</th>
+            <th>Anonymous code</th>
             <th>Canvas grade</th>
             <th>Transferrable</th>
           </tr>
@@ -122,6 +123,7 @@ export default function PreviewStep({
           {gradesWithStatus.map((tg) => (
             <tr className={tg.status === "ready" ? "do-export-row" : ""}>
               <td>{tg.student.sortableName}</td>
+              <td>{tg.student.anonymousCode}</td>
               <td>{tg.canvasGrade}</td>
               <td>{tg.status === "ready" && "Transferrable"}</td>
             </tr>
