@@ -16,7 +16,6 @@ export interface Aktivitetstillfalle {
   Datumperiod: {
     Startdatum: string;
   };
-
 }
 
 /**

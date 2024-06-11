@@ -54,8 +54,8 @@ function validateAssignment(
     return "This assignment does not have letter grades. Choose a different assignment or go to Canvas to configure letter grades for the assignment";
   }
 
-  if (!assignment.postedGrades){
-    return "The grades for this assignment have not been posted. Choose a different assignment or go to Canvas gradebook and post the grades for the assignment."
+  if (!assignment.postedGrades) {
+    return "The grades for this assignment have not been posted. Choose a different assignment or go to Canvas gradebook and post the grades for the assignment.";
   }
 }
 

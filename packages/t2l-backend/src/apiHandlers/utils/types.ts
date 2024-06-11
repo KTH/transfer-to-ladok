@@ -27,7 +27,6 @@ export interface AktivitetstillfalleSection {
 
   /** Go to this URL to report grades in this Aktivitetstillfälle  */
   url: string;
-
 }
 
 /** A Canvas Section linked with a Ladok kurstillfalle  */

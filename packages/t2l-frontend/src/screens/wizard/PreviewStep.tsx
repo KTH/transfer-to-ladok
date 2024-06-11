@@ -14,17 +14,16 @@ interface PreviewStepProps {
   onSubmit: (input: GradeWithStatus[]) => void;
 }
 
-function comparator(a: GradeWithStatus, b:GradeWithStatus){
-  if (a.student.anonymousCode && b.student.anonymousCode){
+function comparator(a: GradeWithStatus, b: GradeWithStatus) {
+  if (a.student.anonymousCode && b.student.anonymousCode) {
     return a.student.anonymousCode.localeCompare(b.student.anonymousCode, "sv");
-  } else if (a.student.anonymousCode && !b.student.anonymousCode){
+  } else if (a.student.anonymousCode && !b.student.anonymousCode) {
     return -1;
-  } else if (!a.student.anonymousCode && b.student.anonymousCode){
+  } else if (!a.student.anonymousCode && b.student.anonymousCode) {
     return 1;
-  }else{
+  } else {
     return a.student.sortableName.localeCompare(b.student.sortableName, "sv");
   }
-
 }
 
 export default function PreviewStep({
@@ -78,7 +77,7 @@ export default function PreviewStep({
   )
     .slice()
     .sort(comparator);
-  
+
   const isAnonymous = gradesWithStatus.some((s) => s.student.anonymousCode);
 
   const numberOfTransferrableGrades = gradesWithStatus.filter(
