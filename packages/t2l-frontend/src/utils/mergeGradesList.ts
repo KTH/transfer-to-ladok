@@ -26,6 +26,7 @@ export interface GradeWithStatus {
     id: string;
     sortableName: string;
     personalNumber?: string;
+    anonymousCode?: string;
   };
 
   /** Information that will be sent to Ladok */
@@ -76,6 +77,7 @@ export function getTransferencePreview(
       id: ladokGrade.student.id,
       sortableName: ladokGrade.student.sortableName,
       personalNumber: ladokGrade.student.personalNumber,
+      anonymousCode: ladokGrade.anonymousCode,
     };
 
     // The teacher has no permission in Ladok

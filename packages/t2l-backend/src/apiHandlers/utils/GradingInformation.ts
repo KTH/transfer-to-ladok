@@ -279,6 +279,7 @@ export default class GradingInformation {
       scale: getBetyg(this._obj.Rapporteringskontext.BetygsskalaID).map(
         (b) => b.Kod
       ),
+      anonymousCode: this._obj.Rapporteringskontext.Anonymiseringskod,
       hasPermission: this.hasPermission,
       requiresTitle: this._obj.Rapporteringskontext.KravPaProjekttitel,
       draft: this.draft(),

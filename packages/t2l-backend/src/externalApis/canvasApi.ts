@@ -28,7 +28,7 @@ export interface Assignment {
   unlock_at: string | null;
   lock_at: string | null;
   published: boolean;
-
+  anonymize_students: boolean;
   /**
    * Indicates if there is at least one submission submitted by anyone.
    * If true, users can choose the "submission date" in this assignment as the

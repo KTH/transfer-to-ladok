@@ -92,6 +92,8 @@ export interface Studieresultat {
     BetygsskalaID: number;
 
     KravPaProjekttitel: boolean;
+
+    Anonymiseringskod?: string;
   };
 
   /** All "utkast" or "klarmarkerade" grades for the student and the latest "attesterade" result */

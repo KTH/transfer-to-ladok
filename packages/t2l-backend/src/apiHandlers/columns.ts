@@ -30,6 +30,7 @@ export default async function columnsHandler(
       published: assignment.published,
       lockAt: assignment.lock_at,
       hasSubmissions: assignment.has_submitted_submissions,
+      postedGrades: !assignment.anonymize_students,
     })),
   });
 }

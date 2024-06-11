@@ -14,6 +14,18 @@ interface PreviewStepProps {
   onSubmit: (input: GradeWithStatus[]) => void;
 }
 
+function comparator(a: GradeWithStatus, b: GradeWithStatus) {
+  if (a.student.anonymousCode && b.student.anonymousCode) {
+    return a.student.anonymousCode.localeCompare(b.student.anonymousCode, "sv");
+  } else if (a.student.anonymousCode && !b.student.anonymousCode) {
+    return -1;
+  } else if (!a.student.anonymousCode && b.student.anonymousCode) {
+    return 1;
+  } else {
+    return a.student.sortableName.localeCompare(b.student.sortableName, "sv");
+  }
+}
+
 export default function PreviewStep({
   userSelection,
   onBack,
@@ -64,9 +76,9 @@ export default function PreviewStep({
     date
   )
     .slice()
-    .sort((a, b) =>
-      a.student.sortableName.localeCompare(b.student.sortableName, "sv")
-    );
+    .sort(comparator);
+
+  const isAnonymous = gradesWithStatus.some((s) => s.student.anonymousCode);
 
   const numberOfTransferrableGrades = gradesWithStatus.filter(
     (t) => t.status === "ready"
@@ -114,6 +126,7 @@ export default function PreviewStep({
         <thead>
           <tr>
             <th>Student</th>
+            {isAnonymous && <th>Anonymous code</th>}
             <th>Canvas grade</th>
             <th>Transferrable</th>
           </tr>
@@ -122,6 +135,7 @@ export default function PreviewStep({
           {gradesWithStatus.map((tg) => (
             <tr className={tg.status === "ready" ? "do-export-row" : ""}>
               <td>{tg.student.sortableName}</td>
+              {isAnonymous && <td>{tg.student.anonymousCode}</td>}
               <td>{tg.canvasGrade}</td>
               <td>{tg.status === "ready" && "Transferrable"}</td>
             </tr>
