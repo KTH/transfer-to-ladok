@@ -12,6 +12,7 @@ import type {
   Behorighetsprofil,
   Betygsgrad,
   Kurstillfalle,
+  KurstillfalleParticipants,
   RapporteringsMojlighetInput,
   RapporteringsMojlighetOutput,
   Resultat,
@@ -82,6 +83,19 @@ export function getSkaFinnasStudenter(aktivitetstillfalleUID: string) {
 }
 
 /**
+ *
+ */
+export async function getAktivitetstillfalleParticipants(
+  aktivitetstillfalleUID: string
+) {
+  return gotClient
+    .get<KurstillfalleParticipants>(
+      `aktivitetstillfallesmojlighet/filtrera/studentidentiteter?aktivitetstillfalleUID=${aktivitetstillfalleUID}`
+    )
+    .then((response) => response.body);
+}
+
+/**
  * Get the structure of a course round (kurstillfälle)
  * @see {@link https://www.integrationstest.ladok.se/restdoc/resultat.html#h%C3%A4mtaIng%C3%A5endeMomentF%C3%B6rKurstillf%C3%A4lle}
  */
@@ -101,6 +115,20 @@ export async function getKurstillfalleStructure(kurstillfalleUID: string) {
         throw e;
       }
     });
+}
+
+export async function getKurstillfalleParticipants(kurstillfalleUID: string[]) {
+  return gotClient
+    .put<KurstillfalleParticipants>(
+      `studiedeltagande/deltagare/kurstillfalle/studentidentiter`,
+      {
+        json: {
+          utbildningstillfalleUID: kurstillfalleUID,
+          deltagaretillstand: ["EJ_PABORJAD", "REGISTRERAD"],
+        },
+      }
+    )
+    .then((r) => r.body);
 }
 
 /**

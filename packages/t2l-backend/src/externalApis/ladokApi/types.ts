@@ -59,6 +59,11 @@ export interface Kurstillfalle {
   }>;
 }
 
+/** Represents a list of participants in a Kurstillfalle */
+export interface KurstillfalleParticipants {
+  Identitet: string[];
+}
+
 export interface SkaFinnasStudenter {
   Utbildningstillfalle?: {
     /** Here is the Kurstillfalle UID */
