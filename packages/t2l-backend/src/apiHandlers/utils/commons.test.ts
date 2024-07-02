@@ -1,4 +1,4 @@
-import { splitSections } from "./commons";
+import { splitSections, unique } from "./commons";
 
 describe("splitSections", () => {
   it("should ignore non-Ladok sections", () => {
@@ -115,5 +115,33 @@ describe("splitSections", () => {
     };
     const actual = splitSections(input);
     expect(actual).toEqual(expected);
+  });
+});
+
+describe("unique", () => {
+  it("should work with primitives", () => {
+    const input = [1, 2, 3, 4, 1, 1, 4, 5];
+    const output = input.filter(unique());
+    const expected = [1, 2, 3, 4, 5];
+
+    expect(output).toEqual(expected);
+  });
+
+  it("should work with objects", () => {
+    const input = [
+      { id: 1, name: "X" },
+      { id: 2, name: "Y" },
+      { id: 1, name: "Z" },
+    ];
+    const output = input.filter(
+      // The `equalFn` passed considers two objects as equal when their `id` are the same
+      unique((a, b) => a.id === b.id)
+    );
+
+    const expected = [
+      { id: 1, name: "X" },
+      { id: 2, name: "Y" },
+    ];
+    expect(output).toEqual(expected);
   });
 });

@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import CanvasClient from "../externalApis/canvasApi";
 import { CanvasGrades } from "./utils/types";
+import { unique } from "./utils/commons";
 
 /**
  * HTTP request: `GET /courses/:courseId/assignments/:assignmentId`
@@ -45,14 +46,19 @@ export async function courseGradesHandler(
   const enrollments = await canvasApi.getEnrollments(courseId);
 
   res.json(
-    enrollments.map((e) => ({
-      student: {
-        id: e.user.integration_id,
-        sortableName: e.user.sortable_name,
-      },
-      grade: e.grades?.unposted_current_grade?.toUpperCase() ?? null,
-      gradedAt: null,
-      submittedAt: null,
-    }))
+    enrollments
+      .filter(
+        // Each student should appear only once
+        unique((a, b) => a.user.integration_id === b.user.integration_id)
+      )
+      .map((e) => ({
+        student: {
+          id: e.user.integration_id,
+          sortableName: e.user.sortable_name,
+        },
+        grade: e.grades?.unposted_current_grade?.toUpperCase() ?? null,
+        gradedAt: null,
+        submittedAt: null,
+      }))
   );
 }
