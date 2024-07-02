@@ -12,7 +12,7 @@ import type {
   Behorighetsprofil,
   Betygsgrad,
   Kurstillfalle,
-  KurstillfalleParticipants,
+  ParticipantIds,
   RapporteringsMojlighetInput,
   RapporteringsMojlighetOutput,
   Resultat,
@@ -24,7 +24,10 @@ export * from "./types";
 const gotClient = got.extend({
   prefixUrl: process.env.LADOK_API_BASEURL,
   headers: {
-    Accept: "application/vnd.ladok-resultat+json",
+    Accept: [
+      "application/vnd.ladok-resultat+json",
+      "application/vnd.ladok-studiedeltagande+json",
+    ].join(","),
   },
   responseType: "json",
   https: {
@@ -83,13 +86,13 @@ export function getSkaFinnasStudenter(aktivitetstillfalleUID: string) {
 }
 
 /**
- *
+ * Get participants in a single aktivitetstillfalle
  */
 export async function getAktivitetstillfalleParticipants(
   aktivitetstillfalleUID: string
 ) {
   return gotClient
-    .get<KurstillfalleParticipants>(
+    .get<ParticipantIds>(
       `aktivitetstillfallesmojlighet/filtrera/studentidentiteter?aktivitetstillfalleUID=${aktivitetstillfalleUID}`
     )
     .then((response) => response.body);
@@ -119,12 +122,18 @@ export async function getKurstillfalleStructure(kurstillfalleUID: string) {
 
 export async function getKurstillfalleParticipants(kurstillfalleUID: string[]) {
   return gotClient
-    .put<KurstillfalleParticipants>(
+    .put<ParticipantIds>(
       `studiedeltagande/deltagare/kurstillfalle/studentidentiter`,
       {
         json: {
           utbildningstillfalleUID: kurstillfalleUID,
-          deltagaretillstand: ["EJ_PABORJAD", "REGISTRERAD"],
+          deltagaretillstand: [
+            "EJ_PABORJAD",
+            "REGISTRERAD",
+            "AVKLARAD",
+            "AVBROTT",
+            "ATERBUD",
+          ],
         },
       }
     )

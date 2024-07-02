@@ -60,7 +60,7 @@ export interface Kurstillfalle {
 }
 
 /** Represents a list of participants in a Kurstillfalle */
-export interface KurstillfalleParticipants {
+export interface ParticipantIds {
   Identitet: string[];
 }
 
