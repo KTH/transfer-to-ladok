@@ -9,6 +9,7 @@ import { getGradesHandler, postGradesHandler } from "./apiHandlers/ladokGrades";
 import auth from "./otherHandlers/auth";
 import { monitor, about } from "./otherHandlers/system";
 import log from "skog";
+import { getParticipantsHandler } from "./apiHandlers/ladokParticipants";
 const router = Router();
 
 router.get("/_monitor", monitor);
@@ -46,6 +47,9 @@ router.get(
   (req, res, next) => assignmentGradesHandler(req, res).catch(next)
 );
 
+router.get("/api/courses/:courseId/ladok-participants", (req, res, next) =>
+  getParticipantsHandler(req, res).catch(next)
+);
 router.get("/api/courses/:courseId/ladok-grades", (req, res, next) =>
   getGradesHandler(req, res).catch(next)
 );

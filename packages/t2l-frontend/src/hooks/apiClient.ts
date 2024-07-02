@@ -71,6 +71,13 @@ export function useAssignments() {
   );
 }
 
+export function useLadokParticipants() {
+  const courseId = getCourseId();
+  return useQuery<string[]>(["participants", courseId], () =>
+    apiFetch(`/transfer-to-ladok/api/courses/${courseId}/ladok-participants`)
+  );
+}
+
 export function useGradeableStudents(destination: GradesDestination) {
   const courseId = getCourseId();
 

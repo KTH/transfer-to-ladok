@@ -50,12 +50,33 @@ export interface GradeWithStatus {
 export function getTransferencePreview(
   canvasGrades: CanvasGrades,
   ladokGradeableStudents: GradeableStudents,
+  ladokParticipantsId: string[],
   examinationDate: string
 ): GradeWithStatus[] {
   return canvasGrades.map<GradeWithStatus>((canvasGrade): GradeWithStatus => {
     const ladokGrade = ladokGradeableStudents.find(
       (ladokGrade) => ladokGrade.student.id === canvasGrade.student.id
     );
+
+    const isParticipant = ladokParticipantsId.find(
+      (p) => p === canvasGrade.student.id
+    );
+
+    if (!isParticipant) {
+      return {
+        status: "not_transferable",
+        canvasGrade: canvasGrade.grade,
+        student: {
+          id: canvasGrade.student.id,
+          sortableName: canvasGrade.student.sortableName,
+        },
+        cause: {
+          code: "not_participant",
+          message:
+            "The student does not exist in Ladok (any section in current room)",
+        },
+      };
+    }
 
     if (!ladokGrade) {
       return {
@@ -66,8 +87,8 @@ export function getTransferencePreview(
           sortableName: canvasGrade.student.sortableName,
         },
         cause: {
-          code: "not_in_ladok",
-          message: "The student is not in Ladok",
+          code: "not_participant_in_selected_section",
+          message: "The student does not exist in Ladok (user selection)",
         },
       };
     }

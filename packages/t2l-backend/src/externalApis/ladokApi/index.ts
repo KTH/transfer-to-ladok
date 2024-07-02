@@ -12,6 +12,7 @@ import type {
   Behorighetsprofil,
   Betygsgrad,
   Kurstillfalle,
+  ParticipantIds,
   RapporteringsMojlighetInput,
   RapporteringsMojlighetOutput,
   Resultat,
@@ -23,7 +24,10 @@ export * from "./types";
 const gotClient = got.extend({
   prefixUrl: process.env.LADOK_API_BASEURL,
   headers: {
-    Accept: "application/vnd.ladok-resultat+json",
+    Accept: [
+      "application/vnd.ladok-resultat+json",
+      "application/vnd.ladok-studiedeltagande+json",
+    ].join(","),
   },
   responseType: "json",
   https: {
@@ -82,6 +86,19 @@ export function getSkaFinnasStudenter(aktivitetstillfalleUID: string) {
 }
 
 /**
+ * Get participants in a single aktivitetstillfalle
+ */
+export async function getAktivitetstillfalleParticipants(
+  aktivitetstillfalleUID: string
+) {
+  return gotClient
+    .get<ParticipantIds>(
+      `aktivitetstillfallesmojlighet/filtrera/studentidentiteter?aktivitetstillfalleUID=${aktivitetstillfalleUID}`
+    )
+    .then((response) => response.body);
+}
+
+/**
  * Get the structure of a course round (kurstillfälle)
  * @see {@link https://www.integrationstest.ladok.se/restdoc/resultat.html#h%C3%A4mtaIng%C3%A5endeMomentF%C3%B6rKurstillf%C3%A4lle}
  */
@@ -101,6 +118,26 @@ export async function getKurstillfalleStructure(kurstillfalleUID: string) {
         throw e;
       }
     });
+}
+
+export async function getKurstillfalleParticipants(kurstillfalleUID: string[]) {
+  return gotClient
+    .put<ParticipantIds>(
+      `studiedeltagande/deltagare/kurstillfalle/studentidentiter`,
+      {
+        json: {
+          utbildningstillfalleUID: kurstillfalleUID,
+          deltagaretillstand: [
+            "EJ_PABORJAD",
+            "REGISTRERAD",
+            "AVKLARAD",
+            "AVBROTT",
+            "ATERBUD",
+          ],
+        },
+      }
+    )
+    .then((r) => r.body);
 }
 
 /**
