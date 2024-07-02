@@ -1,6 +1,10 @@
 import React from "react";
 import { UserSelection } from "./SelectionStep";
-import { useCanvasGrades, useGradeableStudents } from "../../hooks/apiClient";
+import {
+  useCanvasGrades,
+  useGradeableStudents,
+  useLadokParticipants,
+} from "../../hooks/apiClient";
 import Loading from "../../components/Loading";
 import {
   GradeWithStatus,
@@ -36,6 +40,7 @@ export default function PreviewStep({
   // Fetch submissions and gradeable students
   const ladokGradesQuery = useGradeableStudents(destination.value);
   const canvasGradesQuery = useCanvasGrades(assignment.id);
+  const ladokParticipantsQuery = useLadokParticipants();
 
   if (ladokGradesQuery.isError) {
     throw ladokGradesQuery.error;
@@ -45,7 +50,11 @@ export default function PreviewStep({
     throw canvasGradesQuery.error;
   }
 
-  if (!ladokGradesQuery.data) {
+  if (ladokParticipantsQuery.isError) {
+    throw ladokParticipantsQuery.error;
+  }
+
+  if (!ladokGradesQuery.data || !ladokParticipantsQuery.data) {
     return <Loading>Getting students list from Ladok...</Loading>;
   }
 
@@ -73,13 +82,17 @@ export default function PreviewStep({
   const gradesWithStatus = getTransferencePreview(
     canvasGradesQuery.data,
     ladokGradesQuery.data,
+    ladokParticipantsQuery.data,
     date
   )
     .slice()
     .sort(comparator);
 
   const isAnonymous = gradesWithStatus.some((s) => s.student.anonymousCode);
-
+  const nonParticipants = gradesWithStatus.filter(
+    (t) =>
+      t.status === "not_transferable" && t.cause?.code === "not_participant"
+  );
   const numberOfTransferrableGrades = gradesWithStatus.filter(
     (t) => t.status === "ready"
   ).length;
@@ -117,6 +130,19 @@ export default function PreviewStep({
           </div>
         </dl>
       </div>
+      {nonParticipants.length > 0 && (
+        <div>
+          <p>
+            There are {nonParticipants.length} students that cannot receive
+            grades in Ladok:
+          </p>
+          <ol>
+            {nonParticipants.map((p) => (
+              <li>{p.student.sortableName}</li>
+            ))}
+          </ol>
+        </div>
+      )}
       <h2>Preview</h2>
       <div>
         {numberOfTransferrableGrades}/{gradesWithStatus.length} grades can be
