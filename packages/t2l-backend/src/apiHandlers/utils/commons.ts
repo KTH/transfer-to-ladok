@@ -50,3 +50,18 @@ export async function checkPermissionProfile(email: string) {
     )
   );
 }
+
+/**
+ * Returns a predicate for {@link Array.filter}.
+ *
+ * The predicate returns true only if the element is the first appearance in
+ * the array.
+ *
+ * @param equalFn Function that compares if two elements are the same.
+ */
+export function unique<T>(
+  equalFn: (a: T, b: T) => boolean = (a, b) => a === b
+) {
+  return (value: T, index: number, array: T[]) =>
+    array.findIndex((v2) => equalFn(value, v2)) === index;
+}

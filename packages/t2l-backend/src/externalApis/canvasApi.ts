@@ -119,6 +119,7 @@ export default class CanvasClient {
     return this.client
       .listItems<Enrollment>(`courses/${courseId}/enrollments`, {
         include: ["user"],
+        type: ["StudentEnrollment"],
       })
       .toArray();
   }
